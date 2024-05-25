@@ -15,8 +15,12 @@
     src: url("../font/Inter-SemiBold.ttf");
 }
 
+html{
+    font-size: 14px;
+}
 
 :root {
+
     font-family: inter-Regular, sans-serif;
     line-height: 1.5;
     font-weight: 400;
@@ -36,6 +40,14 @@
     -webkit-text-size-adjust: 100%;
 }
 
+:root{
+    /* base colors for this project */
+
+    --bizgem_primary:#3F88C5;
+    color: #000;
+    background-color: #fafafa;
+
+}
 
 @media (prefers-color-scheme: light) {
     :root {
@@ -49,3 +61,5 @@
         background-color: #f9f9f9;
     }
 }
+
+

@@ -1,22 +1,16 @@
-import {RouteConstantUtil} from "@/util/constant/RouteConstantUtil.ts";
-import LoginView from "@/view/auth/LoginView.vue";
+import {RouteConstantUtil} from "../../util/constant/RouteConstantUtil.ts";
 import {BaseRouteProps} from "./base-route.ts";
-import InitiateForgotPasswordView from "../../view/auth/InitiateForgotPasswordView.vue";
 export const authRoute: BaseRouteProps[] = [
     {
         name: RouteConstantUtil.auth.login,
-        path: "/login",
-        component: LoginView,
-        meta: {
-            auth: false
-        }
+        path: '/login',
+        component: () => import("@/view/auth/LoginView.vue"),
+        meta: {authRequired:RouteConstantUtil.auth.authRequired, layout:'auth'}
     },
     {
         name: RouteConstantUtil.auth.initiateForgotPassword,
         path: "/initiate/forgetPassword",
-        component: InitiateForgotPasswordView,
-        meta: {
-            auth: false
-        }
+        component: () => import("../../view/auth/InitiateForgotPasswordView.vue"),
+        meta: {authRequired: RouteConstantUtil.auth.authRequired,layout:'auth'}
     },
 ]
