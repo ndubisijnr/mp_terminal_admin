@@ -19,19 +19,22 @@ const getCurrentRoute = computed(() => {
       <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
     </div>
 
-    <div>
+    <div style="position: relative;border: solid;max-height: 100vh;">
       <div class="sidebar-top-nav">
         <div v-for="(i, index) in SidebarTopUtils" :key="index" class="nav-item-base">
           <img :src="i.icon" alt=""/>
           <p>{{i.name}}</p>
         </div>
       </div>
-      <div class="sidebar-bottom-nav">
+      <div style="position: relative;border: solid;">
+        <div class="sidebar-bottom-nav">
         <div v-for="(i, index) in SidebarBottomUtils" :key="index">
           <img />
           <p>{{i.name}}</p>
         </div>
       </div>
+      </div>
+      
     </div>
   </div>
 
@@ -40,22 +43,40 @@ const getCurrentRoute = computed(() => {
 <style scoped>
 .sidebar-wrapper{
   width: 15%;
-  height: 100vh;
   background-color: var(--bizgem_primary);
   display: block;
   position: relative;
   transition: ease-in 0.3s;
+  /* Sidebar navigation */
+  min-height: 100%;
+  padding: 25px;
+
+  /* Bizgem primary */
+
+  /* Inside auto layout */
+  flex: none;
+
 }
+
+.sidebar-top-nav{
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.sidebar-bottom-nav{
+  position: absolute;
+  bottom: 0;
+}
+
 
 .nav-item-base{
   /* _Nav item base */
 
   /* Auto layout */
   display: flex;
-  flex-direction: row;
   align-items: center;
   padding: 8.4px 12.6px;
-  gap: 110.25px;
+  gap: .4rem;
 
   width: 100%;
   height: 42px;
@@ -64,6 +85,7 @@ const getCurrentRoute = computed(() => {
   background: #3F88C5;
   border-radius: 6.3px;
   border:solid red;
+  margin-bottom: 12px;
 
 }
 

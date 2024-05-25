@@ -28,7 +28,7 @@ const getCurrentRoute = computed(() => {
   display: flex;
 }
 .dashboard-main{
-  width: 85%;
+  width: 80%;
   min-height: 100%;
   position: relative;
 }
