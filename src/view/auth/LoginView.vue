@@ -19,10 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import documentTitle from "@/util/helper/documentTitle.ts";
-import getEnv from "@/util/helper/getEnv.ts";
 import LoginForm from "@/components/form/auth/LoginForm.vue";
 import { Motion } from "motion/vue"
+import documentTitle from "@/util/helper/documentTitle.ts";
+import getEnv from "@/util/helper/getEnv.ts";
 
 documentTitle(`Login | ${getEnv("VITE_APP_NAME")}`)
 </script>
