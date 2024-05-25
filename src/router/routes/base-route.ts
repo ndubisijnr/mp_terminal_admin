@@ -11,7 +11,7 @@ type Meta = {
     auth: boolean
 }
 
-const initialRoute:BaseRouteProps = []
+const initialRoute:any[] = []
 export const baseRoute = initialRoute.concat(authRoute, pageRoute)
 
 console.log(baseRoute)

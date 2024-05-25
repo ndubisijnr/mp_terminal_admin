@@ -1,4 +1,4 @@
-import {RouteConstantUtil} from "../../util/constant/RouteConstantUtil.ts";
+import {RouteConstantUtil} from "@/util/constant/RouteConstantUtil.ts";
 import {BaseRouteProps} from "./base-route.ts";
 import NoPageFoundView from "../../view/page/NoPageFoundView.vue";
 export const pageRoute: BaseRouteProps[] = [
