@@ -4,7 +4,7 @@
     :animate="{opacity: 1, x: 0}"
     :transition="{duration: 0.5}"
   >
-    <div class="container ">
+    <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
           <img src="@/assets/icon/logo.svg" alt="logo" >

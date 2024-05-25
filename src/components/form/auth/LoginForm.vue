@@ -2,7 +2,7 @@
   <div class="form-container mx-auto">
     <h1 class=" font-[800] text-[37px] font-inter-Medium">Login</h1>
     <p class="text-[16px] leading-[25px]" >Welcome back! Please fill in the correct details.</p>
-    <form class="">
+    <form class="" @submit.prevent="toDashboard">
       <base-input placeholder="Enter your email"  label="Email"/>
       <base-input  placeholder="....." label="Password"/>
       <div class="forgot-password-container">
@@ -21,6 +21,11 @@
 import BaseInput from "@/components/input/BaseInput.vue";
 import BaseCheckbox from "@/components/checkbox/BaseCheckbox.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
+import {router} from "@/router/index";
+
+function toDashboard() {
+  router.push({path:'/dashboard'});
+}
 </script>
 
 <style scoped >
