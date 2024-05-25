@@ -7,7 +7,9 @@ export const pageRoute: BaseRouteProps[] = [
         path: "/:catchAll(.*)",
         component: NoPageFoundView,
         meta: {
-            auth: false
+            authRequired: false,
+            layout:'dashboard',
+            sub_title:'No Page matched'
         }
     }
 ]

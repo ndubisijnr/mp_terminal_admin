@@ -10,19 +10,19 @@ import ManageCharges from "../../assets/icon/sidebar-icon/check-square.svg"
 
 export const  SidebarTopUtils = [
 
-    {name:"Dashboard", icon:Dashboard},
-    {name:"Transaction", icon:Card},
-    {name:"Terminals", icon:""},
-    {name:"Manage Charges", icon:ManageCharges},
-    {name:"Users", icon:Users},
-    {name:"Logs", icon:""},
+    {name:"Dashboard", icon:Dashboard, active:'active-nav', route:'/dashboard'},
+    {name:"Transaction", icon:Card,active:'active-nav', route:'/transaction'},
+    {name:"Terminals", icon:"",active:'active-nav', route:'/terminals'},
+    {name:"Manage Charges", icon:ManageCharges,active:'active-nav', route:'/charges'},
+    {name:"Users", icon:Users,active:'active-nav', route:'/users'},
+    {name:"Logs", icon:"",active:'active-nav', route:'/logs'},
 
 ]
 
 export const  SidebarBottomUtils = [
 
-    {name:"Support", icon:""},
-    {name:"Settings", icon:Setting},
-    {name:"Log out", icon:Logout},
+    {name:"Support", icon:"",active:'active-nav', route:'/support'},
+    {name:"Settings", icon:Setting,active:'active-nav', route:'/settings'},
+    {name:"Log out", icon:Logout,active:'active-nav', route:'/login'},
 
 ]

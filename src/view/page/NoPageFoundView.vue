@@ -1,5 +1,4 @@
 <template>
-  <h1>No Page Found</h1>
 </template>
 
 <script setup lang="ts">

@@ -6,12 +6,13 @@ export type BaseRouteProps = {
     name: string,
     path: string,
     component: object,
-    meta: Meta
+    meta: Meta,
 }
 
 type Meta = {
     authRequired: boolean,
     layout: string,
+    sub_title:string
 }
 
 // Variable initialRoute implicitly has type any[] in some locations where its type cannot be determined.

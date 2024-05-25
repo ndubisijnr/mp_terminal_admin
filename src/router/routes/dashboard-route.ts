@@ -5,7 +5,7 @@ export const dashboardRoute: BaseRouteProps[] = [
         name: RouteConstantUtil.dashboard.homePage,
         path: '/dashboard',
         component: () => import("@/view/dashboard/HomePageView.vue"),
-        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard'}
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, manage your transactions in real time!'},
     },
 
 ]

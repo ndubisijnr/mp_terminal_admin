@@ -4,7 +4,6 @@ import BaseTable from "@/components/table/BaseTable.vue";
 import Chart from 'primevue/chart';
 
 import { ref, onMounted } from "vue";
-import {Motion} from "motion/vue";
 
 onMounted(() => {
   chartData.value = setChartData();
@@ -95,28 +94,9 @@ const setChartOptions = () => {
 </script>
 
 <template>
-  <Motion
-      :initial="{opacity: 0, x: -100}"
-      :animate="{opacity: 1, x: 0}"
-      :transition="{duration: 0.5}"
-  >
-
+ 
 
   <div class="content">
-    <div class="content-header">
-      <div>
-        <h3 class="text-4xl text-black mb-0.5">Dashboard</h3>
-        <p class="text-sm">Track, manage your transactions in real time!</p>
-      </div>
-      <div class="content-inner-container-right">
-        <img src="@/assets/image/user_logo.svg" alt="">
-        <div>
-          <p>Quickgem</p>
-          <p>quickgemltd@gmail.com</p>
-        </div>
-      </div>
-    </div>
-
     <div class="content-card-section">
       <base-card></base-card>
       <base-card></base-card>
@@ -166,7 +146,6 @@ const setChartOptions = () => {
       <BaseTable></BaseTable>
     </div>
   </div>
-  </Motion>
 </template>
 
 <style scoped>
@@ -219,17 +198,6 @@ const setChartOptions = () => {
   flex-grow: 0;
   cursor:pointer;
 
-}
-
-.content-header{
-  display: flex;
-  justify-content: space-between;
-  padding: 2rem;
-}
-
-.content-inner-container-right{
-  display: flex;
-  align-items: center;
 }
 
 .content-card-section{
