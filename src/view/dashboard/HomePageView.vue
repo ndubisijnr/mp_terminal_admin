@@ -98,10 +98,10 @@ const setChartOptions = () => {
 
   <div class="content">
     <div class="content-card-section">
-      <base-card></base-card>
-      <base-card></base-card>
-      <base-card></base-card>
-      <base-card></base-card>
+      <base-card text="Total Transaction" amount="2,420"></base-card>
+      <base-card text="Successfull Transaction" amount="1198"></base-card>
+      <base-card text="Pending Transaction" amount="502"></base-card>
+      <base-card text="Failed Transaction" amount="32"></base-card>
     </div>
 
     <div class="content-chart-section">
