@@ -2,8 +2,11 @@
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import Dropdown from 'primevue/dropdown';
-import { reactive } from 'vue';
-const emit = defineEmits(['close']);
+import { reactive, defineEmits } from 'vue';
+
+const emit = defineEmits<{
+  (e: 'close', value: boolean): void;
+}>();
 
 
 
