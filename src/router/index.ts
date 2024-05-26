@@ -37,7 +37,7 @@ router.beforeEach(async (routeTo, routeFrom, next) => {
     }
 });
 
-router.beforeResolve(async (routeTo, routeFrom, next) => {
+router.beforeResolve(async (routeTo:any, routeFrom:any, next:(...args: any[]) => void) =>  {
     // Create a `beforeResolve` hook, which fires whenever
     // `beforeRouteEnter` and `beforeRouteUpdate` would. This
     // allows us to ensure data is fetched even when params change,
@@ -47,11 +47,11 @@ router.beforeResolve(async (routeTo, routeFrom, next) => {
     try {
         // For each matched route...
         for (const route of routeTo.matched) {
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
                 // If a `beforeResolve` hook is defined, call it with
                 // the same arguments as the `beforeEnter` hook.
                 if (route.meta && route.meta.beforeResolve) {
-                    route.meta.beforeResolve(routeTo, routeFrom, (...args:any[]) => {
+                    route.meta.beforeResolve(routeTo, routeFrom, (...args:any[]) =>  {
                         // If the userManagement chose to redirect...
                         if (args.length) {
                             // If redirecting to the same route we're coming from...

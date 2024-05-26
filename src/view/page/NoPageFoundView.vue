@@ -2,8 +2,7 @@
 </template>
 
 <script setup lang="ts">
-import documentTitle from "@/util/helper/documentTitle.ts";
-import getEnv from "@/util/helper/getEnv.ts";
+// import documentTitle from "@/util/helper/documentTitle.ts";
 
-documentTitle(`Page Not Found | ${getEnv("VITE_APP_NAME")}`)
+// documentTitle(`Page Not Found | ${getEnv("VITE_APP_NAME")}`)
 </script>

@@ -1,8 +1,8 @@
 
- export default function getEnv(key: string) {
-    return import.meta.env[key]
-}
+//  export default function getEnv(key: string) {
+//     return import.meta.env[key]
+// }
 
-function env(key: string){
-    return process.env
-}
+// function env(key: string){
+//     return process.env
+// }
