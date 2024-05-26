@@ -19,11 +19,6 @@ function close(){
 }
 
 
-function sendRequest(){
-    data.isRequestSent = true
-}
-
-
 
 
 </script>
