@@ -98,10 +98,10 @@ const setChartOptions = () => {
 
   <div class="content">
     <div class="content-card-section">
-      <base-card></base-card>
-      <base-card></base-card>
-      <base-card></base-card>
-      <base-card></base-card>
+      <base-card text="Total Transaction" amount="2,420"></base-card>
+      <base-card text="Successfull Transaction" amount="1198"></base-card>
+      <base-card text="Pending Transaction" amount="502"></base-card>
+      <base-card text="Failed Transaction" amount="32"></base-card>
     </div>
 
     <div class="content-chart-section">
@@ -141,7 +141,6 @@ const setChartOptions = () => {
       <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
         <p class="text-xl text-black">Recent Transaction</p>
         <img src="../../assets/icon/alert-circle.svg" />
-
       </div>
       <BaseTable></BaseTable>
     </div>

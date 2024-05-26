@@ -37,7 +37,7 @@ documentTitle(`Login | ${getEnv("VITE_APP_NAME")}`)
   .min-container{
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
+    background-color: var(--light-bgcolor);
   }
   .img-container{
     width: 100%;

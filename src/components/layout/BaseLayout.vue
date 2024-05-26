@@ -63,6 +63,7 @@ const getCurrentRouteSubTitle = computed(() => {
           
         </div>
       </div>
+      
         <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login'}">
         
           <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">
@@ -74,8 +75,8 @@ const getCurrentRouteSubTitle = computed(() => {
               <div class="content-inner-container-right">
                 <img src="@/assets/image/user_logo.svg" alt="">
                 <div>
-                  <p>Quickgem</p>
-                  <p>quickgemltd@gmail.com</p>
+                  <p>Purple Pay</p>
+                  <p>support@purplepay.com</p>
                 </div>
               </div>
             </div>
@@ -95,7 +96,6 @@ const getCurrentRouteSubTitle = computed(() => {
   }
 
   .sidebar-menubar{
-    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -131,7 +131,6 @@ const getCurrentRouteSubTitle = computed(() => {
 .dashboard-main{
   width: calc(100% - 294px);
   min-height: 100%;
-  position: relative;
 }
 
 .authView{
@@ -142,13 +141,12 @@ const getCurrentRouteSubTitle = computed(() => {
 
 .sidebar-wrapper{
   width: 294px;
-  background-color: var(--bizgem_primary);
+  background-color: var(--light_primary);
   display: block;
   transition: ease-in 0.3s;
   /* Sidebar navigation */
   padding: 25px;
   min-height: inherit;
-  position: relative;
 
   /* Bizgem primary */
 

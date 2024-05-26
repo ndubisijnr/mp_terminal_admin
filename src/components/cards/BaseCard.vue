@@ -1,12 +1,16 @@
 <script setup lang="ts">
+ defineProps({
+  text:String,
+  amount:String,
 
+ })
 </script>
 
 <template>
   <div class="base-card">
-    <p class="base-card-title">Total Transaction</p>
+    <p class="base-card-title">{{ text }}</p>
 
-    <p class="base-card-amount">2,043</p>
+    <p class="base-card-amount">{{ amount }}</p>
   </div>
 
 </template>
