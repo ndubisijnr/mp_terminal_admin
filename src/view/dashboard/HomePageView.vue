@@ -141,7 +141,6 @@ const setChartOptions = () => {
       <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
         <p class="text-xl text-black">Recent Transaction</p>
         <img src="../../assets/icon/alert-circle.svg" />
-
       </div>
       <BaseTable></BaseTable>
     </div>

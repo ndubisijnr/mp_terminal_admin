@@ -42,31 +42,47 @@ html{
 
 :root{
     /* base colors for this project */
+    --light_primary:#3F88C5;
+    --dark_color: #000;
+    --light_color:#fff;
+    --light-bgcolor: #fafafa;
 
-    --bizgem_primary:#3F88C5;
-    color: #000;
-    background-color: #fafafa;
+
+    /* transistions */
+    --tran-02:all 0.2 ease;
+    --tran-03:all 0.3 ease;
+    --tran-04:all 0.4 ease;
+    --tran-05:all 0.5 ease;
+
 
 }
 
 
 body{
     height: 100vh;
-    background-color: #fff;
-    color: #000;
+    background-color: var(--light-bgcolor);
+    color: var(--dark_color);
+    transition:var(--tran-02) ;
+}
+
+body.purple{
+    --light_primary:#bc17d9;
+    --dark_color: #000;
+    --light_color:#fff;
+    --light-bgcolor: #fafafa;
 }
 
 
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
-        background-color: #ffffff;
+        background-color: var(--light-bgcolor);
     }
     a:hover {
-        color: #747bff;
+        color: var(--light_primary);
     }
     button {
-        background-color: #f9f9f9;
+        background-color: var(--light-bgcolor);
     }
 }
 
