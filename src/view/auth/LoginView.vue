@@ -8,6 +8,7 @@
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
           <img src="../../assets/icon/main-logo.57311ad2.svg" alt="logo" >
+
         </div>
         <login-form />
       </div>
