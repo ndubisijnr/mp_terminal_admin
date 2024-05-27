@@ -44,7 +44,7 @@ function assignTerminal(){
           </div>
         
         </div>
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+        <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
           <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
             <img src="../../assets/icon/Group 2.svg" />
             <p class="bnt-trans-text">Assgin Terminal</p>
@@ -98,7 +98,7 @@ align-items: center;
 padding: 10px 14px;
 gap: 8px;
 
-width: 320px;
+width: 100%;
 height: 44px;
 
 /* White */

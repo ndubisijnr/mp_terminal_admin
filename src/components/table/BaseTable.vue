@@ -24,6 +24,7 @@
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">12344586998BIZ </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">
           <span>05-11-2023</span>
+          <br />
           <span>10:42:10am</span>
         </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">
@@ -38,7 +39,7 @@
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">Transfer </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">12344586998BIZ </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">
-          <span>05-11-2023</span>
+          <span>05-11-2023</span> <br />
           <span>10:42:10am</span>
         </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">
@@ -58,6 +59,38 @@
         </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">
           <span class="p-1.5 text-xs font-medium uppercase text-green-800 bg-green-300 rounded-lg bg-opacity-50 tracking-wider">Approved</span>
+        </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">View receipt</td>
+      </tr>
+      <tr class="bg-white">
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">N2000</td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">BIZ1234567A</td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">Transfer </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">12344586998BIZ </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">
+          <span>05-11-2023</span>
+          <br />
+          <span>10:42:10am</span>
+        </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">
+          <span class="p-1.5 text-xs font-medium uppercase text-orange-600 bg-orange-200 rounded-lg bg-opacity-50 tracking-wider">Pending</span>
+
+        </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">View receipt</td>
+      </tr>
+      <tr class="bg-gray">
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">N2000</td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">BIZ1234567A</td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">Transfer </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">12344586998BIZ </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">
+          <span>05-11-2023</span>
+          <br />
+          <span>10:42:10am</span>
+        </td>
+        <td class="whitespace-nowrap p-3 text-sm text-gray-700">
+          <span class="p-1.5 text-xs font-medium uppercase text-orange-600 bg-orange-200 rounded-lg bg-opacity-50 tracking-wider">Pending</span>
+
         </td>
         <td class="whitespace-nowrap p-3 text-sm text-gray-700">View receipt</td>
       </tr>
