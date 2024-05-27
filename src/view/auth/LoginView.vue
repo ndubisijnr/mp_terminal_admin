@@ -13,8 +13,7 @@
         <login-form />
       </div>
       <div class="min-container">
-        <img class="img-container" src="../../assets/image/section.png" alt="logo1">
-
+        <img class="img-container" src="../../assets/image/section-terminal.png" alt="logo1">
       </div>
     </div>
   </Motion>
