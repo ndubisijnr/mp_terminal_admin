@@ -7,13 +7,12 @@
     <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
-          <!-- <img src="@/assets/icon/logo.svg" alt="logo" > -->
-          <p class="font-[800] text-[37px] font-inter-Medium">Purple Pay Logo</p>
+          <img src="@/assets/icon/main-logo.57311ad2.svg" alt="logo" >
         </div>
         <login-form />
       </div>
       <div class="min-container">
-        <img class="img-container" src="@/assets/image/payment-terminal.png" alt="logo">
+        <img class="img-container" src="@/assets/image/section.png" alt="logo">
       </div>
     </div>
   </Motion>
@@ -32,12 +31,13 @@ import { Motion } from "motion/vue"
     min-width: 100%;
     height: 100vh;
     display: flex;
-    overflow: hidden;
+
   }
   .min-container{
     width: 100%;
     height: 100%;
     background-color: var(--light-bgcolor);
+    overflow: scroll;
   }
   .img-container{
     width: 100%;
