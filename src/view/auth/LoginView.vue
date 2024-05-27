@@ -7,12 +7,14 @@
     <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
-          <img src="@/assets/icon/main-logo.57311ad2.svg" alt="logo" >
+          <img src="../../assets/icon/main-logo.57311ad2.svg" alt="logo" >
+
         </div>
         <login-form />
       </div>
       <div class="min-container">
-        <img class="img-container" src="@/assets/image/section.png" alt="logo1">
+        <img class="img-container" src="../../assets/image/section.png" alt="logo1">
+
       </div>
     </div>
   </Motion>
