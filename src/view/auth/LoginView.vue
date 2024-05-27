@@ -10,10 +10,9 @@
           <img src="../../assets/icon/main-logo.57311ad2.svg" alt="logo" >
         </div>
         <login-form />
+
       </div>
-      <div class="min-container">
-        <img class="img-container" src="../../assets/image/section-terminal.png" alt="logo1">
-      </div>
+      <div class="min-container bg-image"></div>
     </div>
   </Motion>
 </template>
@@ -27,21 +26,26 @@ import { Motion } from "motion/vue"
 </script>
 
 <style scoped>
+
   .container{
     min-width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-
+    background-color: var(--light-bgcolor);
   }
   .min-container{
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--light-bgcolor);
-    overflow: scroll;
+  }
+
+  .bg-image{
+    background-image: url('../../assets/image/section-terminal.png');
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .img-container{
     width: 100%;
     height: 100%;
-    transform: scale(1);
   }
 </style>
