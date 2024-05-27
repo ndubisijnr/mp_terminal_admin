@@ -92,6 +92,7 @@ const getCurrentRouteSubTitle = computed(() => {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 100px;
     height: calc(100% - 30%);
   }
 
@@ -117,13 +118,14 @@ const getCurrentRouteSubTitle = computed(() => {
   width: 100%;
   background-color: #fff !important;
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
 
 }
 
 .dashboard-main{
   width: calc(100% - 294px);
   min-height: 100%;
+  overflow: scroll;
 }
 
 .authView{
@@ -139,7 +141,7 @@ const getCurrentRouteSubTitle = computed(() => {
   transition: ease-in 0.3s;
   /* Sidebar navigation */
   padding: 25px;
-  min-height: inherit;
+  height: 100vh;
 
   /* Bizgem primary */
 
@@ -255,5 +257,11 @@ flex-grow: 0; */
     min-height: 100%;
   }
 
+}
+
+@media (max-width: 700px) {
+  .dashboard-wrapper-layout{
+    display: none;
+  }
 }
 </style>
