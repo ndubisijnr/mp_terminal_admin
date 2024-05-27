@@ -38,7 +38,7 @@ const getCurrentRouteSubTitle = computed(() => {
     
       <div class="sidebar-wrapper" :class="{'no-sidebar':getCurrentRoute === 'Login'}">
         <div class="sidebar-wrapper-header">
-          <img class="logo" src="../../assets/icon/logo_white.svg" alt="">
+          <img class="logo" src="../../assets/icon/quickgem.svg" alt="">
         </div>
         <div class="search-wrapper">
           <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
@@ -68,10 +68,10 @@ const getCurrentRouteSubTitle = computed(() => {
                 <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
                 <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
               </div>
-              <div class="content-inner-container-right">
-                <img src="../../assets/icon/main-logo.57311ad2.svg" alt="">
+              <!-- <div class="content-inner-container-right">
+                <img src="../../assets/icon/logo.svg" alt="">
               
-              </div>
+              </div> -->
             </div>
 
             <slot name="children"></slot>
