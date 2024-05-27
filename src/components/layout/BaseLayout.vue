@@ -125,7 +125,7 @@ const getCurrentRouteSubTitle = computed(() => {
 .dashboard-main{
   width: calc(100% - 294px);
   min-height: 100%;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .authView{
@@ -142,12 +142,14 @@ const getCurrentRouteSubTitle = computed(() => {
   /* Sidebar navigation */
   padding: 25px;
   height: 100vh;
+  overflow: auto;
 
   /* Bizgem primary */
 
   /* Inside auto layout */
 
 }
+
 
 
 .sidebar-top-nav{
