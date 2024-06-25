@@ -1,0 +1,410 @@
+<!-- <script setup lang="ts">
+import {computed, onMounted} from "vue";
+import {router} from "@/router/index";
+import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
+import { reactive } from "vue";
+// import StoreUtils from "@/util/storeUtils";
+import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
+
+const authRoute:any = ['Login','Register','InitiateForgotPassword']
+
+
+const data = reactive({
+  mounting:true
+})
+
+const getCurrentRoute:any = computed(() => {
+  return router.currentRoute.value.name
+
+})
+
+const getCurrentRoutePath = computed(() => {
+  return router.currentRoute.value.fullPath
+
+})
+
+
+
+
+onMounted(() => {
+
+  setTimeout(() => {
+    data.mounting = false    
+  
+  },500)
+  
+  
+})
+
+</script>
+
+<template>
+
+    <div class="loading-wrapper" v-if="data?.mounting"></div>
+    <div class="dashboard-wrapper-layout" v-else v-cloak>
+    
+      {{ getCurrentRoute }}
+      <div class="sidebar-wrapper" :class="{'no-sidebar': !getCurrentRoute.includes(authRoute)}">
+        <div class="sidebar-wrapper-header">
+          <img class="logo" src="../../assets/icon/cropped.png" alt="">
+        </div>
+        <div class="search-wrapper">
+          <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
+        </div>
+
+        <div class="sidebar-menubar">
+
+          <div class="sidebar-top-nav">
+            <router-link  :to='i.route' v-for="(i, index) in SidebarTopUtils" :key="index" class="nav-item-base" :class="{'active-nav':getCurrentRoutePath === i.route}">
+              <img :src="i.icon" alt=""/>
+              <p>{{i.name}}</p>
+            </router-link>
+          </div>
+            <div class="sidebar-bottom-nav">
+            <router-link  :to='i.route' v-for="(i, index) in SidebarBottomUtils" :key="index" class="nav-item-base">
+              <img :src="i.icon"/>
+              <p>{{i.name}}</p>
+            </router-link>
+          </div>
+          
+        </div>
+      </div>
+      
+      <div class="dashboard-main" :class="{'authView': getCurrentRoute.includes(authRoute)}">
+          <ContentHeader v-if="getCurrentRoute.includes(authRoute)"/>
+          <slot name="children"></slot>
+      
+      </div>
+    
+    </div>
+
+</template>
+
+<style scoped>
+[v-cloak] {
+    display: none;
+  }
+
+  .sidebar-menubar{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 100px;
+    height: calc(100% - 30%);
+  }
+
+  .hideShow{
+    display: none;
+  }
+
+
+
+.logo{
+  width: 150px;
+  height: 5px;
+}
+
+
+  .loading-wrapper{
+    width: 100%;
+    min-height: 100vh;
+    background-color: #fff;
+  }
+.dashboard-wrapper-layout{
+  width: 100%;
+  background-color: #fff !important;
+  display: flex;
+  height: 100vh;
+
+}
+
+.dashboard-main{
+  width: calc(100% - 294px);
+  min-height: 100%;
+  overflow: auto;
+}
+
+.authView{
+  width: 100% !important;
+}
+
+
+
+.sidebar-wrapper{
+  width: 294px;
+  background-color: var(--light_primary);
+  display: block;
+  transition: ease-in 0.3s;
+  /* Sidebar navigation */
+  padding: 25px;
+  height: 100vh;
+  overflow: auto;
+
+  /* Bizgem primary */
+
+  /* Inside auto layout */
+
+}
+
+
+
+.sidebar-top-nav{
+  width: 100%;
+}
+
+.sidebar-bottom-nav{
+  width: 100%;
+}
+
+.search-input{
+  /* Input */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 10.5px 14.7px;
+gap: 8.4px;
+
+width: 100%;
+height: 47px;
+
+background: rgba(167, 196, 222, 0.02);
+/* White */
+border: 1.05px solid #F7F7F7;
+box-shadow: 0px 1.05px 2.1px rgba(16, 24, 40, 0.05);
+border-radius: 8.4px;
+margin: 25px 0;
+
+/* Inside auto layout */
+flex: none;
+/* order: 0;
+align-self: stretch;
+flex-grow: 0; */
+
+}
+
+.search-input::placeholder{
+  color: #fff;
+}
+
+
+.nav-item-base{
+  /* _Nav item base */
+
+  /* Auto layout */
+  display: flex;
+  align-items: center;
+  padding: 8.4px 12.6px;
+  gap: .4rem;
+
+  width: 100%;
+  height: 42px;
+  /* Text */
+
+  font-style: normal;
+  font-weight: 700;
+  line-height: 25px;
+  /* identical to box height, or 150% */
+
+  /* Gray/100 */
+  color: #fff;
+
+  margin-bottom: 12px;
+  cursor: pointer;
+
+}
+
+.nav-item-base:hover{
+  background-color: #0F3E5F;
+  color: #fafafa;
+  font-weight: 700;
+  background: #0F3E5F;
+  border-radius: 6.3px;
+
+}
+
+.active-nav{
+  background-color: #0F3E5F;
+  color: #fafafa;
+  font-weight: 700;
+  background: #0F3E5F;
+  border-radius: 6.3px;
+}
+
+.no-sidebar{
+  width: 0;
+  opacity:0;
+  background-color: #fff;
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-wrapper{
+    display: none;
+
+  }
+
+}
+
+@media (max-width: 1024px) {
+  .dashboard-main{
+    width: 100%;
+    min-height: 100%;
+  }
+
+}
+
+@media (max-width: 700px) {
+  .dashboard-wrapper-layout{
+    display: none;
+  }
+}
+</style> -->
+
+
+<script setup lang="ts">
+import { computed, onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtils.ts';
+import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
+
+const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
+
+const router = useRouter();
+
+const data = reactive({
+  mounting: true
+});
+
+const getCurrentRoute = computed(() => router.currentRoute.value.name);
+const getCurrentRoutePath = computed(() => router.currentRoute.value.fullPath);
+
+const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
+
+onMounted(() => {
+  setTimeout(() => {
+    data.mounting = false;
+  }, 500);
+});
+</script>
+
+<template>
+  <div class="loading-wrapper" v-if="data.mounting"></div>
+  <div class="dashboard-wrapper-layout" v-else v-cloak>
+    <div class="sidebar-wrapper" :class="{ 'no-sidebar': isAuthRoute }">
+      <div class="sidebar-wrapper-header">
+        <img class="logo" src="../../assets/icon/cropped.png" alt="">
+      </div>
+      <div class="search-wrapper">
+        <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
+      </div>
+      <div class="sidebar-menubar">
+        <div class="sidebar-top-nav">
+          <router-link
+            :to="i.route"
+            v-for="(i, index) in SidebarTopUtils"
+            :key="index"
+            class="nav-item-base"
+            :class="{ 'active-nav': getCurrentRoutePath === i.route }"
+          >
+            <img :src="i.icon" alt="" />
+            <p>{{ i.name }}</p>
+          </router-link>
+        </div>
+        <div class="sidebar-bottom-nav">
+          <router-link
+            :to="i.route"
+            v-for="(i, index) in SidebarBottomUtils"
+            :key="index"
+            class="nav-item-base"
+          >
+            <img :src="i.icon" />
+            <p>{{ i.name }}</p>
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-main" :class="{ 'authView': isAuthRoute }">
+      <ContentHeader v-if="!isAuthRoute" />
+      <slot name="children"></slot>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+[v-cloak] {
+  display: none;
+}
+
+.sidebar-menubar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 100px;
+  height: calc(100% - 30%);
+}
+
+.hideShow {
+  display: none;
+}
+
+.logo {
+  width: 150px;
+  height: 5px;
+}
+
+.loading-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.dashboard-wrapper-layout {
+  width: 100%;
+  background-color: #fff !important;
+  display: flex;
+  height: 100vh;
+}
+
+.dashboard-main {
+  width: calc(100% - 294px);
+  min-height: 100%;
+  overflow: auto;
+}
+
+.authView {
+  width: 100% !important;
+}
+
+.sidebar-wrapper {
+  width: 294px;
+  background-color: var(--light_primary);
+  display: block;
+  transition: ease-in 0.3s;
+  padding: 25px;
+  height: 100vh;
+  overflow: auto;
+}
+
+.sidebar-top-nav,
+.sidebar-bottom-nav {
+  width: 100%;
+}
+
+.search-input {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10.5px 14.7px;
+  gap: 8.4px;
+  width: 100%;
+  height: 47px;
+  background: rgba(167, 196, 222, 0.02);
+ 
+}
+
+</style>

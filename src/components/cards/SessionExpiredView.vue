@@ -1,91 +1,31 @@
 <script setup lang="ts">
-import {computed, onMounted} from "vue";
 import {router} from "@/router/index";
-import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
-import { reactive } from "vue";
+import MazDialog from 'maz-ui/components/MazDialog'
+import MazBtn from "maz-ui/components/MazBtn";
+// import StoreUtils from "@/util/storeUtils";
 
 
-const data = reactive({
-  mounting:true
-})
+// const sessionExpired = StoreUtils.getter()?.auth.getSessionExpired
 
 
+function toLogin(){
+router.push({path:'/login'})
+}
 
-const getCurrentRoute:any = computed(() => {
-  return router.currentRoute.value.name
-
-})
-
-const getCurrentRoutePath = computed(() => {
-  return router.currentRoute.value.fullPath
-
-})
-
-const getCurrentRouteSubTitle = computed(() => {
-  return router.currentRoute.value?.meta.sub_title
-
-})
-
-
-onMounted(() => {
-
-  setTimeout(() => {
-    data.mounting = false    
-  
-  },500)
-  
-  
-})
 
 </script>
 
 <template>
-    <div class="loading-wrapper" v-if="data?.mounting"></div>
-    <div class="dashboard-wrapper-layout" v-else v-cloak>
-    
-      <div class="sidebar-wrapper" :class="{'no-sidebar': getCurrentRoute === 'Login' || getCurrentRoute === 'Register'|| getCurrentRoute === 'InitiateForgotPassword'}">
-        <div class="sidebar-wrapper-header">
-          <img class="logo" src="../../assets/icon/quickgem.svg" alt="">
-        </div>
-        <div class="search-wrapper">
-          <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
-        </div>
-
-        <div class="sidebar-menubar">
-
-          <div class="sidebar-top-nav">
-            <router-link  :to='i.route' v-for="(i, index) in SidebarTopUtils" :key="index" class="nav-item-base" :class="{'active-nav':getCurrentRoutePath === i.route}">
-              <img :src="i.icon" alt=""/>
-              <p>{{i.name}}</p>
-            </router-link>
-          </div>
-            <div class="sidebar-bottom-nav">
-            <router-link  :to='i.route' v-for="(i, index) in SidebarBottomUtils" :key="index" class="nav-item-base">
-              <img :src="i.icon"/>
-              <p>{{i.name}}</p>
-            </router-link>
-          </div>
-          
-        </div>
-      </div>
-      
-        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login' || getCurrentRoute === 'Register' || getCurrentRoute === 'InitiateForgotPassword'}">
-          <div class="content-header" v-if="getCurrentRoute !== 'Login' && getCurrentRoute !== 'Register' && getCurrentRoute !== 'InitiateForgotPassword'">
-              <div>
-                <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
-                <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
-              </div>
-              <!-- <div class="content-inner-container-right">
-                <img src="../../assets/icon/logo.svg" alt="">
-              
-              </div> -->
-            </div>
-
-            <slot name="children"></slot>
-        
-        </div>
-    
-    </div>
+  <MazDialog title="Session Expired">
+    <p>
+      Session Expired Please Login Again
+    </p>
+    <template #footer="{ close }">
+      <MazBtn @click="toLogin">
+        Confirm
+      </MazBtn>
+    </template>
+  </MazDialog>
 
 </template>
 

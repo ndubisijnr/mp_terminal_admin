@@ -3,17 +3,25 @@ import BaseCard from "../../components/cards/BaseCard.vue";
 import BaseTable from "@/components/table/BaseTable.vue";
 import Chart from 'primevue/chart';
 import {Motion} from "motion/vue";
-import { ref, onMounted, computed } from "vue";
-import { useToast} from 'maz-ui'
+import { ref, onMounted } from "vue";
+import { useToast, useWait} from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
+import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
+import BaseLayout from "../layout/BaseLayout.vue";
 
 const toast = useToast()
+const wait = useWait()
+
 const user = StoreUtils.getter()?.auth.user
 
-onMounted(() => {
+onMounted(async () => {
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
-  if(!user)StoreUtils?.getter()?.auth?.userDetails(toast)
+  if(!user){
+    wait.start()
+    await StoreUtils?.getter()?.auth?.userDetails(toast)
+    wait.stop()
+  }
 });
 
 const chartData = ref();
@@ -97,64 +105,73 @@ const setChartOptions = () => {
   };
 }
 
+
 </script>
 
 <template>
- <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
-        
-  <div class="content">
-    <div class="content-card-section">
-      <base-card text="Total Transaction" amount="2,420"></base-card>
-      <base-card text="Successfull Transaction" amount="1198"></base-card>
-      <base-card text="Pending Transaction" amount="502"></base-card>
-      <base-card text="Failed Transaction" amount="32"></base-card>
-    </div>
+  <MazFullscreenLoader style="position: fixed;z-index: 9999;" v-if="wait.isLoading()">
+      <p>
+        Loading...
+      </p>
+    </MazFullscreenLoader>
 
-    <div class="content-chart-section">
-      <div style="display: flex; align-items: center; justify-content: space-between;margin:25px 0">
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">Statistics</p>
+
+  <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
+    <div class="content">
+      <div class="content-card-section">
+        <base-card text="Total Transaction" amount="2,420"></base-card>
+        <base-card text="Successfull Transaction" amount="1198"></base-card>
+        <base-card text="Pending Transaction" amount="502"></base-card>
+        <base-card text="Failed Transaction" amount="32"></base-card>
+      </div>
+
+      <div class="content-chart-section">
+        <div style="display: flex; align-items: center; justify-content: space-between;margin:25px 0">
+          <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+            <p class="text-xl text-black">Statistics</p>
+            <img src="../../assets/icon/alert-circle.svg" />
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
+              <p class="circle-sm"></p>
+              <p>Success</p>
+            </div>
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
+              <p class="circle-sm pending"></p>
+              <p>Pending</p>
+            </div>
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
+              <p class="circle-sm failed"></p>
+              <p>Failed</p>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+            <span>Filter by:</span>
+            <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">
+              <img src="../../assets/icon/Ic.svg" alt="">
+              <p>July 12, 2021 - August 10, 2021</p>
+
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <Chart type="line" :data="chartData" :options="chartOptions" class="h-30rem" />
+        </div>
+      </div>
+
+
+      <div class="content-table-section">
+        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+          <p class="text-xl text-black">Recent Transaction</p>
           <img src="../../assets/icon/alert-circle.svg" />
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm"></p>
-            <p>Success</p>
-          </div>
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm pending"></p>
-            <p>Pending</p>
-          </div>
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm failed"></p>
-            <p>Failed</p>
-          </div>
         </div>
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <span>Filter by:</span>
-          <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">
-            <img src="../../assets/icon/Ic.svg" alt="">
-            <p>July 12, 2021 - August 10, 2021</p>
-
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <Chart type="line" :data="chartData" :options="chartOptions" class="h-30rem" />
+        <BaseTable></BaseTable>
       </div>
     </div>
-
-
-    <div class="content-table-section">
-      <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
-        <p class="text-xl text-black">Recent Transaction</p>
-        <img src="../../assets/icon/alert-circle.svg" />
-      </div>
-      <BaseTable></BaseTable>
-    </div>
-  </div>
-</Motion>
+  </Motion> 
+  
 </template>
 
 <style scoped>
+
 .content{
   background-color: white;
 }

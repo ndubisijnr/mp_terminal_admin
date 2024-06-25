@@ -21,9 +21,9 @@ const pinia = createPinia()
 const app = createApp(App)
 app.use(installToaster, toasterOptions)
 app.use(installWait)
-app.use(router)
 app.use(PrimeVue)
 app.use(pinia)
+app.use(router)
 
 
 app.mount("#app")

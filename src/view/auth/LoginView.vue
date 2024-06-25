@@ -7,8 +7,9 @@
     <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
-          <img src="../../assets/icon/logo.svg" alt="logo" >
+          <img class="logo shadow-lg" src="../../assets/icon/cropped.png" alt="">
         </div>
+       
         <login-form />
 
       </div>
@@ -26,6 +27,14 @@ import { Motion } from "motion/vue"
 </script>
 
 <style scoped>
+.logo{
+  @apply bg-primary;
+  width: 150px;
+  height: 57px;
+  padding: 10px;
+  border-bottom-right-radius: 2rem;
+}
+
 
   .container{
     min-width: 100%;

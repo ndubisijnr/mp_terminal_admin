@@ -79,6 +79,13 @@ body.biz{
     --light-bgcolor: #fafafa;
 }
 
+body.maintms{
+    --light_primary:#032B43;
+    --dark_color: #000;
+    --light_color:#fff;
+    --light-bgcolor: #fafafa;
+}
+
 
 
 @media (prefers-color-scheme: light) {

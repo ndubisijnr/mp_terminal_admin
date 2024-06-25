@@ -1,7 +1,6 @@
 import axios from "axios";
 import appConfig from "../config/app-config"
-
-export let isTimedOut = false
+import StoreUtils from "@/util/storeUtils";
 
 export const appClient = axios.create({
     baseURL: appConfig.baseUrl,
@@ -33,29 +32,31 @@ appClient.interceptors.request.use(config => {
     return config
 })
 
-// appClient.interceptors.response.use(response => {
-//     if (response != null) {
-//         if (response.data != null) {
-//             if (response.data.responseCode === '115') {
-//                 // localStorage.clear();
-//                 // let timerInterval
-//                 if (router.currentRoute.meta.layout !== "auth"){
-//                     isTimedOut = true
-//                     localStorage.clear()
-//                     StoreUtils.dispatch(StoreUtils.actions.auth.logOut,{customerEmail: StoreUtils.rootGetters(StoreUtils.getters.auth.getUserInfo).customerEmail}).then()
-//                     // Swal.fire({
-//                     //   title: 'Session timed out',
-//                     //   html: 'Please re-authenticate',
-//                     //   icon:"info",
-//                     // })
-//                     //     .then((result) => {
-//                     // })
-//                 }
-//             }
-//         }
-//     }
-//     return response
-// });
+appClient.interceptors.response.use(response => {
+    if (response != null) {
+        if (response.data != null) {
+            if (response.data.responseCode === '26') {
+                // StoreUtils.getter().auth.commitSessionStory(true)
+                // sessionStorage.removeItem('token')
+                // localStorage.clear();
+                // let timerInterval
+                // if (router.currentRoute.meta.layout !== "auth"){
+                //     isTimedOut = true
+                //     localStorage.clear()
+                //     StoreUtils.dispatch(StoreUtils.actions.auth.logOut,{customerEmail: StoreUtils.rootGetters(StoreUtils.getters.auth.getUserInfo).customerEmail}).then()
+                //     // Swal.fire({
+                //     //   title: 'Session timed out',
+                //     //   html: 'Please re-authenticate',
+                //     //   icon:"info",
+                //     // })
+                //     //     .then((result) => {
+                //     // })
+                // }
+            }
+        }
+    }
+    return response
+});
 
 
 export const apiClient = {
