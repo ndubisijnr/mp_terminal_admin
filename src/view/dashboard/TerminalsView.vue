@@ -45,14 +45,16 @@ function assignTerminal(){
         
         </div>
         <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-          <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
+          <!-- <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
             <img src="../../assets/icon/Group 2.svg" />
             <p class="bnt-trans-text">Assgin Terminal</p>
            
-          </BaseButton>
+          </BaseButton> -->
           <BaseButton @click="requestTerminal">
+            <div style="display: flex;align-items: center;gap: 5px;">
             <img src="../../assets/icon/Folder Add 2.svg" />
-            Request Terminal
+            Create Terminal
+          </div>
           
         </BaseButton>
         </div>

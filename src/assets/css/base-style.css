@@ -72,6 +72,14 @@ body.purple{
     --light-bgcolor: #fafafa;
 }
 
+body.biz{
+    --light_primary:#3F88C5;
+    --dark_color: #000;
+    --light_color:#fff;
+    --light-bgcolor: #fafafa;
+}
+
+
 
 @media (prefers-color-scheme: light) {
     :root {

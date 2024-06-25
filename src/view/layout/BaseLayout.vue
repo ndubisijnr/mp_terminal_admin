@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import {computed, onMounted} from "vue";
-import {router} from "@/router/index";
+import {router} from "@/router";
 import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
 import { reactive } from "vue";
+
 
 const data = reactive({
   mounting:true
 })
 
-onMounted(() => {
-  setTimeout(() => {
-    data.mounting = false
-  },500)
-  
-})
 
-const getCurrentRoute = computed(() => {
+
+const getCurrentRoute:any = computed(() => {
   return router.currentRoute.value.name
 
 })
@@ -30,15 +26,24 @@ const getCurrentRouteSubTitle = computed(() => {
 
 })
 
+
+onMounted(() => {
+
+  setTimeout(() => {
+    data.mounting = false    
+  
+  },500)
+  
+  
+})
 </script>
 
 <template>
     <div class="loading-wrapper" v-if="data?.mounting"></div>
-    <div class="dashboard-wrapper-layout" v-else v-cloak>
-    
-      <div class="sidebar-wrapper" :class="{'no-sidebar':getCurrentRoute === 'Login'}">
+      <div class="dashboard-wrapper-layout" v-else v-cloak>
+      <div class="sidebar-wrapper" :class="{'no-sidebar': getCurrentRoute === 'Login' || getCurrentRoute === 'Register'|| getCurrentRoute === 'InitiateForgotPassword'}">
         <div class="sidebar-wrapper-header">
-          <img class="logo" src="../../assets/icon/logo_white.svg" alt="">
+          <img class="logo" src="../../assets/icon/quickgem.svg" alt="">
         </div>
         <div class="search-wrapper">
           <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
@@ -54,33 +59,29 @@ const getCurrentRouteSubTitle = computed(() => {
           </div>
             <div class="sidebar-bottom-nav">
             <router-link  :to='i.route' v-for="(i, index) in SidebarBottomUtils" :key="index" class="nav-item-base">
-              <img :src="i.icon"/>
+              <img :src="i.icon"  />
               <p>{{i.name}}</p>
             </router-link>
           </div>
           
         </div>
       </div>
-      
-        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login'}">
-          <div class="content-header" v-if="getCurrentRoute !== 'Login'">
+        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login' || getCurrentRoute === 'Register' || getCurrentRoute === 'InitiateForgotPassword'}">
+          <div class="content-header" v-if="getCurrentRoute !== 'Login' && getCurrentRoute !== 'Register' && getCurrentRoute !== 'InitiateForgotPassword'">
               <div>
                 <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
                 <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
               </div>
-              <div class="content-inner-container-right">
-                <img src="../../assets/icon/main-logo.57311ad2.svg" alt="">
-
+              <!-- <div class="content-inner-container-right">
+                <img src="../../assets/icon/logo.svg" alt="">
               
-              </div>
+              </div> -->
             </div>
 
             <slot name="children"></slot>
         
         </div>
-    
     </div>
-
 </template>
 
 <style scoped>

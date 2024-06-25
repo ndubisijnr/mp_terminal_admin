@@ -59,9 +59,7 @@ function discardRequest(){
 
 
                     <div class="modal-child-footer">
-                        <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="close">
-                            <p class="bnt-trans-text">Cancel</p>
-                        </BaseButton>
+                      
                         <BaseButton @click="sendRequest">Send Request</BaseButton>
 
                     </div>
