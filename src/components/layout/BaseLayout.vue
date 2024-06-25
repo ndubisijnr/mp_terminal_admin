@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, onMounted} from "vue";
-import {router} from "@/router/index";
+import {router} from "@/router";
 import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
 import { reactive } from "vue";
 
@@ -37,7 +37,6 @@ const getCurrentRouteSubTitle = computed(() => {
 <template>
     <div class="loading-wrapper" v-if="data?.mounting"></div>
     <div class="dashboard-wrapper-layout" v-cloak>
-    
       <div class="sidebar-wrapper" :class="{'no-sidebar':getCurrentRoute === 'Login'}">
         <div class="sidebar-wrapper-header">
           <img class="logo" src="@/assets/image/user_logo.svg" alt="">

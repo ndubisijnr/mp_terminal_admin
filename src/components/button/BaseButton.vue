@@ -3,7 +3,7 @@
     :hover="{scale: 1.04, opacity: 0.9}"
     :press="{scale: 0.8}"
   >
-    <button class="container" :style="{backgroundColor:props?.bgColor, border:`solid ${props?.bgBorder}`}">
+    <button type="submit" class="container" :style="{backgroundColor:props?.bgColor, border:`solid ${props?.bgBorder}`}">
       <slot></slot>
     </button>
   </motion>
@@ -16,6 +16,7 @@ const props = defineProps({
   bgColor:String,
   bgBorder:String
 })
+
 </script>
 <style scoped>
   .container{
@@ -32,7 +33,6 @@ const props = defineProps({
 
   }
   button {
-    color: var(--light-color);
     font-size: 16px;
     line-height: 24px;
     color: var(--light_color);

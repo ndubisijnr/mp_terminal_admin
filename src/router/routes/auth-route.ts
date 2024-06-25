@@ -10,7 +10,7 @@ export const authRoute: BaseRouteProps[] = [
     {
         name: RouteConstantUtil.auth.initiateForgotPassword,
         path: "/initiate/forgetPassword",
-        component: () => import("../../view/auth/InitiateForgotPasswordView.vue"),
+        component: () => import("@/view/auth/InitiateForgotPasswordView.vue"),
         meta: {authRequired: RouteConstantUtil.auth.authRequired,layout:'auth',sub_title:''}
     },
 ]

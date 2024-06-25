@@ -7,7 +7,7 @@
       <base-input  placeholder="....." label="Password"/>
       <div class="forgot-password-container">
         <base-checkbox label="Remember for 30 days" />
-        <p class="sign-up cursor-pointer"><a>Forgot password</a></p>
+        <p class="sign-up cursor-pointer" v-on:click="navigateToForgotPassword"><a>Forgot password</a></p>
       </div>
 
       <base-button>Sign in</base-button>
@@ -22,9 +22,14 @@ import BaseInput from "@/components/input/BaseInput.vue";
 import BaseCheckbox from "@/components/checkbox/BaseCheckbox.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import {router} from "@/router/index";
+import {RouteConstantUtil} from "@/util/constant/RouteConstantUtil.js";
 
 function toDashboard() {
   router.push({path:'/dashboard'});
+}
+
+function navigateToForgotPassword() {
+  router.push({name: RouteConstantUtil.auth.initiateForgotPassword});
 }
 </script>
 
