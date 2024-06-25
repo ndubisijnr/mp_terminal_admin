@@ -3,18 +3,23 @@
     :hover="{scale: 1.04, opacity: 0.9}"
     :press="{scale: 0.8}"
   >
-    <button class="container" :style="{backgroundColor:props?.bgColor, border:`solid ${props?.bgBorder}`}">
-      <slot></slot>
-    </button>
+    <MazBtn class="container" :color="loadingColor" :loading="loading" :type="type"><slot></slot></MazBtn>
   </motion>
 </template>
 
 <script setup>
 import {Motion} from "motion/vue";
+import MazBtn from 'maz-ui/components/MazBtn'
+import { color } from "chart.js/helpers";
+
 
 const props = defineProps({
-  bgColor:String,
-  bgBorder:String
+  class:String,
+  bgBorder:String,
+  type:String,
+  loading:Boolean,
+  loadingColor:String,
+
 })
 </script>
 <style scoped>
@@ -23,11 +28,12 @@ const props = defineProps({
     /* @apply bg-primary my-6; */
     width: 100%;
     border-radius: 8px;
-    background-color: var(--light_primary);
+    background-color: var(--light_primary) !important;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    color: #fff !important;
     padding: 10px;
 
   }

@@ -11,6 +11,6 @@ export const RouteConstantUtil = {
     dashboard:{
         homePage: "Dashboard",
         teminalPage:"Terminals",
-        authRequired:false
+        authRequired:true
     }
 }

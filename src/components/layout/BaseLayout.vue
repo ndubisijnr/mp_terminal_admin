@@ -4,18 +4,14 @@ import {router} from "@/router/index";
 import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
 import { reactive } from "vue";
 
+
 const data = reactive({
   mounting:true
 })
 
-onMounted(() => {
-  setTimeout(() => {
-    data.mounting = false
-  },500)
-  
-})
 
-const getCurrentRoute = computed(() => {
+
+const getCurrentRoute:any = computed(() => {
   return router.currentRoute.value.name
 
 })
@@ -30,13 +26,24 @@ const getCurrentRouteSubTitle = computed(() => {
 
 })
 
+
+onMounted(() => {
+
+  setTimeout(() => {
+    data.mounting = false    
+  
+  },500)
+  
+  
+})
+
 </script>
 
 <template>
     <div class="loading-wrapper" v-if="data?.mounting"></div>
     <div class="dashboard-wrapper-layout" v-else v-cloak>
     
-      <div class="sidebar-wrapper" :class="{'no-sidebar':getCurrentRoute === 'Login'}">
+      <div class="sidebar-wrapper" :class="{'no-sidebar': getCurrentRoute === 'Login' || getCurrentRoute === 'Register'|| getCurrentRoute === 'InitiateForgotPassword'}">
         <div class="sidebar-wrapper-header">
           <img class="logo" src="../../assets/icon/quickgem.svg" alt="">
         </div>
@@ -62,8 +69,8 @@ const getCurrentRouteSubTitle = computed(() => {
         </div>
       </div>
       
-        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login'}">
-          <div class="content-header" v-if="getCurrentRoute !== 'Login'">
+        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login' || getCurrentRoute === 'Register' || getCurrentRoute === 'InitiateForgotPassword'}">
+          <div class="content-header" v-if="getCurrentRoute !== 'Login' && getCurrentRoute !== 'Register' && getCurrentRoute !== 'InitiateForgotPassword'">
               <div>
                 <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
                 <p class="text-sm">{{getCurrentRouteSubTitle}}</p>

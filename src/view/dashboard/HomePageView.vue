@@ -3,11 +3,17 @@ import BaseCard from "../../components/cards/BaseCard.vue";
 import BaseTable from "@/components/table/BaseTable.vue";
 import Chart from 'primevue/chart';
 import {Motion} from "motion/vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useToast} from 'maz-ui'
+import StoreUtils from "@/util/storeUtils";
+
+const toast = useToast()
+const user = StoreUtils.getter()?.auth.user
 
 onMounted(() => {
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
+  if(!user)StoreUtils?.getter()?.auth?.userDetails(toast)
 });
 
 const chartData = ref();
