@@ -7,14 +7,13 @@
     <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
-          <!-- <img src="@/assets/icon/logo.svg" alt="logo" > -->
-          <p class="font-[800] text-[37px] font-inter-Medium">Purple Pay Logo</p>
+          <img src="../../assets/icon/main-logo.57311ad2.svg" alt="logo" >
+
         </div>
         <login-form />
+
       </div>
-      <div class="min-container">
-        <img class="img-container" src="@/assets/image/payment-terminal.png" alt="logo">
-      </div>
+      <div class="min-container bg-image"></div>
     </div>
   </Motion>
 </template>
@@ -28,20 +27,26 @@ import { Motion } from "motion/vue"
 </script>
 
 <style scoped>
+
   .container{
     min-width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
-    overflow: hidden;
+    background-color: var(--light-bgcolor);
   }
   .min-container{
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     background-color: var(--light-bgcolor);
+  }
+
+  .bg-image{
+    background-image: url('../../assets/image/section-terminal.png');
+    background-repeat: no-repeat;
+    background-size: cover;
   }
   .img-container{
     width: 100%;
     height: 100%;
-    transform: scale(1);
   }
 </style>

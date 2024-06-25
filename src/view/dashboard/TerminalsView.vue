@@ -4,6 +4,8 @@ import BaseButton from '@/components/button/BaseButton.vue';
 import RequestTerminal from '@/components/modal/terminal/RequestTerminal.vue';
 import { reactive } from 'vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
+import {Motion} from "motion/vue";
+
 
 const data = reactive({
   showRequestTerminal:false,
@@ -29,6 +31,7 @@ function assignTerminal(){
 <template>
     <RequestTerminal v-if="data.showRequestTerminal" @close="handleClose" />
     <AssignTerminal v-if="data.showAssignTerminal" @close="handleClose"/>
+    <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
 
     <div class="content-table-section">
         <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
@@ -41,7 +44,7 @@ function assignTerminal(){
           </div>
         
         </div>
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+        <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
           <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
             <img src="../../assets/icon/Group 2.svg" />
             <p class="bnt-trans-text">Assgin Terminal</p>
@@ -57,6 +60,7 @@ function assignTerminal(){
      
         <BaseTable></BaseTable>
     </div>
+    </Motion>
 </template>
 
 <style scoped>
@@ -94,7 +98,7 @@ align-items: center;
 padding: 10px 14px;
 gap: 8px;
 
-width: 320px;
+width: 100%;
 height: 44px;
 
 /* White */

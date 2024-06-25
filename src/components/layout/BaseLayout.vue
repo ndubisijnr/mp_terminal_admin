@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import {computed, onMounted} from "vue";
-import {router} from "@/router";
+import {router} from "@/router/index";
 import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
 import { reactive } from "vue";
-
-import {Motion} from "motion/vue";
 
 const data = reactive({
   mounting:true
@@ -36,10 +34,11 @@ const getCurrentRouteSubTitle = computed(() => {
 
 <template>
     <div class="loading-wrapper" v-if="data?.mounting"></div>
-    <div class="dashboard-wrapper-layout" v-cloak>
+    <div class="dashboard-wrapper-layout" v-else v-cloak>
+    
       <div class="sidebar-wrapper" :class="{'no-sidebar':getCurrentRoute === 'Login'}">
         <div class="sidebar-wrapper-header">
-          <img class="logo" src="@/assets/image/user_logo.svg" alt="">
+          <img class="logo" src="../../assets/icon/logo_white.svg" alt="">
         </div>
         <div class="search-wrapper">
           <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
@@ -64,25 +63,20 @@ const getCurrentRouteSubTitle = computed(() => {
       </div>
       
         <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login'}">
-        
-          <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">
-            <div class="content-header" v-if="getCurrentRoute !== 'Login'">
+          <div class="content-header" v-if="getCurrentRoute !== 'Login'">
               <div>
                 <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
                 <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
               </div>
               <div class="content-inner-container-right">
-                <img src="@/assets/image/user_logo.svg" alt="">
-                <div>
-                  <p>Purple Pay</p>
-                  <p>support@purplepay.com</p>
-                </div>
+                <img src="../../assets/icon/main-logo.57311ad2.svg" alt="">
+
+              
               </div>
             </div>
 
             <slot name="children"></slot>
         
-          </Motion>
         </div>
     
     </div>
@@ -98,6 +92,7 @@ const getCurrentRouteSubTitle = computed(() => {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 100px;
     height: calc(100% - 30%);
   }
 
@@ -123,13 +118,14 @@ const getCurrentRouteSubTitle = computed(() => {
   width: 100%;
   background-color: #fff !important;
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
 
 }
 
 .dashboard-main{
   width: calc(100% - 294px);
   min-height: 100%;
+  overflow: auto;
 }
 
 .authView{
@@ -145,13 +141,15 @@ const getCurrentRouteSubTitle = computed(() => {
   transition: ease-in 0.3s;
   /* Sidebar navigation */
   padding: 25px;
-  min-height: inherit;
+  height: 100vh;
+  overflow: auto;
 
   /* Bizgem primary */
 
   /* Inside auto layout */
 
 }
+
 
 
 .sidebar-top-nav{
@@ -261,5 +259,11 @@ flex-grow: 0; */
     min-height: 100%;
   }
 
+}
+
+@media (max-width: 700px) {
+  .dashboard-wrapper-layout{
+    display: none;
+  }
 }
 </style>

@@ -2,7 +2,7 @@
 import BaseCard from "../../components/cards/BaseCard.vue";
 import BaseTable from "@/components/table/BaseTable.vue";
 import Chart from 'primevue/chart';
-
+import {Motion} from "motion/vue";
 import { ref, onMounted } from "vue";
 
 onMounted(() => {
@@ -94,8 +94,8 @@ const setChartOptions = () => {
 </script>
 
 <template>
- 
-
+ <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
+        
   <div class="content">
     <div class="content-card-section">
       <base-card text="Total Transaction" amount="2,420"></base-card>
@@ -145,6 +145,7 @@ const setChartOptions = () => {
       <BaseTable></BaseTable>
     </div>
   </div>
+</Motion>
 </template>
 
 <style scoped>
