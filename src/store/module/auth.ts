@@ -1,12 +1,22 @@
 import { defineStore } from 'pinia'
 import AuthController from '../../service/AuthController.js'
 import {router} from "@/router";
+import StoreUtils from '@/util/storeUtils.js';
+import {LoginResponse} from "@/models/response/auth/LoginResponse.ts";
 
+export type AuthType = {
+    loading: boolean,
+    data: any[],
+    userInfo: LoginResponse,
+    enrolmentStage:'1'|'2',
+    passwordResetStage:'1'|'2',
+    sessionExpired:boolean
+}
 export const useAuthStore = defineStore('auth_store', {
-    state: () => ({
+    state: (): AuthType => ({
         loading: false,
-        data:null,
-        user:null,
+        data:[] as any[],
+        userInfo:{} as LoginResponse,
         enrolmentStage:'1',
         passwordResetStage:'1',
         sessionExpired:false
@@ -14,7 +24,7 @@ export const useAuthStore = defineStore('auth_store', {
 
     getters: {
         getData:state => state.data,
-        getUser:state => state.user,
+        getUserInfo:state => state.userInfo,
         getLoading: state => state.loading,
         getEnrolmentStage: state => state.enrolmentStage,
         getPasswordResetStage: state => state.passwordResetStage,
@@ -22,16 +32,13 @@ export const useAuthStore = defineStore('auth_store', {
     },
 
     actions: {
-
         commitSessionStory(payload:any){
             this.sessionExpired = payload
         },
-    
+
         async initiateEnrolment(payload:any, toast:any){
             const response = await AuthController.initiateEnrolment(payload)
             const responseData = response.data
-
-
             try{
                 if(responseData.responseCode === '00'){
                     this.enrolmentStage = '2'
@@ -65,11 +72,11 @@ export const useAuthStore = defineStore('auth_store', {
             const redirectRoute = router.currentRoute.value.query.redirectFrom
             console.log(redirectRoute)
             sessionStorage.setItem('token', responseData.token)
-
             try{
                 if(responseData.responseCode === '00'){
-                    this.user = responseData
-                    router.push({path: router.currentRoute.value.query.redirectFrom ?  router.currentRoute.value.query.redirectFrom : '/dashboard'})
+                    this.userInfo = responseData
+                    await router.push({path: router.currentRoute.value.query.redirectFrom ? router.currentRoute.value.query.redirectFrom : '/dashboard'})
+                    StoreUtils.getter()?.organisation.readCustomerOrganisation(responseData.userId)
                 }else{
                     toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
                 }
@@ -111,8 +118,8 @@ export const useAuthStore = defineStore('auth_store', {
 
             try{
                 if(responseData.responseCode === '00'){
-                    this.user = responseData
-                    console.log(this.user)
+                    this.userInfo = responseData
+                    console.log(this.userInfo)
                 }else if(responseData.responseCode === '22'){
                     toast.error('Session Expired', {
                         action: {

@@ -21,11 +21,10 @@
 <script setup>
 
 import BaseInput from "@/components/input/BaseInput.vue";
-import BaseCheckbox from "@/components/checkbox/BaseCheckbox.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import {router} from "@/router/index";
-import AuthRequest from "@/models/AuthRequest"
-import StoreUtiils from "@/util/storeUtils"
+import AuthRequest from "@/models/request/AuthRequest.js"
+import StoreUtils from "@/util/storeUtils.ts"
 import { useToast, useWait } from 'maz-ui'
 
 const toast = useToast()
@@ -39,7 +38,7 @@ function toForgetPassword() {
 async function login(){
   console.log(AuthRequest.LoginRequest)
   wait.start('DATA_SUBMITTING')
-  await StoreUtiils.getter()?.auth.login(AuthRequest.LoginRequest, toast, wait)
+  await StoreUtils.getter()?.auth.login(AuthRequest.LoginRequest, toast, wait)
   wait.stop('DATA_SUBMITTING')
 }
 

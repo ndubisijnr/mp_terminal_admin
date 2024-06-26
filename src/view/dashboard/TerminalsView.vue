@@ -2,19 +2,18 @@
 import BaseTable from '@/components/table/BaseTable.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import RequestTerminal from '@/components/modal/terminal/RequestTerminal.vue';
-import { reactive } from 'vue';
+import {computed, onMounted, reactive} from 'vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
 import {Motion} from "motion/vue";
-
-
-
+import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
+import stores from "@/store";
+import StoreUtils from "@/util/storeUtils.ts";
 const data = reactive({
   showRequestTerminal:false,
   showAssignTerminal:false
 })
 
-
-
+const terminalOrganizes = computed(()=> StoreUtils.getter()?.terminal.terminalOrganizes)
 
 function handleClose(payload:any) {
   data.showRequestTerminal = payload;
@@ -27,14 +26,23 @@ function requestTerminal(){
 }
 function assignTerminal(){
   data.showAssignTerminal = !data.showAssignTerminal
-
 }
+
+
+function init() {
+  console.log('Auth', StoreUtils.getter()?.auth.getUserInfo.userRoleId)
+  StoreUtils.getter()?.terminal.readOrganizationTerminal(StoreUtils.getter()?.auth.getUserInfo.userId?.toString() ?? "")
+}
+
+init()
+
 </script>
 
 <template>
     <RequestTerminal v-if="data.showRequestTerminal" @close="handleClose" />
     <AssignTerminal v-if="data.showAssignTerminal" @close="handleClose"/>
     <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
+      <ContentHeader />
 
     <div class="content-table-section">
         <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
@@ -62,8 +70,12 @@ function assignTerminal(){
         </BaseButton>
         </div>
         </div>
-     
-        <BaseTable></BaseTable>
+
+        <BaseTable
+            :bodies="[{items: [terminalOrganizes?.data?.terminalId?.toString() ?? '', terminalOrganizes?.data?.terminalId?.toString() ?? '', terminalOrganizes?.data?.terminalId?.toString() ?? ''], action: ''}]"
+            :headers="['Terminal ID', 'Terminals Assigned', 'Wallet I.D', 'Business Manager', 'Phone Number', 'Merchant I.D']"
+        ></BaseTable>
+
     </div>
     </Motion>
 </template>

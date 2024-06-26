@@ -5,14 +5,14 @@ import Chart from 'primevue/chart';
 import {Motion} from "motion/vue";
 import { ref, onMounted } from "vue";
 import { useToast, useWait} from 'maz-ui'
-import StoreUtils from "@/util/storeUtils";
+import StoreUtils from "@/util/storeUtils.ts";
 import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
-import BaseLayout from "../layout/BaseLayout.vue";
+import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 
 const toast = useToast()
 const wait = useWait()
 
-const user = StoreUtils.getter()?.auth.user
+const user = StoreUtils.getter()?.auth.userInfo
 
 onMounted(async () => {
   chartData.value = setChartData();
@@ -117,6 +117,7 @@ const setChartOptions = () => {
 
 
   <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
+    <ContentHeader  />
     <div class="content">
       <div class="content-card-section">
         <base-card text="Total Transaction" amount="2,420"></base-card>
