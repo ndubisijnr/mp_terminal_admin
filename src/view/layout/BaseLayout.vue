@@ -81,6 +81,9 @@ onMounted(() => {
     justify-content: space-between;
     gap: 100px;
     height: calc(100% - 30%);
+    transform: scale(.9);
+    transform-origin:0 0;
+
   }
 
   .hideShow{

@@ -76,9 +76,9 @@
   import {router} from "@/router/index";
   import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
   import { reactive, ref } from 'vue'
-  import AuthRequest from "@/models/request/AuthRequest.js";
+  import AuthRequest from "@/models/request/AuthRequest.ts";
   import { useToast, useWait } from 'maz-ui'
-import StoreUtils from "@/util/storeUtils.js";
+import StoreUtils from "@/util/storeUtils.ts";
 
   const toast = useToast()
   const wait = useWait()

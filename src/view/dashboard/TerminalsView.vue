@@ -2,18 +2,17 @@
 import BaseTable from '@/components/table/BaseTable.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import RequestTerminal from '@/components/modal/terminal/RequestTerminal.vue';
-import {computed, onMounted, reactive} from 'vue';
+import {computed, reactive} from 'vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
 import {Motion} from "motion/vue";
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
-import stores from "@/store";
 import StoreUtils from "@/util/storeUtils.ts";
 const data = reactive({
   showRequestTerminal:false,
   showAssignTerminal:false
 })
 
-const terminalOrganizes = computed(()=> StoreUtils.getter()?.terminal.terminalOrganizes)
+const terminalOrganizes = computed(()=> StoreUtils.getter()?.terminal?.getTerminalOrganizes)
 
 function handleClose(payload:any) {
   data.showRequestTerminal = payload;
@@ -24,14 +23,10 @@ function requestTerminal(){
   data.showRequestTerminal = !data.showRequestTerminal
 
 }
-function assignTerminal(){
-  data.showAssignTerminal = !data.showAssignTerminal
-}
-
 
 function init() {
   console.log('Auth', StoreUtils.getter()?.auth.getUserInfo.userRoleId)
-  StoreUtils.getter()?.terminal.readOrganizationTerminal(StoreUtils.getter()?.auth.getUserInfo.userId?.toString() ?? "")
+  StoreUtils.getter()?.terminal?.getOrganizationTerminal(StoreUtils.getter()?.auth.getUserInfo.userId?.toString() ?? "")
 }
 
 init()

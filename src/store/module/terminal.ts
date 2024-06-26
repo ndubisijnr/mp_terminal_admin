@@ -18,7 +18,7 @@ export const useTerminalStore = defineStore('terminal_store', {
     },
 
     actions: {
-        async readOrganizationTerminal(payload: string){
+        async getOrganizationTerminal(payload: string){
             const response = await TerminalController.readOrganizationTerminal(payload)
             const responseData = response.data
             console.log('readOrganizationTerminal', response)

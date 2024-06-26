@@ -28,7 +28,7 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         },
 
         async createOrganisation(payload:any, toast:any){
-            const response = await OrganizationController.createOrganisation(payload)
+            const response = await OrganisationController.createOrganisation(payload)
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){

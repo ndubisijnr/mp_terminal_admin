@@ -1,7 +1,7 @@
 import { apiClient } from "./BaseService.js"
 export default {
-    readUsers(payload){
-        return apiClient.appClient.post(`/dev/terminal/read`, payload)
+    readUsers(){
+        return apiClient.appClient.get(`/dev/user/read`)
     },
     
 }

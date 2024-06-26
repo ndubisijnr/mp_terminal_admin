@@ -23,7 +23,7 @@
 import BaseInput from "@/components/input/BaseInput.vue";
 import BaseButton from "@/components/button/BaseButton.vue";
 import {router} from "@/router/index";
-import AuthRequest from "@/models/request/AuthRequest.js"
+import AuthRequest from "@/models/request/AuthRequest.ts"
 import StoreUtils from "@/util/storeUtils.ts"
 import { useToast, useWait } from 'maz-ui'
 

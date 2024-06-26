@@ -1,10 +1,12 @@
 <script setup lang="ts">
-
-console.log(props.headers)
+const props = defineProps<{
+  headers: string[],
+  bodies: {items: string[], action: {}}[]
+}>()
 </script>
 
 <template>
-  <!-- <div class="overflow-auto rounded-lg shadow">
+   <div class="overflow-auto rounded-lg shadow">
     <table class="w-full border-b-2">
     <thead class="bg-white-50 border-white-200">
      <tr class="bg-white">
@@ -31,8 +33,8 @@ console.log(props.headers)
     <div>
 
     </div>
-  </div> -->
-  <div class="overflow-auto rounded-lg shadow">
+  </div>
+ <!-- <div class="overflow-auto rounded-lg shadow">
     <table class="w-full border-b-2">
       <thead class="bg-white-50 border-white-200">
         <tr class="bg-white">
@@ -51,7 +53,7 @@ console.log(props.headers)
       <div v-else class="p-3  text-sm text-gray-700 py-5 text-center">No data available.</div>
 
     </table>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>

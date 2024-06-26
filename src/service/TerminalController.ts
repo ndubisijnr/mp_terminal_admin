@@ -1,7 +1,7 @@
 import { apiClient } from "./BaseService.ts"
 export  class  TerminalController {
     static readTerminals(){
-        return apiClient.appClient.post(`/dev/terminal/read`)
+        return apiClient.appClient.get(`/dev/terminal/read`)
     }
 
     static createTerminal(payload: any){
