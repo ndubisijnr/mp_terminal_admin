@@ -1,7 +1,8 @@
 import { apiClient } from "./BaseService"
-export default {
-    readOrganisation(organisationCustomerId){
+
+export const OrganisationController = {
+    readOrganisation(organisationCustomerId: string){
         return apiClient.appClient.get(`/dev/organisation/read-by-organisation-customer-id/${organisationCustomerId}`)
     },
-    
+
 }

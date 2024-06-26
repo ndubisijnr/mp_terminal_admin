@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import OrganizationController from "@/service/OrganisationController"
+import {OrganisationController} from "@/service/OrganisationController.ts";
 
 export const useOrganisationStore = defineStore('organisation_Store', {
     state: () => ({
@@ -13,12 +13,9 @@ export const useOrganisationStore = defineStore('organisation_Store', {
     },
 
     actions: {
-
-    
         async readCustomerOrganisation(payload:any){
-            const response = await OrganizationController.readOrganisation(payload)
+            const response = await OrganisationController.readOrganisation(payload)
             const responseData = response.data
-
 
             try{
                 if(responseData.responseCode === '00'){

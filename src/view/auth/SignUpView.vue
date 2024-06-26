@@ -36,7 +36,7 @@
   import CompleteEnrolment from "@/components/form/auth/CompleteEnrolment.vue"
   import { Motion } from "motion/vue"
   import { ref, computed } from "vue";
-import StoreUtils from "@/util/storeUtils";
+import StoreUtils from "@/util/storeUtils.ts";
 
   const stage = ref('1')
 

@@ -5,14 +5,14 @@ import Chart from 'primevue/chart';
 import {Motion} from "motion/vue";
 import { ref, onMounted } from "vue";
 import { useToast, useWait} from 'maz-ui'
-import StoreUtils from "@/util/storeUtils";
+import StoreUtils from "@/util/storeUtils.ts";
 import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 
 const toast = useToast()
 const wait = useWait()
 
-const user = StoreUtils.getter()?.auth.user
+const user = StoreUtils.getter()?.auth.userInfo
 
 onMounted(async () => {
   chartData.value = setChartData();

@@ -6,8 +6,8 @@ import App from './App.vue'
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/aura-light-green/theme.css'
 import 'maz-ui/css/main.css'
-import { createPinia } from 'pinia'
 import { installToaster, ToasterOptions, installWait} from 'maz-ui'
+import pinia from "@/util/PiniaUtil.ts";
 
 
 // DEFAULT OPTIONS
@@ -17,14 +17,12 @@ const toasterOptions: ToasterOptions = {
     persistent: false,
   }
 
-const pinia = createPinia()
 const app = createApp(App)
-const routeApp = router
 app.use(installToaster, toasterOptions)
 app.use(installWait)
 app.use(PrimeVue)
 app.use(pinia)
-app.use(routeApp)
+app.use(router)
 
 
 app.mount("#app")

@@ -1,6 +1,5 @@
 import axios from "axios";
 import appConfig from "../config/app-config"
-import StoreUtils from "@/util/storeUtils";
 
 export const appClient = axios.create({
     baseURL: appConfig.baseUrl,
