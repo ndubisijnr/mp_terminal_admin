@@ -7,7 +7,7 @@
  import MazLoadingBar from 'maz-ui/components/MazLoadingBar'
 import {computed, onMounted, ref, reactive} from "vue";
 import {router} from "@/router/index";
-import StoreUtils from "@/util/storeUtils";
+import StoreUtils from "@/util/storeUtils.ts";
 import { useWait } from 'maz-ui';
 // import Dialog from 'primevue/dialog';
 import BaseButton from '../button/BaseButton.vue';
@@ -26,7 +26,7 @@ const data = reactive({
 })
 
 const user = computed(() => {
-  return StoreUtils.getter()?.auth.getUser
+  return StoreUtils.getter()?.auth.getUserInfo
 })
 
 const organisation = computed(() => {
@@ -34,7 +34,7 @@ const organisation = computed(() => {
 })
 
 const userFullName = computed(() => {
-  return StoreUtils.getter()?.auth.getUser?.userFirstName + ' ' +  StoreUtils.getter()?.auth.getUser?.userLastName
+  return StoreUtils.getter()?.auth.getUserInfo?.userFirstName + ' ' +  StoreUtils.getter()?.auth.getUserInfo?.userLastName
 })
 
 
@@ -43,7 +43,7 @@ async function getCustomerOrganisation(){
   data.isOpen = true 
   console.log(user)
   wait.start('READ_ORGANISATION')
-  await StoreUtils.getter()?.organisation.readCustomerOrganisation(user?.value.userId)
+  await StoreUtils.getter()?.organisation.readCustomerOrganisation(user.value?.userId)
   wait.stop('READ_ORGANISATION')
 }
 

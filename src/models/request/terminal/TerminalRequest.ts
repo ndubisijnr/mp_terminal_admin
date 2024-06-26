@@ -1,18 +1,18 @@
 class TerminalRequest {
     static createTerminal= {
-        tId: NULL,
+        tId: null,
         terminalAccountNumber: null,
         terminalCallHomeTimeInHours: null,
-        terminalCardAcceptorId: NULL,
+        terminalCardAcceptorId: null,
         terminalCountryCode: null,
         terminalCurrencyCode: null,
         terminalMcc: null,
         terminalMerchantNameLocation: null,
-        terminalOrganisationId: NULL,
+        terminalOrganisationId: null,
         terminalPin: null,
         terminalSerialNumber: null,
         terminalTimeOutInSeconds: null,
-        tid: NULL
+        tid: null
       }
 }
 

@@ -15,5 +15,5 @@ export const RouteConstantUtil = {
         merchants:"Merchants",
         charges:"Manage Charges",
         authRequired:true
-    }
+    },
 }
