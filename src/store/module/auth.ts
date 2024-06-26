@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import AuthController from '../../service/AuthController.js'
 import {router} from "@/router/index";
+import StoreUtils from '@/util/storeUtils.js';
 
 export const useAuthStore = defineStore('auth_store', {
     state: () => ({
@@ -69,7 +70,9 @@ export const useAuthStore = defineStore('auth_store', {
             try{
                 if(responseData.responseCode === '00'){
                     this.user = responseData
-                    router.push({path:router.currentRoute.value.query.redirectFrom ? router.currentRoute.value.query.redirectFrom : '/dashboard'})
+                    await router.push({path:router.currentRoute.value.query.redirectFrom ? router.currentRoute.value.query.redirectFrom : '/dashboard'})
+                    StoreUtils.getter()?.organisation.readCustomerOrganisation(responseData.userId)
+
                 }else{
                     toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
                 }

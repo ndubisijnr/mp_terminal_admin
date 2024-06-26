@@ -5,6 +5,7 @@ import RequestTerminal from '@/components/modal/terminal/RequestTerminal.vue';
 import { reactive } from 'vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
 import {Motion} from "motion/vue";
+import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 
 
 
@@ -35,6 +36,7 @@ function assignTerminal(){
     <RequestTerminal v-if="data.showRequestTerminal" @close="handleClose" />
     <AssignTerminal v-if="data.showAssignTerminal" @close="handleClose"/>
     <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
+      <ContentHeader />
 
     <div class="content-table-section">
         <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">

@@ -19,11 +19,12 @@ const toasterOptions: ToasterOptions = {
 
 const pinia = createPinia()
 const app = createApp(App)
+const routeApp = router
 app.use(installToaster, toasterOptions)
 app.use(installWait)
 app.use(PrimeVue)
 app.use(pinia)
-app.use(router)
+app.use(routeApp)
 
 
 app.mount("#app")
