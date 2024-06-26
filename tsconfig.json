@@ -25,6 +25,9 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/main.js", "src/service/BaseService.js", "src/store/module/auth.ts", "src/store/index.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/main.js",
+    "src/service/BaseService", "src/store/module/auth.ts",
+    "src/store/index"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

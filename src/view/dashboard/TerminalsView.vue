@@ -7,10 +7,13 @@ import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
 import {Motion} from "motion/vue";
 
 
+
 const data = reactive({
   showRequestTerminal:false,
   showAssignTerminal:false
 })
+
+
 
 
 function handleClose(payload:any) {

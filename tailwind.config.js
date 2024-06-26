@@ -14,7 +14,7 @@ export default {
         "inter-SemiBold": ['inter-SemiBold'],
       },
       colors:{
-        primary: "#3F88C5",
+        primary: "#032B43",
         secondary: "#032B43",
         tertiary: "#CEE3FA",
         white: "#F7F7F7",

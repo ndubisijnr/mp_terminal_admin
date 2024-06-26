@@ -1,4 +1,4 @@
-import { apiClient } from "./BaseService"
+import { apiClient } from "./BaseService.ts"
 export default {
     login(payload){
         return apiClient.appClient.post(`/dev/authentication/login`, payload)

@@ -1,15 +1,17 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import {computed, onMounted} from "vue";
-import {router} from "@/router";
+import {router} from "@/router/index";
 import {SidebarTopUtils, SidebarBottomUtils} from "@/util/constant/SidebarUtils.ts";
 import { reactive } from "vue";
+// import StoreUtils from "@/util/storeUtils";
+import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
+
+const authRoute:any = ['Login','Register','InitiateForgotPassword']
 
 
 const data = reactive({
   mounting:true
 })
-
-
 
 const getCurrentRoute:any = computed(() => {
   return router.currentRoute.value.name
@@ -21,10 +23,7 @@ const getCurrentRoutePath = computed(() => {
 
 })
 
-const getCurrentRouteSubTitle = computed(() => {
-  return router.currentRoute.value?.meta.sub_title
 
-})
 
 
 onMounted(() => {
@@ -36,14 +35,18 @@ onMounted(() => {
   
   
 })
+
 </script>
 
 <template>
+
     <div class="loading-wrapper" v-if="data?.mounting"></div>
-      <div class="dashboard-wrapper-layout" v-else v-cloak>
-      <div class="sidebar-wrapper" :class="{'no-sidebar': getCurrentRoute === 'Login' || getCurrentRoute === 'Register'|| getCurrentRoute === 'InitiateForgotPassword'}">
+    <div class="dashboard-wrapper-layout" v-else v-cloak>
+    
+      {{ getCurrentRoute }}
+      <div class="sidebar-wrapper" :class="{'no-sidebar': !getCurrentRoute.includes(authRoute)}">
         <div class="sidebar-wrapper-header">
-          <img class="logo" src="../../assets/icon/quickgem.svg" alt="">
+          <img class="logo" src="../../assets/icon/cropped.png" alt="">
         </div>
         <div class="search-wrapper">
           <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
@@ -59,29 +62,22 @@ onMounted(() => {
           </div>
             <div class="sidebar-bottom-nav">
             <router-link  :to='i.route' v-for="(i, index) in SidebarBottomUtils" :key="index" class="nav-item-base">
-              <img :src="i.icon"  />
+              <img :src="i.icon"/>
               <p>{{i.name}}</p>
             </router-link>
           </div>
           
         </div>
       </div>
-        <div class="dashboard-main" :class="{'authView': getCurrentRoute === 'Login' || getCurrentRoute === 'Register' || getCurrentRoute === 'InitiateForgotPassword'}">
-          <div class="content-header" v-if="getCurrentRoute !== 'Login' && getCurrentRoute !== 'Register' && getCurrentRoute !== 'InitiateForgotPassword'">
-              <div>
-                <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
-                <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
-              </div>
-              <!-- <div class="content-inner-container-right">
-                <img src="../../assets/icon/logo.svg" alt="">
-              
-              </div> -->
-            </div>
-
-            <slot name="children"></slot>
-        
-        </div>
+      
+      <div class="dashboard-main" :class="{'authView': getCurrentRoute.includes(authRoute)}">
+          <ContentHeader v-if="getCurrentRoute.includes(authRoute)"/>
+          <slot name="children"></slot>
+      
+      </div>
+    
     </div>
+
 </template>
 
 <style scoped>
@@ -97,16 +93,15 @@ onMounted(() => {
     height: calc(100% - 30%);
   }
 
-  .content-header{
-  display: flex;
-  justify-content: space-between;
-  padding: 2rem;
-  background-color: #fff;
-}
+  .hideShow{
+    display: none;
+  }
 
-.content-inner-container-right{
-  display: flex;
-  align-items: center;
+
+
+.logo{
+  width: 150px;
+  height: 5px;
 }
 
 
@@ -267,4 +262,149 @@ flex-grow: 0; */
     display: none;
   }
 }
+</style> -->
+
+
+<script setup lang="ts">
+import { computed, onMounted, reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtils.ts';
+import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
+
+const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
+
+const router = useRouter();
+
+const data = reactive({
+  mounting: true
+});
+
+const getCurrentRoute = computed(() => router.currentRoute.value.name);
+const getCurrentRoutePath = computed(() => router.currentRoute.value.fullPath);
+
+const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
+
+onMounted(() => {
+  setTimeout(() => {
+    data.mounting = false;
+  }, 500);
+});
+</script>
+
+<template>
+  <div class="loading-wrapper" v-if="data.mounting"></div>
+  <div class="dashboard-wrapper-layout" v-else v-cloak>
+    <div class="sidebar-wrapper" :class="{ 'no-sidebar': isAuthRoute }">
+      <div class="sidebar-wrapper-header">
+        <img class="logo" src="../../assets/icon/cropped.png" alt="">
+      </div>
+      <div class="search-wrapper">
+        <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
+      </div>
+      <div class="sidebar-menubar">
+        <div class="sidebar-top-nav">
+          <router-link
+            :to="i.route"
+            v-for="(i, index) in SidebarTopUtils"
+            :key="index"
+            class="nav-item-base"
+            :class="{ 'active-nav': getCurrentRoutePath === i.route }"
+          >
+            <img :src="i.icon" alt="" />
+            <p>{{ i.name }}</p>
+          </router-link>
+        </div>
+        <div class="sidebar-bottom-nav">
+          <router-link
+            :to="i.route"
+            v-for="(i, index) in SidebarBottomUtils"
+            :key="index"
+            class="nav-item-base"
+          >
+            <img :src="i.icon" />
+            <p>{{ i.name }}</p>
+          </router-link>
+        </div>
+      </div>
+    </div>
+    <div class="dashboard-main" :class="{ 'authView': isAuthRoute }">
+      <ContentHeader v-if="!isAuthRoute" />
+      <slot name="children"></slot>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+[v-cloak] {
+  display: none;
+}
+
+.sidebar-menubar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 100px;
+  height: calc(100% - 30%);
+}
+
+.hideShow {
+  display: none;
+}
+
+.logo {
+  width: 150px;
+  height: 5px;
+}
+
+.loading-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.dashboard-wrapper-layout {
+  width: 100%;
+  background-color: #fff !important;
+  display: flex;
+  height: 100vh;
+}
+
+.dashboard-main {
+  width: calc(100% - 294px);
+  min-height: 100%;
+  overflow: auto;
+}
+
+.authView {
+  width: 100% !important;
+}
+
+.sidebar-wrapper {
+  width: 294px;
+  background-color: var(--light_primary);
+  display: block;
+  transition: ease-in 0.3s;
+  padding: 25px;
+  height: 100vh;
+  overflow: auto;
+}
+
+.sidebar-top-nav,
+.sidebar-bottom-nav {
+  width: 100%;
+}
+
+.search-input {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10.5px 14.7px;
+  gap: 8.4px;
+  width: 100%;
+  height: 47px;
+  background: rgba(167, 196, 222, 0.02);
+ 
+}
+
 </style>

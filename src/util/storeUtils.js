@@ -1,4 +1,4 @@
-import stores from '../store'
+import stores from '../store/index.js'
 
 class StoreUtils {
 
