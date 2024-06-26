@@ -13,5 +13,23 @@ export const dashboardRoute: BaseRouteProps[] = [
         component: () => import("@/view/dashboard/TerminalsView.vue"),
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, manage your terminals in real time!'},
     },
+    {
+        name: RouteConstantUtil.dashboard.transactions,
+        path: '/transactions',
+        component: () => import("@/view/dashboard/TransactionsView.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage your transactions in real time!'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.merchants,
+        path: '/merchants',
+        component: () => import("@/view/dashboard/MerchantView.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage merchants!'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.charges,
+        path: '/charges',
+        component: () => import("@/view/dashboard/ManageCharges.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage charges!'},
+    },
 
 ]

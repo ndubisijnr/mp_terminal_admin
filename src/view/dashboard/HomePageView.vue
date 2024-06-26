@@ -9,6 +9,7 @@ import StoreUtils from "@/util/storeUtils";
 import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 
+
 const toast = useToast()
 const wait = useWait()
 
@@ -117,7 +118,7 @@ const setChartOptions = () => {
 
 
   <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
-    <ContentHeader  />
+     <ContentHeader  />
     <div class="content">
       <div class="content-card-section">
         <base-card text="Total Transaction" amount="2,420"></base-card>

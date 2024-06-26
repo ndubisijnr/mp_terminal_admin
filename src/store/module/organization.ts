@@ -30,5 +30,19 @@ export const useOrganisationStore = defineStore('organisation_Store', {
             }catch(e){}
         },
 
+        async createOrganisation(payload:any, toast:any){
+            const response = await OrganizationController.createOrganisation(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }else{
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }
+            }catch(e){}
+        },
+
+
     }
 })

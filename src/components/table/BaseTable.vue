@@ -1,9 +1,21 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps({
+  data:Array,
+  headers:Array
+})
+
+// Computed property to get the table headers dynamically
+// const headers = computed(() => {
+//   if (props.data?.length === 0) return [];
+//   return Object.keys(props.data[0]);
+// });
 
 </script>
 
 <template>
-  <div class="overflow-auto rounded-lg shadow">
+  <!-- <div class="overflow-auto rounded-lg shadow">
     <table class="w-full border-b-2">
     <thead class="bg-white-50 border-white-200">
      <tr class="bg-white">
@@ -100,6 +112,26 @@
     <div>
 
     </div>
+  </div> -->
+  <div class="overflow-auto rounded-lg shadow">
+    <table class="w-full border-b-2">
+      <thead class="bg-white-50 border-white-200">
+        <tr class="bg-white">
+          <th v-for="header in props.headers" :key="header" class="p-3 capitalize text-sm font-semibold tracking-wide text-left ">
+            {{ header }}
+          </th>
+        </tr>
+      </thead>
+      <tbody v-if="props.data?.length" class="divide-y divide-gray-200">
+        <tr v-for="(item, index) in props.data" :key="index" :class="index % 2 === 0 ? 'bg-gray' : 'bg-white'">
+          <td v-for="header in props.headers" :key="header" class="whitespace-nowrap p-3 text-sm text-gray-700">
+            {{ item[header] }}
+          </td>
+        </tr>
+      </tbody>
+      <div v-else class="p-3  text-sm text-gray-700 py-5 text-center">No data available.</div>
+
+    </table>
   </div>
 </template>
 
