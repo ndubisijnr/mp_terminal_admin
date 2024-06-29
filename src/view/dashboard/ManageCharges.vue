@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import BaseTable from '@/components/table/BaseTable.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import { reactive, computed, onMounted, ref } from 'vue';
 import {Motion} from "motion/vue";
@@ -14,8 +13,9 @@ import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
 import UpdateManageCharges from '@/components/modal/charges/UpdateManageCharges.vue'
 import MazDialogPromise, {
-    useMazDialogPromise, type DialogCustomButton, type DialogData
+    useMazDialogPromise
   } from 'maz-ui/components/MazDialogPromise'
+// import { DialogCustomButton } from 'maz-ui/types/components/MazDialogPromise/use-maz-dialog-promise.js'; 
 import ChargesRequest from '@/models/request/charges/ChargesRequest';
 import { useToast } from 'maz-ui';
 
@@ -26,7 +26,7 @@ const { showDialogAndWaitChoice, data } = useMazDialogPromise()
 const reactiveData= reactive({
   showManageCharges:false,
   visible:false,
-  selectedRow:null,
+  selectedRow:{} as any,
   showUpdateCharges:false
 })
 
@@ -41,22 +41,22 @@ const organisations = computed(() => {
 
 const menu = ref();
 
-const buttons: DialogCustomButton[] = [
-    {
-      text: 'Cancel',
-      type: 'reject',
-      color: 'danger',
-      response: new Error('cancel'),
-      size: 'sm',
-    },
-    {
-      text: 'Delete!',
-      type: 'resolve',
-      color: 'success',
-      response: 'delete',
-      size: 'lg',
-    },
-  ]
+// const buttons: DialogCustomButton[] = [
+//     {
+//       text: 'Cancel',
+//       type: 'reject',
+//       color: 'danger',
+//       response: new Error('cancel'),
+//       size: 'sm',
+//     },
+//     {
+//       text: 'Delete!',
+//       type: 'resolve',
+//       color: 'success',
+//       response: 'delete',
+//       size: 'lg',
+//     },
+//   ]
 
 
 const onRowSelect = (event:any) => {
@@ -74,13 +74,13 @@ async function askToUser() {
 
       if(responseOne === 'accept'){
        deleteTerminal()
-       await StoreUtils.getter()?.terminal.getOrganizationTerminal(organisations.value?.organisationId)
+       await StoreUtils.getter()?.terminal.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId))
 
       }else{
         console.log(responseOne)
       }
 
-    } catch (error) {
+    } catch (error:any) {
       toast.error(error.message ?? error, {
         position: 'top-right'
       })
@@ -106,13 +106,15 @@ const filters = ref({
     pricingCode: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const toggle = (event) => {
+const toggle = (event:any) => {
     menu.value.toggle(event);
 }
 
+const model:any= ChargesRequest.deleteCharges;
+
 const deleteTerminal = () => {
-  ChargesRequest.deleteCharges.pricingId = reactiveData.selectedRow.pricingId
-  StoreUtils.getter()?.charges.deleteCharges(ChargesRequest.deleteCharges, toast)
+  model.pricingId = JSON.stringify(reactiveData.selectedRow.pricingId)
+  StoreUtils.getter()?.charges.deleteCharges(model, toast)
 }
 
 const items = ref([
@@ -171,7 +173,7 @@ onMounted(() => {
               <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ i }}</p>
           </div>
       </Dialog>
-      <MazDialogPromise :data="dataPromiseOne" identifier="one"/>
+      <MazDialogPromise  identifier="one"/>
     
 
     <AddManageCharges v-if="reactiveData.showManageCharges" @close="handleClose"></AddManageCharges>

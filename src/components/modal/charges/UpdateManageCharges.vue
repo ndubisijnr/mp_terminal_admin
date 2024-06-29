@@ -2,7 +2,7 @@
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import Dropdown from 'primevue/dropdown';
-import { reactive, defineEmits, ref } from 'vue';
+import {defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
@@ -55,29 +55,29 @@ async function addCharges(){
                     <!-- pricingAmount -->
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
-                            <base-input type="text"  v-model="model.pricingAmount" :placeholder="data.pricingAmount"  label="pricingAmount" />
-                            <base-input type="text" v-model="model.pricingCode" :placeholder="data.pricingCode"  label="pricingCode" />
+                            <base-input type="text"  v-model="model.pricingAmount" :placeholder="data?.pricingAmount"  label="pricingAmount" />
+                            <base-input type="text" v-model="model.pricingCode" :placeholder="data?.pricingCode"  label="pricingCode" />
                         </div>
                        
                         
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.pricingMinAmount" :placeholder="data.pricingMinAmount"  label="pricingMinAmount" />
-                            <base-input type="text" v-model="model.pricingMaxAmount" :placeholder="data.pricingMaxAmount"  label="pricingMaxAmount" />
+                            <base-input type="text" v-model="model.pricingMinAmount" :placeholder="data?.pricingMinAmount"  label="pricingMinAmount" />
+                            <base-input type="text" v-model="model.pricingMaxAmount" :placeholder="data?.pricingMaxAmount"  label="pricingMaxAmount" />
                         </div>
 
                         <div class="flex justify-between gap-10 mt-3">
                             <div>
                                 <label>pricingAmountType</label>
-                                <Dropdown optionLabel="name" v-model="model.pricingAmountType" optionValue="code" :placeholder="data.pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown optionLabel="name" v-model="model.pricingAmountType" optionValue="code" :placeholder="data?.pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
                             </div>
                             <div>
                                 <label>pricingType</label>
-                                <Dropdown optionLabel="name" v-model="model.pricingType" optionValue="code" :placeholder="data.pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown optionLabel="name" v-model="model.pricingType" optionValue="code" :placeholder="data?.pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
                             </div>
                         </div>
 
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.pricingDescription" :placeholder="data.pricingDescription"  label="pricingDescription" />
+                            <base-input type="text" v-model="model.pricingDescription" :placeholder="data?.pricingDescription"  label="pricingDescription" />
                         </div>
                     
                     </div>

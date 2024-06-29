@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
-import BaseTable from "@/components/table/BaseTable.vue";
 import { Motion } from "motion/vue";
-import { onMounted, computed, ref, reactive } from "vue";
+import { onMounted, ref, reactive } from "vue";
 import { useToast, useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
 import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Tag from 'primevue/tag';
 import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
@@ -26,7 +24,7 @@ const reactiveData = reactive({
 })
 
 
-const user = StoreUtils.getter()?.auth?.user
+const user = StoreUtils.getter()?.auth?.getUserInfo
 
 const transactions = StoreUtils.getter()?.transactions?.transactions
 
@@ -48,18 +46,18 @@ const onRowSelect = (event: any) => {
 
 const menu = ref()
 
-const getSeverity = (status: string) => {
-  switch (status) {
-    case 'Declined':
-      return 'danger';
+// const getSeverity = (status: string) => {
+//   switch (status) {
+//     case 'Declined':
+//       return 'danger';
 
-    case 'ACTIVE':
-      return 'sucess';
+//     case 'ACTIVE':
+//       return 'sucess';
 
-    case 'Pending':
-      return 'warning';
-  }
-};
+//     case 'Pending':
+//       return 'warning';
+//   }
+// };
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -68,11 +66,9 @@ const filters = ref({
   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const toggle = (event) => {
+const toggle = (event:any) => {
   menu.value.toggle(event);
 }
-
-
 
 const items = ref([
   {

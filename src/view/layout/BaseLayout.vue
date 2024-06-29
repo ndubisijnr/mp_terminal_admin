@@ -5,16 +5,14 @@ import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtil
 
 const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
 
-
-
-
 const router = useRouter();
 
 const data = reactive({
   mounting: true
 });
 
-const getCurrentRoute = computed(() => router.currentRoute.value.name);
+const getCurrentRoute:any = computed(() => router.currentRoute.value.name);
+
 const getCurrentRoutePath = computed(() => router.currentRoute.value.fullPath);
 
 const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));

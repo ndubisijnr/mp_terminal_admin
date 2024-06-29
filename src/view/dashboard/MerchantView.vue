@@ -1,22 +1,19 @@
 <script lang="ts" setup>
-import BaseTable from '@/components/table/BaseTable.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import { reactive, onMounted, computed, ref } from 'vue';
 import {Motion} from "motion/vue";
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import AddOrganisation from '@/components/modal/organisation/AddOrganisation.vue'
-import { useToast, useWait } from 'maz-ui';
+import { useWait } from 'maz-ui';
 import StoreUtils from '@/util/storeUtils';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Tag from 'primevue/tag';
 import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 
 const wait = useWait()
-const toast = useToast()
 
 const reactiveData = reactive({
   showAddOrganisation:false,
@@ -40,18 +37,18 @@ const onRowSelect = (event:any) => {
 
 const menu = ref()
 
-const getSeverity = (status:string) => {
-    switch (status) {
-        case 'Declined':
-            return 'danger';
+// const getSeverity = (status:string) => {
+//     switch (status) {
+//         case 'Declined':
+//             return 'danger';
 
-        case 'ACTIVE':
-            return 'sucess';
+//         case 'ACTIVE':
+//             return 'sucess';
 
-        case 'Pending':
-            return 'warning';
-    }
-};
+//         case 'Pending':
+//             return 'warning';
+//     }
+// };
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -60,7 +57,7 @@ const filters = ref({
     terminalSerialNumber: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const toggle = (event) => {
+const toggle = (event:any) => {
     menu.value.toggle(event);
 }
 

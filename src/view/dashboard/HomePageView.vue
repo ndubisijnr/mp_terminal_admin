@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
-import BaseTable from "@/components/table/BaseTable.vue";
 import Chart from 'primevue/chart';
 import { Motion } from "motion/vue";
 import { ref, onMounted, reactive, computed } from "vue";
@@ -10,11 +9,7 @@ import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import Tag from 'primevue/tag';
 import { FilterMatchMode } from 'primevue/api';
-import InputText from 'primevue/inputtext';
-import Menu from 'primevue/menu';
-import Dialog from 'primevue/dialog';
 
 const toast = useToast()
 const wait = useWait()
@@ -29,9 +24,11 @@ const chartData = ref();
 const chartOptions = ref();
 
 const user = StoreUtils.getter()?.auth.userInfo
-const transactions = StoreUtils.getter()?.transactions?.transactions
+const transactions = StoreUtils.getter()?.transactions.getTransactions
 
-const terminalOrganizations = computed(()=> StoreUtils.getter()?.terminal?.getTerminalOrganizations)
+const terminalOrganizations = computed(() => {
+  return StoreUtils.getter()?.terminal?.getTerminalOrganisations
+})
 
 
 const reactiveData = reactive({
@@ -149,18 +146,18 @@ const setChartOptions = () => {
 }
 
 const transactionsHeaders = [
-  {label:'transactionRequestAmount',key:'transactionRequestAmount'}, 
-   {label:'transactionStatus',key:'transactionStatus'},
-  {label:'transactionTerminalId',key:'transactionTerminalId'},
-{label:'transactionTransactionTime',key:'transactionTransactionTime'},
-{label:'transactionToAccountType',key:'transactionToAccountType'},
-{label:'transactionToAccountIdentification',key:'transactionToAccountIdentification'}]
+  { label: 'transactionRequestAmount', key: 'transactionRequestAmount' },
+  { label: 'transactionStatus', key: 'transactionStatus' },
+  { label: 'transactionTerminalId', key: 'transactionTerminalId' },
+  { label: 'transactionTransactionTime', key: 'transactionTransactionTime' },
+  { label: 'transactionToAccountType', key: 'transactionToAccountType' },
+  { label: 'transactionToAccountIdentification', key: 'transactionToAccountIdentification' }]
 
 const terminalHeaders = [
-{label:'terminalId',key:'terminalId'}, 
-{label:'terminalSerialNumber',key:'terminalSerialNumber'},
-{label:'terminalMerchantNameLocation',key:'terminalMerchantNameLocation'},
-{label:'terminalCreatedAt',key:'terminalCreatedAt'}]
+  { label: 'terminalId', key: 'terminalId' },
+  { label: 'terminalSerialNumber', key: 'terminalSerialNumber' },
+  { label: 'terminalMerchantNameLocation', key: 'terminalMerchantNameLocation' },
+  { label: 'terminalCreatedAt', key: 'terminalCreatedAt' }]
 
 </script>
 
@@ -220,28 +217,28 @@ const terminalHeaders = [
         </div>
 
         <div class="overflow-auto rounded-lg shadow">
-          <DataTable v-model:filters="filters2" :value="terminalOrganizations" :metaKeySelection="metaKey2" selectionMode="single" :rows="3"
-          stripedRows tableStyle="min-width: 50rem"
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
-          :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
+          <DataTable v-model:filters="filters2" :value="terminalOrganizations" :metaKeySelection="metaKey2"
+            selectionMode="single" :rows="3" stripedRows tableStyle="min-width: 50rem"
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+            :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
 
-          <template #header>
-            <div class="flex justify-end">
-             
-            </div>
-          </template>
+            <template #header>
+              <div class="flex justify-end">
 
-          <template #empty>
-            <div class="text-center">
-              No Resent Terminal found.
-            </div>
-          </template>
-          <template #loading> Loading customers data. Please wait. </template>
+              </div>
+            </template>
 
-          <Column v-for="col of terminalHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
-          
-        </DataTable>
+            <template #empty>
+              <div class="text-center">
+                No Resent Terminal found.
+              </div>
+            </template>
+            <template #loading> Loading customers data. Please wait. </template>
+
+            <Column v-for="col of terminalHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+
+          </DataTable>
         </div>
         <!-- <BaseTable :headers="terminalHeaders" :bodies="terminalDatas"></BaseTable> -->
       </div>
@@ -253,32 +250,32 @@ const terminalHeaders = [
         </div>
         <div class="overflow-auto rounded-lg shadow">
 
-        <!-- <BaseTable :headers="headers" :bodies="data"></BaseTable>
+          <!-- <BaseTable :headers="headers" :bodies="data"></BaseTable>
         <div class="overflow-auto rounded-lg shadow"> -->
 
-        <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single" :rows="3"
-          stripedRows tableStyle="min-width: 50rem"
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
-          :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
+          <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
+          <DataTable v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
+            :rows="3" stripedRows tableStyle="min-width: 50rem"
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+            :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
 
-          <template #header>
-            <div class="flex justify-end">
-             
-            </div>
-          </template>
+            <template #header>
+              <div class="flex justify-end">
 
-          <template #empty>
-            <div class="text-center">
-              No Resent Transactions found.
-            </div>
-          </template>
-          <template #loading> Loading customers data. Please wait. </template>
+              </div>
+            </template>
 
-          <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
-          
-        </DataTable>
+            <template #empty>
+              <div class="text-center">
+                No Resent Transactions found.
+              </div>
+            </template>
+            <template #loading> Loading customers data. Please wait. </template>
+
+            <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+
+          </DataTable>
         </div>
 
       </div>

@@ -10,7 +10,7 @@ import { useToast, useWait } from 'maz-ui';
 const toast = useToast()
 const wait = useWait()
 
-const model = ref(TerminalRequest.createTerminal)
+const model:any = ref(TerminalRequest.createTerminal)
 
 defineProps({
     data:Object
@@ -54,7 +54,7 @@ async function createTerminal(){
 
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.terminalSerialNumber" :placeholder="data.terminalSerialNumber"  label="TerminalSerialNumber" />
+                            <base-input type="text" v-model="model.terminalSerialNumber" :placeholder="data?.terminalSerialNumber"  label="TerminalSerialNumber" />
                             <base-input type="text" v-model="model.terminalPin" label="TerminalPin" />
                         </div>
                        

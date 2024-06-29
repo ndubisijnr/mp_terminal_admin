@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { reactive, defineEmits, computed, ref } from 'vue';
+import {defineEmits, computed, ref } from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
 import BaseInput from '@/components/input/BaseInput.vue';
@@ -10,7 +10,7 @@ import { useToast, useWait } from 'maz-ui';
 const toast = useToast()
 const wait = useWait()
 
-const model = ref(TerminalRequest.createTerminal)
+const model:any = ref(TerminalRequest.createTerminal)
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;

@@ -29,7 +29,7 @@ const user = computed(() => {
   return StoreUtils.getter()?.auth.getUserInfo
 })
 
-const organisation = computed(() => {
+const organisation:any = computed(() => {
   return StoreUtils.getter()?.organisation.getOrganisation
 })
 
@@ -151,7 +151,7 @@ onMounted(() => {
               </div>
               <div class="text-center" v-if="!organisation?.length">
                 <p class="py-5" >No Organisations</p>
-                <MazBtn @click="initiateCreateOrganisation">Create Organisation</MazBtn>
+                <MazBtn>Create Organisation</MazBtn>
               </div>
             </div>
            
@@ -159,7 +159,7 @@ onMounted(() => {
 
 
             <template #footer>
-              <BaseButton v-if="organisation?.length" @click="initiateCreateOrganisation">
+              <BaseButton v-if="organisation?.length">
                 Confirm
               </BaseButton>
               

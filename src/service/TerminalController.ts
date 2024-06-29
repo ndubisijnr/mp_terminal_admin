@@ -12,7 +12,7 @@ export  class  TerminalController {
         return apiClient.appClient.post('/dev/terminal/update', payload)
     }
 
-    static readOrganizationTerminal(payload: string){
+    static readOrganisationTerminal(payload: string){
         return apiClient.appClient.get(`/dev/terminal/read-by-terminal-organization-id/${payload}`)
     }
 

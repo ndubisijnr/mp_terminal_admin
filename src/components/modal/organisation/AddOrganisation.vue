@@ -7,9 +7,8 @@ import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import OrganisationRequest from '@/models/request/organisation/OrganisationRequest';
 import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
-  import MazBtn from 'maz-ui/components/MazBtn'
 
-const model = ref(OrganisationRequest.createOrganisation)
+const model:any = ref(OrganisationRequest.createOrganisation)
 
 const user = computed(() => {
   return StoreUtils.getter()?.auth.getUserInfo
@@ -23,13 +22,12 @@ const loading = ref(false)
   const mazDropzoneInstance = ref<MazDropzoneInstance>()
   const errorMessage = ref<string>()
 
-  const error = ({ file, message }) => {
-    console.log('dropzone-error', { file, message })
+  const error = ({ message } : any) => {
     errorMessage.value = message
   }
-  const success = ({ file, response }) => {
+  const success = ({ file, response } : any) => {
     OrganisationRequest.createOrganisation.organisationLogo = file.dataURL
-    console.log('dropzone-like', { file, response })
+    console.log('dropzone-like', file, response )
   }
 //   const sendFiles = () =>  mazDropzoneInstance.value?.processQueue()
 
@@ -42,19 +40,19 @@ const loading = ref(false)
     maxThumbnailFilesize: 3,
     autoProcessQueue: true,
     autoRemoveOnError: true,
-  }
+  } as any
 
   const translations: MazDropzoneOptions = {
     dictDefaultMessage: 'Choose or drop a file',
-    dictFilesDescriptions: `(PNG or JPG under ${dropzoneOptionsBase.maxFilesize} MB)`,
+    dictFilesDescriptions: `(PNG or JPG under ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
     dictFallbackMessage: 'Your browser is not supported',
-    dictFileTooBig: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
-    dictInvalidFileType: `File(s) too big (max: ${dropzoneOptionsBase.maxFilesize} MB)`,
+    dictFileTooBig: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
+    dictInvalidFileType: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
     dictRemoveFile: 'Remove',
     dictCancelUpload: 'Cancel upload',
-    dictMaxFilesExceeded: `You can not upload any more files. (max: ${dropzoneOptionsBase.maxFiles})`,
+    dictMaxFilesExceeded: `You can not upload any more files. (max: ${(dropzoneOptionsBase as any).maxFiles})`,
     dictUploadCanceled: 'Upload canceled',
-  }
+  } as any
 
   const dropzoneOptions: MazDropzoneOptions = {
     ...dropzoneOptionsBase,

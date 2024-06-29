@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import BaseTable from '@/components/table/BaseTable.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import { computed, reactive, ref, onMounted } from 'vue';
 import { Motion } from "motion/vue";
@@ -12,9 +11,6 @@ import Column from 'primevue/column';
 import Tag from 'primevue/tag';
 import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
-import Menu from 'primevue/menu';
-import Dialog from 'primevue/dialog';
-
 
 
 const reactiveData = reactive({
@@ -50,18 +46,13 @@ function addUser() {
 }
 
 
-function addRole() {
-  reactiveData.showRoleModal = !reactiveData.showRoleModal
-}
-
-
 const onRowSelect = (event: any) => {
   reactiveData.selectedRow = event.data
   console.log(event)
 }
 
 
-const menu = ref()
+// const menu = ref()
 
 const getSeverity = (status: string) => {
   switch (status) {
@@ -83,40 +74,42 @@ const filters = ref({
   userLastName: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const toggle = (event) => {
-  menu.value.toggle(event);
-}
+// const toggle = (event) => {
+//   menu.value.toggle(event);
+// }
 
 
 
-const items = ref([
-  {
-    label: 'Options',
-    items: [
-      {
-        label: 'View',
-        icon: 'pi pi-refresh',
-        command: () => {
-          reactiveData.visible = !reactiveData.visible
-        }
-      },
-      // {
-      //     label: 'Edit',
-      //     icon: 'pi pi-upload',
-      //     command:() => {
-      //       reactiveData.showUpdateTerminal = !reactiveData.showUpdateTerminal
-      //     }
-      // },
-      // {
-      //     label: 'Delete',
-      //     icon: 'pi pi-upload',
-      //     command:() => {
-      //       askToUser()
-      //     }
-      // }
-    ]
-  }
-]);
+// const items = ref([
+//   {
+//     label: 'Options',
+//     items: [
+//       {
+//         label: 'View',
+//         icon: 'pi pi-refresh',
+//         command: () => {
+//           reactiveData.visible = !reactiveData.visible
+//         }
+//       },
+//       // {
+//       //     label: 'Edit',
+//       //     icon: 'pi pi-upload',
+//       //     command:() => {
+//       //       reactiveData.showUpdateTerminal = !reactiveData.showUpdateTerminal
+//       //     }
+//       // },
+//       // {
+//       //     label: 'Delete',
+//       //     icon: 'pi pi-upload',
+//       //     command:() => {
+//       //       askToUser()
+//       //     }
+//       // }
+//     ]
+//   }
+// ]);
+
+
 const metaKey = ref(true);
 
 

@@ -35,10 +35,9 @@
   import SignUpForm from "@/components/form/auth/SignUpForm.vue";
   import CompleteEnrolment from "@/components/form/auth/CompleteEnrolment.vue"
   import { Motion } from "motion/vue"
-  import { ref, computed } from "vue";
+  import { computed } from "vue";
 import StoreUtils from "@/util/storeUtils.ts";
 
-  const stage = ref('1')
 
   const enrolmentStage = computed(() => {return StoreUtils.getter()?.auth.getEnrolmentStage})
 

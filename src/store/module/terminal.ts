@@ -1,31 +1,30 @@
 import { defineStore } from 'pinia'
 import {TerminalController} from "@/service/TerminalController.ts";
-import {ReadByTerminalOrganization} from "@/models/response/terminal/ReadByTerminalOrganization.ts";
 import StoreUtils from '@/util/storeUtils';
 
 export type TerminalStoreState = {
     loading: boolean,
-    terminalOrganizations: ReadByTerminalOrganization
+    terminalOrganisations: null
 }
 
 export const useTerminalStore = defineStore('terminal_store', {
     state: ():TerminalStoreState  => ({
         loading: false,
-        terminalOrganizations: {} as ReadByTerminalOrganization,
+        terminalOrganisations: null,
     }),
 
     getters: {
-        getTerminalOrganizations:state => state.terminalOrganizations,
+        getTerminalOrganisations:state => state.terminalOrganisations,
         getLoading: state => state.loading,
     },
 
     actions: {
-        async getOrganizationTerminal(payload: string){
-            const response = await TerminalController.readOrganizationTerminal(payload)
+        async getOrganisationTerminal(payload: string){
+            const response = await TerminalController.readOrganisationTerminal(payload)
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){
-                    this.terminalOrganizations= responseData.data
+                    this.terminalOrganisations= responseData.data
                 }else{
                     console.log(responseData)
                 }
@@ -34,7 +33,7 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async createNewTerminal(payload:{}, toast:any){
+        async createNewTerminal(payload:any, toast:any){
             const response = await TerminalController.createTerminal(payload)
             const responseData = response.data
             console.log('readOrganizationTerminal', response)
@@ -42,7 +41,7 @@ export const useTerminalStore = defineStore('terminal_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganizationTerminal(payload.terminalOrganisationId)
+                    StoreUtils.getter()?.terminal.getOrganisationTerminal(payload.terminalOrganisationId)
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
@@ -53,14 +52,14 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async updateTerminal(payload:{}, toast:any){
+        async updateTerminal(payload:any, toast:any){
             const response = await TerminalController.updateTerminal(payload)
             const responseData = response.data
 
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganizationTerminal(payload.terminalOrganisationId)
+                    StoreUtils.getter()?.terminal.getOrganisationTerminal(payload.terminalOrganisationId)
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
