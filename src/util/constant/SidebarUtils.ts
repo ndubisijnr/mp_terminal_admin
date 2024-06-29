@@ -19,10 +19,10 @@ export const  SidebarTopUtils = [
 
     {name:"Dashboard", icon:Dashboard, active:'active-nav', route:'/dashboard'},
     {name:"Transaction", icon:Card,active:'active-nav', route:'/transactions'},
-    {name:"Merchants", icon:Bank,active:'active-nav', route:'/merchants'},
+    {name:"Organizations", icon:Bank,active:'active-nav', route:'/merchants'},
     {name:"Terminals", icon:Terminal,active:'active-nav', route:'/terminals'},
     {name:"Manage Charges", icon:ManageCharges,active:'active-nav', route:'/charges'},
-    {name:"Users", icon:Users,active:'active-nav', route:'#'},
+    {name:"Users", icon:Users,active:'active-nav', route:'/users'},
     {name:"Logs", icon:Logs,active:'active-nav', route:'#'},
 
 ]
@@ -31,6 +31,6 @@ export const  SidebarBottomUtils = [
 
     {name:"Support", icon:Support,active:'active-nav', route:'#'},
     {name:"Settings", icon:Setting,active:'active-nav', route:'#'},
-    {name:"Log out", icon:Logout,active:'active-nav', route:'/login'},
+    {name:"Log out", icon:Logout,active:'active-nav', route:'/'},
 
 ]

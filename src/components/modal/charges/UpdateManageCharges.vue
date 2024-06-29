@@ -1,24 +1,26 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { reactive, defineEmits, computed, ref } from 'vue';
-import StoreUtils from '@/util/storeUtils';
-import TerminalRequest from '@/models/request/terminal/TerminalRequest';
+import Dropdown from 'primevue/dropdown';
+import { reactive, defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
+import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
+import StoreUtils from '@/util/storeUtils';
 
 const toast = useToast()
 const wait = useWait()
 
-const model = ref(TerminalRequest.createTerminal)
-
+defineProps({
+    data:Object
+})
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
-const organisations = computed(() => {
-    return StoreUtils.getter()?.organisation.getCurrentOrganisation
-})
+
+const model = ref(ChargesRequest.createChargesRequest)
+
 
 
 function close(){
@@ -26,15 +28,18 @@ function close(){
 }
 
 
-async function createTerminal(){
-    wait.start('CREATING_TERMINAL')
-    model.value.terminalOrganisationId = organisations.value?.organisationId;
-
-    await StoreUtils.getter()?.terminal.createNewTerminal(model.value, toast)
-    wait.stop('CREATING_TERMINAL')
+async function addCharges(){
+    console.log(model)
+    wait.start('UPDATING_CHARGES')
+    await StoreUtils.getter()?.charges.updateCharges(model.value, toast)
+    wait.stop('UPDATING_CHARGES')
     close()
    
 }
+
+
+
+
 
 
 </script>
@@ -42,32 +47,56 @@ async function createTerminal(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div class="modal-child-wrapper">
+                <div  class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add Terminal</p>
+                        <p class="req-term">Update Charges</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
-
+                    <!-- pricingAmount -->
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
-                            <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Pin"  label="TerminalPin" />
+                            <base-input type="text"  v-model="model.pricingAmount" :placeholder="data.pricingAmount"  label="pricingAmount" />
+                            <base-input type="text" v-model="model.pricingCode" :placeholder="data.pricingCode"  label="pricingCode" />
                         </div>
                        
+                        
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.pricingMinAmount" :placeholder="data.pricingMinAmount"  label="pricingMinAmount" />
+                            <base-input type="text" v-model="model.pricingMaxAmount" :placeholder="data.pricingMaxAmount"  label="pricingMaxAmount" />
+                        </div>
+
+                        <div class="flex justify-between gap-10 mt-3">
+                            <div>
+                                <label>pricingAmountType</label>
+                                <Dropdown optionLabel="name" v-model="model.pricingAmountType" optionValue="code" :placeholder="data.pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
+                            </div>
+                            <div>
+                                <label>pricingType</label>
+                                <Dropdown optionLabel="name" v-model="model.pricingType" optionValue="code" :placeholder="data.pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.pricingDescription" :placeholder="data.pricingDescription"  label="pricingDescription" />
+                        </div>
+                    
                     </div>
-        
+                   
+                
 
                     <!-- <div class="divider"></div> -->
 
 
                     <div class="modal-child-footer">
-                      
-                        <BaseButton :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request</BaseButton>
+                    
+                        <BaseButton :loading="wait.isLoading('UPDATING_CHARGES')" @click="addCharges">Update Charges</BaseButton>
 
                     </div>
 
                 </div>
-        
+            
+
+          
         </template>
     </BaseLayout>
 </template>

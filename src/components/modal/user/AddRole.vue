@@ -1,23 +1,18 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { reactive, defineEmits, computed, ref } from 'vue';
-import StoreUtils from '@/util/storeUtils';
-import TerminalRequest from '@/models/request/terminal/TerminalRequest';
-import BaseInput from '@/components/input/BaseInput.vue';
-import { useToast, useWait } from 'maz-ui';
-
-const toast = useToast()
-const wait = useWait()
-
-const model = ref(TerminalRequest.createTerminal)
+import Dropdown from 'primevue/dropdown';
+import { reactive, defineEmits } from 'vue';
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
-const organisations = computed(() => {
-    return StoreUtils.getter()?.organisation.getCurrentOrganisation
+
+const data = reactive({
+    showConfirmAgain:true,
+    isRequestSent:false
+
 })
 
 
@@ -26,15 +21,6 @@ function close(){
 }
 
 
-async function createTerminal(){
-    wait.start('CREATING_TERMINAL')
-    model.value.terminalOrganisationId = organisations.value?.organisationId;
-
-    await StoreUtils.getter()?.terminal.createNewTerminal(model.value, toast)
-    wait.stop('CREATING_TERMINAL')
-    close()
-   
-}
 
 
 </script>
@@ -42,32 +28,41 @@ async function createTerminal(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div class="modal-child-wrapper">
+                <div v-show="!data.isRequestSent" class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add Terminal</p>
+                        <p class="req-term">Assign Terminal</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
 
                     <div class="modal-child-content">
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
-                            <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Pin"  label="TerminalPin" />
+                        <div>
+                            <label>Terminal I.D</label>
+                            <Dropdown class="select-drowdown"></Dropdown>
                         </div>
-                       
+                        <div>
+                            <label>Assign To</label>
+                            <Dropdown class="select-drowdown"></Dropdown>
+                        </div>
+                    
                     </div>
-        
+
+                
 
                     <!-- <div class="divider"></div> -->
 
 
                     <div class="modal-child-footer">
-                      
-                        <BaseButton :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request</BaseButton>
+                        <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="close">
+                            <p class="bnt-trans-text">Cancel</p>
+                        </BaseButton>
+                        <BaseButton>Assign Terminal</BaseButton>
 
                     </div>
 
                 </div>
-        
+            
+
+          
         </template>
     </BaseLayout>
 </template>
@@ -184,8 +179,15 @@ color: #222222;
 
 .modal-child-wrapper{
     /* Assign Terminal Form */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     padding: 0px;
     width: 702px;
+    height: 271px;
+
     /* White */
     background: #FFFFFF;
     /* Shadow/sm */
@@ -210,18 +212,40 @@ align-items: center;
 padding: 16px 24px;
 gap: 10px;
 
+width: 702px;
+height: 78px;
+
 background: #FFFFFF;
 border-bottom: 1px solid #E6E6E6;
 border-radius: 16px 16px 0px 0px;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
 
 }
 
 .modal-child-content{
     /* Content */
+
+/* Auto layout */
+display: flex;
+align-items: flex-start;
 padding: 24px;
+gap: 24px;
+
+width: 702px;
+height: 120px;
 
 /* White */
 background: #FFFFFF;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+align-self: stretch;
+flex-grow: 0;
 border-bottom: 1px solid #E6E6E6;
 
 
@@ -234,11 +258,18 @@ border-bottom: 1px solid #E6E6E6;
 /* Auto layout */
 display: flex;
 align-items: center;
-padding:24px;
+padding:0 24px;
 justify-content: end;
 width: 702px;
+height: 73px;
 gap: 12px;
 
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+align-self: stretch;
+flex-grow: 0;
 
 }
 

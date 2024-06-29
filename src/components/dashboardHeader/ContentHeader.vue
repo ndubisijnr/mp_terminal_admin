@@ -47,13 +47,6 @@ async function getCustomerOrganisation(){
   wait.stop('READ_ORGANISATION')
 }
 
-function initiateCreateOrganisation(){
-  data.visible = true
-  data.isOpen = false
-
-}
-
-
 
 const getCurrentRoute:any = computed(() => {
   return router.currentRoute.value.name
@@ -70,7 +63,6 @@ const getCurrentRouteSubTitle = computed(() => {
 
 
 onMounted(() => {
-  console.log(user)
 })
 </script>
 
@@ -123,6 +115,7 @@ onMounted(() => {
             <MazAvatar
               :caption="userFullName"
               size="1rem"
+              class="avatar"
             />
             <p>{{ userFullName}}</p>
 
@@ -147,7 +140,6 @@ onMounted(() => {
               <div v-if="organisation?.length">
                 <div class="flex justify-between mb-3">
                 <p>Current Organisation : {{ organisation[0].organisationName}}</p>  
-                <BaseButton @click="initiateCreateOrganisation">Add organisation</BaseButton>
                </div>
 
                 <MazSelect
@@ -192,5 +184,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
 }
+
 
 </style>

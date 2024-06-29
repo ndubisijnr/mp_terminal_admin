@@ -6,14 +6,14 @@
       <form class="" @submit.prevent="login">
         <base-input type="email" v-model="AuthRequest.LoginRequest.userEmail" placeholder="Enter your email"  label="Email"/>
         <base-input type="password" v-model="AuthRequest.LoginRequest.userPassword" placeholder="....." label="Password"/>
-        <div class="forgot-password-container" @click="toForgetPassword">
+        <div class="forgot-password-container py-4" @click="toForgetPassword">
           <!-- <base-checkbox label="Remember for 30 days" /> -->
           <p class="sign-up cursor-pointer text-right w-full"><a>Forgot password</a></p>
         </div>
 
         <base-button type="submit" loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Sign in</base-button>
 
-        <p class="text-[14px] leading-[21px] text-gray_1 text-center cursor-pointer" @click="toSignUp">Don’t have an account? <span class="sign-up">Sign up</span></p>
+        <p class="text-[14px] leading-[21px] text-gray_1 text-center cursor-pointer py-4" @click="toSignUp">Don’t have an account? <span class="sign-up">Sign up</span></p>
       </form>
     </div>
   </div>

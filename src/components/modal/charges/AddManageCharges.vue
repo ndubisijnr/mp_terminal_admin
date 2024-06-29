@@ -1,23 +1,28 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { reactive, defineEmits, computed, ref } from 'vue';
-import StoreUtils from '@/util/storeUtils';
-import TerminalRequest from '@/models/request/terminal/TerminalRequest';
+import Dropdown from 'primevue/dropdown';
+import { reactive, defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
+import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
+import StoreUtils from '@/util/storeUtils';
 
 const toast = useToast()
 const wait = useWait()
-
-const model = ref(TerminalRequest.createTerminal)
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
-const organisations = computed(() => {
-    return StoreUtils.getter()?.organisation.getCurrentOrganisation
+
+const model = ref(ChargesRequest.createChargesRequest)
+
+
+const data = reactive({
+    showConfirmAgain:true,
+    isRequestSent:false
+
 })
 
 
@@ -26,15 +31,18 @@ function close(){
 }
 
 
-async function createTerminal(){
-    wait.start('CREATING_TERMINAL')
-    model.value.terminalOrganisationId = organisations.value?.organisationId;
-
-    await StoreUtils.getter()?.terminal.createNewTerminal(model.value, toast)
-    wait.stop('CREATING_TERMINAL')
+async function addCharges(){
+    console.log(model)
+    wait.start('CREATING_CHARGES')
+    await StoreUtils.getter()?.charges.createCharges(model.value, toast)
+    wait.stop('CREATING_CHARGES')
     close()
    
 }
+
+
+
+
 
 
 </script>
@@ -42,32 +50,56 @@ async function createTerminal(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div class="modal-child-wrapper">
+                <div v-show="!data.isRequestSent" class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add Terminal</p>
+                        <p class="req-term">Add New Charges</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
-
+                    <!-- pricingAmount -->
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
-                            <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Pin"  label="TerminalPin" />
+                            <base-input type="text"  v-model="model.pricingAmount" placeholder="pricingAmount"  label="pricingAmount" />
+                            <base-input type="text" v-model="model.pricingCode" placeholder="pricingCode"  label="pricingCode" />
                         </div>
                        
+                        
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.pricingMinAmount" placeholder="pricingMinAmount"  label="pricingMinAmount" />
+                            <base-input type="text" v-model="model.pricingMaxAmount" placeholder="pricingMaxAmount"  label="pricingMaxAmount" />
+                        </div>
+
+                        <div class="flex justify-between gap-10 mt-3">
+                            <div>
+                                <label>pricingAmountType</label>
+                                <Dropdown optionLabel="name" v-model="model.pricingAmountType" optionValue="code" placeholder="pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
+                            </div>
+                            <div>
+                                <label>pricingType</label>
+                                <Dropdown optionLabel="name" v-model="model.pricingType" optionValue="code" placeholder="pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.pricingDescription" placeholder="pricingDescription"  label="pricingDescription" />
+                        </div>
+                    
                     </div>
-        
+                   
+                
 
                     <!-- <div class="divider"></div> -->
 
 
                     <div class="modal-child-footer">
-                      
-                        <BaseButton :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request</BaseButton>
+                    
+                        <BaseButton :loading="wait.isLoading('CREATING_CHARGES')" @click="addCharges">Add New Charges</BaseButton>
 
                     </div>
 
                 </div>
-        
+            
+
+          
         </template>
     </BaseLayout>
 </template>

@@ -1,31 +1,27 @@
 import { defineStore } from 'pinia'
-import {TerminalController} from "@/service/TerminalController.ts";
-import {ReadByTerminalOrganization} from "@/models/response/terminal/ReadByTerminalOrganization.ts";
 import StoreUtils from '@/util/storeUtils';
+import { ChargesController } from '@/service/ChargesController';
 
-export type TerminalStoreState = {
-    loading: boolean,
-    terminalOrganizations: ReadByTerminalOrganization
+export type ChargesStoreState = {
+    charges: null
 }
 
-export const useTerminalStore = defineStore('terminal_store', {
-    state: ():TerminalStoreState  => ({
-        loading: false,
-        terminalOrganizations: {} as ReadByTerminalOrganization,
+export const useChargesStore = defineStore('charges_store', {
+    state: ():ChargesStoreState  => ({
+        charges: null
     }),
 
     getters: {
-        getTerminalOrganizations:state => state.terminalOrganizations,
-        getLoading: state => state.loading,
+        getCharges:state => state.charges,
     },
 
     actions: {
-        async getOrganizationTerminal(payload: string){
-            const response = await TerminalController.readOrganizationTerminal(payload)
+        async getOrganizationCharges(){
+            const response = await ChargesController.readCharges()
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){
-                    this.terminalOrganizations= responseData.data
+                   this.charges = responseData.data
                 }else{
                     console.log(responseData)
                 }
@@ -34,33 +30,14 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async createNewTerminal(payload:{}, toast:any){
-            const response = await TerminalController.createTerminal(payload)
-            const responseData = response.data
-            console.log('readOrganizationTerminal', response)
-
-            try{
-                if(responseData.responseCode === '00'){
-                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganizationTerminal(payload.terminalOrganisationId)
-                }else{
-                    console.log(responseData)
-                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-
-                }
-            }catch(e){
-                console.log('readOrganizationTerminal error', e)
-            }
-        },
-
-        async updateTerminal(payload:{}, toast:any){
-            const response = await TerminalController.updateTerminal(payload)
+        async createCharges(payload:{}, toast:any){
+            const response = await ChargesController.createCharges(payload)
             const responseData = response.data
 
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganizationTerminal(payload.terminalOrganisationId)
+                    StoreUtils.getter()?.charges.getOrganizationCharges()
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
@@ -71,13 +48,32 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async deleteTerminal(payload:{}, toast:any){
-            const response = await TerminalController.deleteTerminal(payload)
+        async deleteCharges(payload:{}, toast:any){
+            const response = await ChargesController.deleteCharges(payload)
             const responseData = response.data
 
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    StoreUtils.getter()?.charges.getOrganizationCharges()
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async updateCharges(payload:{}, toast:any){
+            const response = await ChargesController.updateCharges(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    StoreUtils.getter()?.charges.getOrganizationCharges()
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })

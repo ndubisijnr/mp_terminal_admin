@@ -4,12 +4,20 @@ export  class  TerminalController {
         return apiClient.appClient.get(`/dev/terminal/read`)
     }
 
-    static createTerminal(payload: any){
+    static createTerminal(payload:{}){
         return apiClient.appClient.post('/dev/terminal/create', payload)
+    }
+
+    static updateTerminal(payload:{}){
+        return apiClient.appClient.post('/dev/terminal/update', payload)
     }
 
     static readOrganizationTerminal(payload: string){
         return apiClient.appClient.get(`/dev/terminal/read-by-terminal-organization-id/${payload}`)
+    }
+
+    static deleteTerminal(payload: {}){
+        return apiClient.appClient.post(`/dev/terminal/delete`, payload)
     }
     
 }

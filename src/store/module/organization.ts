@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia'
 import {OrganisationController} from "@/service/OrganisationController.ts";
-
+import { currentOrganisation } from '@/models/response/organisation/CurrentOrganisation';
 export const useOrganisationStore = defineStore('organisation_Store', {
     state: () => ({
         loading: false,
-        organisation:null,
+        organisations:null,
+        currentOrganisation:{} as currentOrganisation
     }),
 
     getters: {
-        getOrganisation:state => state.organisation,
+        getOrganisation:state => state.organisations,
         getLoading: state => state.loading,
+        getCurrentOrganisation:state => state.currentOrganisation
     },
 
     actions: {
@@ -19,7 +21,8 @@ export const useOrganisationStore = defineStore('organisation_Store', {
 
             try{
                 if(responseData.responseCode === '00'){
-                    this.organisation= responseData.data
+                    this.organisations= responseData.data
+                    this.currentOrganisation = responseData.data[0]
                     console.log(responseData)
                 }else{
                     console.log(responseData.responseCode)

@@ -12,8 +12,9 @@ export const RouteConstantUtil = {
         homePage: "Dashboard",
         teminalPage:"Terminals",
         transactions:"Transactions",
-        merchants:"Merchants",
+        organisations:"Organisations",
         charges:"Manage Charges",
+        user:"User",
         authRequired:true
     },
 }

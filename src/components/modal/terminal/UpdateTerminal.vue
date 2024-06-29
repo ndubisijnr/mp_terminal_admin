@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { reactive, defineEmits, computed, ref } from 'vue';
+import {defineEmits, computed, ref } from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
 import BaseInput from '@/components/input/BaseInput.vue';
@@ -11,6 +11,10 @@ const toast = useToast()
 const wait = useWait()
 
 const model = ref(TerminalRequest.createTerminal)
+
+defineProps({
+    data:Object
+})
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
@@ -27,11 +31,11 @@ function close(){
 
 
 async function createTerminal(){
-    wait.start('CREATING_TERMINAL')
+    wait.start('UPDATING_TERMINAL')
     model.value.terminalOrganisationId = organisations.value?.organisationId;
 
-    await StoreUtils.getter()?.terminal.createNewTerminal(model.value, toast)
-    wait.stop('CREATING_TERMINAL')
+    await StoreUtils.getter()?.terminal.updateTerminal(model.value, toast)
+    wait.stop('UPDATING_TERMINAL')
     close()
    
 }
@@ -44,14 +48,14 @@ async function createTerminal(){
         <template v-slot:child>
                 <div class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add Terminal</p>
+                        <p class="req-term">Update Terminal</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
 
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
-                            <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Pin"  label="TerminalPin" />
+                            <base-input type="text" v-model="model.terminalSerialNumber" :placeholder="data.terminalSerialNumber"  label="TerminalSerialNumber" />
+                            <base-input type="text" v-model="model.terminalPin" label="TerminalPin" />
                         </div>
                        
                     </div>
@@ -62,7 +66,7 @@ async function createTerminal(){
 
                     <div class="modal-child-footer">
                       
-                        <BaseButton :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request</BaseButton>
+                        <BaseButton :loading="wait.isLoading('UPDATING_TERMINAL')" @click="createTerminal">Send Request</BaseButton>
 
                     </div>
 
