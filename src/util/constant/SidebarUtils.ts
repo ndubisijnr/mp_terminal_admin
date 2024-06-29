@@ -7,7 +7,7 @@ import ManageCharges from "../../assets/icon/sidebar-icon/check-square.svg"
 import Logs from "../../assets/icon/sidebar-icon/DocumentAlignLeft.svg"
 import Terminal from "../../assets/icon/sidebar-icon/Situation.svg"
 import Support from "../../assets/icon/sidebar-icon/Happy.svg"
-import Bank from "../../assets/icon/sidebar-icon/Bank.svg"
+import Merchant from "../../assets/icon/sidebar-icon/bank.svg"
 
 
 
@@ -19,7 +19,7 @@ export const  SidebarTopUtils = [
 
     {name:"Dashboard", icon:Dashboard, active:'active-nav', route:'/dashboard'},
     {name:"Transaction", icon:Card,active:'active-nav', route:'/transactions'},
-    {name:"Organizations", icon:Bank,active:'active-nav', route:'/merchants'},
+    {name:"Organizations", icon:Merchant,active:'active-nav', route:'/merchants'},
     {name:"Terminals", icon:Terminal,active:'active-nav', route:'/terminals'},
     {name:"Manage Charges", icon:ManageCharges,active:'active-nav', route:'/charges'},
     {name:"Users", icon:Users,active:'active-nav', route:'/users'},
