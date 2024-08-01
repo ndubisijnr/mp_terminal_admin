@@ -13,6 +13,9 @@ import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 import UpdateOrganisation from '@/components/modal/organisation/UpdateOrganisation.vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
+import AddInstitutionCharges from '@/components/modal/charges/AddInstitutionCharges.vue'
+import { RouteConstantUtil } from '@/util/constant/RouteConstantUtil';
+import { router } from '@/router';
 
 const wait = useWait()
 
@@ -21,7 +24,8 @@ const reactiveData = reactive({
   selectedRow:null,
   visible:false,
   showUpdateOganisation:false,
-  showAssignTerminal:false
+  showAssignTerminal:false,
+  showAddOrganisationPricing:false
 })
 
 const mid:any = computed(() => {
@@ -52,12 +56,11 @@ const menu = ref()
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    terminalStatus: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    // representative: { value: null, matchMode: FilterMatchMode.IN },
-    terminalSerialNumber: { value: null, matchMode: FilterMatchMode.EQUALS },
+    organisationName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
 });
 
 const toggle = (event:any) => {
+    console.log(event)
     menu.value.toggle(event);
 }
 
@@ -69,8 +72,6 @@ const organsationHeaders = [
 {label:'AccountNumber',key:'organisationAccountNumber'},
 {label:'Email',key:'organisationEmail'},
 {label:'Contact Phone',key:'organisationPhone'},
-{label:'NumberOfTerminals',key:'OrgNumberOfTerminals'},
-{label:'PricingCode',key:'OrgPricingCode'},
 ]
 
 
@@ -107,6 +108,7 @@ function handleClose(payload:any) {
   reactiveData.showAddOrganisation = payload;
   reactiveData.showUpdateOganisation = payload;
   reactiveData.showAssignTerminal = payload
+  reactiveData.showAddOrganisationPricing = payload
 }
 
 function addOrganisation(){
@@ -115,9 +117,8 @@ function addOrganisation(){
 }
 
 async function getCustomerOrganisation(){
-  console.log(mid)
   wait.start('READ_ORGANISATION')
-  await StoreUtils.getter()?.organisation.readCustomerOrganisation(mid)
+  await StoreUtils.getter()?.organisation.readCustomerOrganisation()
   wait.stop('READ_ORGANISATION')
 }
 
@@ -145,6 +146,20 @@ const items = ref([
                 command:() => {
                   reactiveData.showAssignTerminal = true
                 }
+            },
+            {
+                label: 'Add Institution Pricing',
+                icon: 'pi pi-upload',
+                command:() => {
+                    reactiveData.showAddOrganisationPricing = !reactiveData.showAddOrganisationPricing
+                }
+            },
+            {
+                label: 'View Stats/Charges',
+                icon: 'pi pi-upload',
+                command:() => {
+                  router.push({name:RouteConstantUtil.dashboard.institutionsCharges, query:{organisationID:reactiveData?.selectedRow?.organisationId}})
+                }
             }
         ]
     }
@@ -160,12 +175,13 @@ onMounted(() => {
 <template>
     <AssignTerminal v-if="reactiveData.showAssignTerminal" @close="handleClose"></AssignTerminal>
     <AddOrganisation v-if="reactiveData.showAddOrganisation" @close="handleClose"/>
+    <AddInstitutionCharges :data="reactiveData?.selectedRow" v-if="reactiveData.showAddOrganisationPricing" @close="handleClose"></AddInstitutionCharges>
     <UpdateOrganisation v-if="reactiveData.showUpdateOganisation" @close="handleClose" :data="reactiveData.selectedRow"></UpdateOrganisation>
   
     <ContentHeader />
-    <Dialog v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <Dialog v-model:visible="reactiveData.visible" :header="'Institution Overview'" modal :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
           <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
-              <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
+              <p class="text-lg leading-relaxed text-gray-800 mb-4 capitalize text-black-700">{{ key }}:</p>
               <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ i }}</p>
           </div>
       </Dialog>
@@ -190,7 +206,7 @@ onMounted(() => {
           <BaseButton @click="addOrganisation">
             <div style="display: flex;align-items: center;gap: 5px;">
             <img src="../../assets/icon/Folder Add 2.svg" />
-            Add Organisation
+            Onboard institutions
           </div>
           
         </BaseButton>
@@ -199,7 +215,6 @@ onMounted(() => {
      
         <!-- <BaseTable pagination="true" search="true" :headers="organsationHeaders" :bodies="organisation"></BaseTable> -->
 
-        {{organisation}}
         <div class="overflow-auto rounded-lg shadow">
         <DataTable v-model:filters="filters" :value="organisation" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
@@ -230,20 +245,22 @@ onMounted(() => {
 
                   </template>
             </Column>  -->
-                <Column header="actions">
-                  
-                  <template #body="">
-                    <div class="flex">
-              
-                      <img src="../../assets/icon/Dropdown.svg" @click="toggle"/>
+            <Column header="actions">
+                
+                <template #body="">
+                <div class="flex">
+            
+                    <img src="../../assets/icon/Dropdown.svg" @click="toggle"/>
 
-                      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-                    </div>
-                  </template>
-                </Column>
+                    
+                </div>
+                </template>
+            </Column>
               
                 
         </DataTable>
+        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" ></Menu>
+
       </div>
     </div>
 </template>

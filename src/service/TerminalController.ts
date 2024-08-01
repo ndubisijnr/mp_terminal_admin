@@ -19,5 +19,14 @@ export  class  TerminalController {
     static deleteTerminal(payload: {}){
         return apiClient.appClient.post(`/dev/terminal/delete`, payload)
     }
-    
+
+    static readTerminaTransactionByOrganisationId(organisationId: string){
+        return apiClient.appClient.post(`/dev/terminal-transaction/read-by-terminal-transaction-organisation-id/${organisationId}`)
+    }
+
+    static readTerminaTransactionByTerminalId(terminalId: string){
+        return apiClient.appClient.get(`/dev/terminal-transaction/read-by-terminal-id/${terminalId}`)
+    }
+
+   
 }

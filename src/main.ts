@@ -22,12 +22,9 @@ const app = createApp(App)
 app.use(installToaster, toasterOptions)
 app.use(installWait)
 app.use(ConfirmationService)
-app.use(PrimeVue, {
-  unstyled: false,
-});
-app.use(pinia)
+app.use(PrimeVue, { unstyled: false,});
+
 app.use(router)
-
-
 app.mount("#app")
+app.use(pinia)
 

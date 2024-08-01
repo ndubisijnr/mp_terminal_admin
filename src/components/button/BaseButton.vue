@@ -1,14 +1,9 @@
+
 <template>
-  <motion
-    :hover="{scale: 1.04, opacity: 0.9}"
-    :press="{scale: 0.8}"
-  >
     <MazBtn class="container" :color="loadingColor" :loading="loading" :type="type"><slot></slot></MazBtn>
-  </motion>
 </template>
 
 <script setup>
-import {Motion} from "motion/vue";
 import MazBtn from 'maz-ui/components/MazBtn'
 import { color } from "chart.js/helpers";
 

@@ -2,24 +2,18 @@ import { defineStore } from 'pinia'
 import AuthController from '../../service/AuthController.js'
 import {router} from "@/router";
 import StoreUtils from '@/util/storeUtils.js';
-import {LoginResponse} from "@/models/response/auth/LoginResponse.ts";
+import { globalDispatch } from '@/util/helper/globalDispatcher.js';
 
-export type AuthType = {
-    loading: boolean,
-    data: any[],
-    userInfo: LoginResponse,
-    enrolmentStage:'1'|'2',
-    passwordResetStage:'1'|'2',
-    sessionExpired:boolean
-}
+
 export const useAuthStore = defineStore('auth_store', {
-    state: (): AuthType => ({
+    state:() => ({
         loading: false,
         data:[] as any[],
-        userInfo:{} as LoginResponse,
+        userInfo:null,
         enrolmentStage:'1',
         passwordResetStage:'1',
-        sessionExpired:false
+        sessionExpired:false,
+        multiFactor:false,
     }),
 
     getters: {
@@ -28,13 +22,16 @@ export const useAuthStore = defineStore('auth_store', {
         getLoading: state => state.loading,
         getEnrolmentStage: state => state.enrolmentStage,
         getPasswordResetStage: state => state.passwordResetStage,
-        getSessionExpired:state => state.sessionExpired
+        getSessionExpired:state => state.sessionExpired,
+        getMultiFactor:state => state.multiFactor,
+        getCurrentMid:state => state?.userInfo?.userId || sessionStorage.id
     },
 
     actions: {
         commitSessionStory(payload:any){
             this.sessionExpired = payload
         },
+
 
         async initiateEnrolment(payload:any, toast:any){
             const response = await AuthController.initiateEnrolment(payload)
@@ -66,22 +63,50 @@ export const useAuthStore = defineStore('auth_store', {
             }catch(e){}
         },
 
-        async login(payload:any, toast:any){
-            const response = await AuthController.login(payload)
-            const responseData = response.data
-            const redirectRoute = router.currentRoute.value.query.redirectFrom
-            console.log(redirectRoute)
-            sessionStorage.setItem('token', responseData.token)
-            try{
-                if(responseData.responseCode === '00'){
-                    this.userInfo = responseData
+        async login(payload:any, toast:any, wait:any){
+             wait.start('DATA_SUBMITTING')    
+             //refactor later (global dispatch)
+             const response:any = await globalDispatch(payload, toast, wait, AuthController, 'login', 'top-right')
+             if(response.responseCode !== "00"){
+                await toast.error(response.responseMessage, { position: 'top-right', timeout: 3000 });
+                return;
+             } 
+             else {
+                if(this.multiFactor){
+                    this.userInfo = response
+                    sessionStorage.token = response.token
+                    sessionStorage.id = response.userId
                     await router.push({path: JSON.stringify(router.currentRoute.value.query.redirectFrom) ? JSON.stringify(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
-                    StoreUtils.getter()?.organisation.readCustomerOrganisation(responseData.userId)
-                }else{
-                    toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
+                    StoreUtils.getter()?.organisation.readCustomerOrganisation(response.userId)
+                    this.multiFactor = false;
                 }
-            }catch(e){}
+                else{
+                    this.multiFactor = true;
+                    return;
+                }
+             } 
             
+            // await router.push({path: JSON.stringify(router.currentRoute.value.query.redirectFrom) ? JSON.stringify(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
+            // try{
+            // const response = await AuthController.login(payload)
+            // const responseData = response.data
+            // const redirectRoute = router.currentRoute.value.query.redirectFrom
+            // console.log(redirectRoute)
+            // sessionStorage.setItem('token', responseData.token)
+           
+            // if(responseData.responseCode === '00'){
+            //     this.userInfo = responseData
+            //     await router.push({path: JSON.stringify(router.currentRoute.value.query.redirectFrom) ? JSON.stringify(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
+            //     StoreUtils.getter()?.organisation.readCustomerOrganisation(responseData.userId)
+            // }else{
+            //     toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
+            // }
+            // }catch(e){
+            //     toast.error(e, { position: 'top-right', timeout: 3000 })
+            //     await router.push({path: JSON.stringify(router.currentRoute.value.query.redirectFrom) ? JSON.stringify(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
+
+            // }
+
         },
 
         async initiatePasswordReset(payload:any, toast:any){
@@ -140,3 +165,5 @@ export const useAuthStore = defineStore('auth_store', {
         }
     }
 })
+
+

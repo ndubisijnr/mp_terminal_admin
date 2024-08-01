@@ -1,11 +1,6 @@
 <template>
-    <Motion
-      :initial="{opacity: 0, x: -100}"
-      :animate="{opacity: 1, x: 0}"
-      :transition="{duration: 0.5}"
-      v-if="enrolmentStage === '1'"
-    >
-      <div class="container">
+
+      <div class="container" v-if="enrolmentStage === '1'">
         <div class="min-container p-10">
           <div class="w-full h-[20%]">
             <img class="logo shadow-lg" src="../../assets/icon/cropped.png" alt="">
@@ -19,22 +14,13 @@
       </div>
 
      
-    </Motion>
-    <Motion
-    :initial="{opacity: 0, x: -100}"
-      :animate="{opacity: 1, x: 0}"
-      :transition="{duration: 0.5}"
-      v-else
-      >
-    
-      <CompleteEnrolment></CompleteEnrolment>
-    </Motion>
+
+      <CompleteEnrolment v-else></CompleteEnrolment>
   </template>
   
   <script setup lang="ts">
   import SignUpForm from "@/components/form/auth/SignUpForm.vue";
   import CompleteEnrolment from "@/components/form/auth/CompleteEnrolment.vue"
-  import { Motion } from "motion/vue"
   import { computed } from "vue";
 import StoreUtils from "@/util/storeUtils.ts";
 
@@ -77,4 +63,11 @@ import StoreUtils from "@/util/storeUtils.ts";
       width: 100%;
       height: 100%;
     }
+
+    @media (max-width:1080px) {
+    .bg-image{
+      display: none;
+    }
+    
+  }
   </style>

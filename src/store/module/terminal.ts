@@ -2,29 +2,57 @@ import { defineStore } from 'pinia'
 import {TerminalController} from "@/service/TerminalController.ts";
 import StoreUtils from '@/util/storeUtils';
 
-export type TerminalStoreState = {
-    loading: boolean,
-    terminalOrganisations: null
-}
 
 export const useTerminalStore = defineStore('terminal_store', {
-    state: ():TerminalStoreState  => ({
+    state: () => ({
         loading: false,
         terminalOrganisations: null,
+        terminalOrganisationTransactions:null,
+        organisationTerminal:null
     }),
 
     getters: {
         getTerminalOrganisations:state => state.terminalOrganisations,
+        getTerminalOrganisationTransactions:state => state.terminalOrganisationTransactions,
         getLoading: state => state.loading,
+        getOrganisationTerminals:state => state.organisationTerminal
     },
 
     actions: {
-        async getOrganisationTerminal(payload: string){
-            const response = await TerminalController.readOrganisationTerminal(payload)
+        async getOrganisationTerminal(){
+            const response = await TerminalController.readTerminals()
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){
                     this.terminalOrganisations= responseData.data
+                }else{
+                    console.log(responseData)
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readTerminalTransactionByTerminalId(terminalId:string){
+            const response = await TerminalController.readTerminaTransactionByTerminalId(terminalId)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.terminalOrganisationTransactions= responseData.data
+                }else{
+                    console.log(responseData)
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readOrganisationTerminalOrganisationId(OrganisationId:string){
+            const response = await TerminalController.readOrganisationTerminal(OrganisationId)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.organisationTerminal= responseData.data
                 }else{
                     console.log(responseData)
                 }
@@ -41,7 +69,7 @@ export const useTerminalStore = defineStore('terminal_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganisationTerminal(payload.terminalOrganisationId)
+                    StoreUtils.getter()?.terminal.getOrganisationTerminal()
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
@@ -59,7 +87,7 @@ export const useTerminalStore = defineStore('terminal_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.terminal.getOrganisationTerminal(payload.terminalOrganisationId)
+                    StoreUtils.getter()?.terminal.getOrganisationTerminal()
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })

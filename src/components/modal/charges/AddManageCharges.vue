@@ -33,6 +33,10 @@ function close(){
 
 async function addCharges(){
     console.log(model)
+    if(model.value.pricingAmountType === 'FLAT'){
+        model.value.pricingMaxAmount = model.value.pricingAmount
+        model.value.pricingMinAmount = model.value.pricingAmount
+    }
     wait.start('CREATING_CHARGES')
     await StoreUtils.getter()?.charges.createCharges(model.value, toast)
     wait.stop('CREATING_CHARGES')
@@ -56,22 +60,11 @@ async function addCharges(){
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
                     <!-- pricingAmount -->
-                    <div class="modal-child-content">
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text"  v-model="model.pricingAmount" placeholder="pricingAmount"  label="pricingAmount" />
-                            <base-input type="text" v-model="model.pricingCode" placeholder="pricingCode"  label="pricingCode" />
-                        </div>
-                       
-                        
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.pricingMinAmount" placeholder="pricingMinAmount"  label="pricingMinAmount" />
-                            <base-input type="text" v-model="model.pricingMaxAmount" placeholder="pricingMaxAmount"  label="pricingMaxAmount" />
-                        </div>
-
+                    <form class="modal-child-content">
                         <div class="flex justify-between gap-10 mt-3">
                             <div>
                                 <label>pricingAmountType</label>
-                                <Dropdown optionLabel="name" v-model="model.pricingAmountType" optionValue="code" placeholder="pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown  optionLabel="name" v-model="model.pricingAmountType" optionValue="code" placeholder="pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
                             </div>
                             <div>
                                 <label>pricingType</label>
@@ -80,10 +73,21 @@ async function addCharges(){
                         </div>
 
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.pricingDescription" placeholder="pricingDescription"  label="pricingDescription" />
+                            <base-input required type="text"  v-model="model.pricingAmount" :placeholder="model.pricingAmountType === 'PERCENT' ? 'pricingAmountPercentage' : 'pricingAmount'"  :label="model.pricingAmountType === 'PERCENT' ? 'pricingAmountPercentage(%)' : 'pricingAmount'" />
+                            <base-input required type="text" v-model="model.pricingCode" placeholder="pricingCode"  label="pricingCode" />
+                        </div>
+                       
+                        <div class="flex justify-between gap-10" v-if="model.pricingAmountType && model.pricingAmountType === 'PERCENT'">
+                            <base-input :required="model.pricingAmountType && model.pricingAmountType === 'PERCENT'" type="text"  v-model="model.pricingMinAmount" placeholder="pricingMinAmount"  label="pricingMinAmount" />
+                            <base-input :required="model.pricingAmountType && model.pricingAmountType === 'PERCENT'" type="text"  v-model="model.pricingMaxAmount" placeholder="pricingMaxAmount"  label="pricingMaxAmount" />
+                        </div>
+
+                        
+                        <div class="flex justify-between gap-10">
+                            <base-input required type="text" v-model="model.pricingDescription" placeholder="pricingDescription"  label="pricingDescription" />
                         </div>
                     
-                    </div>
+                    </form>
                    
                 
 
@@ -92,7 +96,7 @@ async function addCharges(){
 
                     <div class="modal-child-footer">
                     
-                        <BaseButton :loading="wait.isLoading('CREATING_CHARGES')" @click="addCharges">Add New Charges</BaseButton>
+                        <BaseButton type="sumbit" :loading="wait.isLoading('CREATING_CHARGES')" @click="addCharges">Add New Charges</BaseButton>
 
                     </div>
 

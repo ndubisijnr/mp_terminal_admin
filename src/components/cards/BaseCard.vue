@@ -12,7 +12,7 @@
     <p class="base-card-title">{{ text }}</p>
 
     <p class="base-card-amount">{{ amount }}</p>
-    <p v-if="analytics" class="text-green flex items-center gap-3"><img src="../../assets/icon/arrow-up.svg" /> 20% <span>vs last month</span></p>
+    <!-- <p v-if="analytics" class="text-green flex items-center gap-3"><img src="../../assets/icon/arrow-up.svg" /> 20% <span>vs last month</span></p> -->
   </div>
 
 </template>
@@ -33,17 +33,13 @@
   /* White */
   background: #FFFFFF;
   /* Gray/200 */
-  border: 1px solid #EAECF0;
+  border: 1px solid #78dabe;
   box-shadow: 0 1px 3.15px rgba(16, 24, 40, 0.1), 0px 1.05px 2.1px rgba(16, 24, 40, 0.06);
   border-radius: 8.4px;
 
 }
 
-@media (max-width: 1232px) {
-  .base-card{
-    padding: 10px;
-  }
-}
+
 
 .base-card-title{
   /* Heading and dropdown */
@@ -122,6 +118,14 @@
   flex: none;
   flex-grow: 0;
 
+}
+
+@media (max-width: 1080px) {
+  .base-card{
+    padding: 0;
+    width: 50rem;
+    border: solid;
+  }
 }
 </style>
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import appConfig from "../config/app-config"
+import StoreUtils from "@/util/storeUtils";
 
 export const appClient = axios.create({
     baseURL: appConfig.baseUrl,
@@ -10,6 +11,7 @@ export const appClient = axios.create({
         "Content-Type": "application/json",
     }
 });
+
 export const appClient1 = axios.create({
     baseURL: appConfig.baseUrl,
     withCredentials: false,
@@ -23,11 +25,7 @@ export const appClient1 = axios.create({
 
 appClient.interceptors.request.use(config => {
     config.headers.Authorization = sessionStorage.token;
-        console.log(config.headers.Authorization)
-    // !localStorage.organisationId ?
-    // config.headers.mid = localStorage.customerId
-    // :
-    // config.headers.mid = localStorage.organisationId
+    config.headers.mid = StoreUtils.getter()?.organisation.getCurrentOrganisation.organisationId || sessionStorage?.id
     return config
 })
 
@@ -35,7 +33,6 @@ appClient.interceptors.response.use(response => {
     if (response != null) {
         if (response.data != null) {
             if (response.data.responseCode === '22') {
-                console.log(response.data)
                 // StoreUtils.getter().auth.commitSessionStory(true)
                 // sessionStorage.removeItem('token')
                 // localStorage.clear();

@@ -1,19 +1,20 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import Dropdown from 'primevue/dropdown';
-import { reactive, defineEmits } from 'vue';
+// import Dropdown from 'primevue/dropdown';
+import { defineEmits } from 'vue';
+import BaseInput from '@/components/input/BaseInput.vue';
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
 
-const data = reactive({
-    showConfirmAgain:true,
-    isRequestSent:false
+// const data = reactive({
+//     showConfirmAgain:true,
+//     isRequestSent:false
 
-})
+// })
 
 
 function close(){
@@ -28,20 +29,16 @@ function close(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div v-show="!data.isRequestSent" class="modal-child-wrapper">
+                <div  class="modal-child-wrapper">
                     <div class="modal-child-header">
                         <p class="req-term">Assign Terminal</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
 
                     <div class="modal-child-content">
-                        <div>
-                            <label>Terminal I.D</label>
-                            <Dropdown class="select-drowdown"></Dropdown>
-                        </div>
-                        <div>
-                            <label>Assign To</label>
-                            <Dropdown class="select-drowdown"></Dropdown>
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text"   placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
+                            <base-input type="text"  placeholder="Terminal Pin"  label="TerminalPin" />
                         </div>
                     
                     </div>
@@ -52,9 +49,7 @@ function close(){
 
 
                     <div class="modal-child-footer">
-                        <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="close">
-                            <p class="bnt-trans-text">Cancel</p>
-                        </BaseButton>
+                       
                         <BaseButton>Assign Terminal</BaseButton>
 
                     </div>
@@ -179,15 +174,8 @@ color: #222222;
 
 .modal-child-wrapper{
     /* Assign Terminal Form */
-
-    /* Auto layout */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
     padding: 0px;
     width: 702px;
-    height: 271px;
-
     /* White */
     background: #FFFFFF;
     /* Shadow/sm */
@@ -212,40 +200,18 @@ align-items: center;
 padding: 16px 24px;
 gap: 10px;
 
-width: 702px;
-height: 78px;
-
 background: #FFFFFF;
 border-bottom: 1px solid #E6E6E6;
 border-radius: 16px 16px 0px 0px;
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
 
 }
 
 .modal-child-content{
     /* Content */
-
-/* Auto layout */
-display: flex;
-align-items: flex-start;
 padding: 24px;
-gap: 24px;
-
-width: 702px;
-height: 120px;
 
 /* White */
 background: #FFFFFF;
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-align-self: stretch;
-flex-grow: 0;
 border-bottom: 1px solid #E6E6E6;
 
 
@@ -258,18 +224,11 @@ border-bottom: 1px solid #E6E6E6;
 /* Auto layout */
 display: flex;
 align-items: center;
-padding:0 24px;
+padding:24px;
 justify-content: end;
 width: 702px;
-height: 73px;
 gap: 12px;
 
-
-/* Inside auto layout */
-flex: none;
-order: 2;
-align-self: stretch;
-flex-grow: 0;
 
 }
 

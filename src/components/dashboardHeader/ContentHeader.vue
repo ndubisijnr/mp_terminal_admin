@@ -110,64 +110,64 @@ onMounted(() => {
           <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
           <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
         </div>
-        <div class="content-inner-container-right">
-          <MazDropdown @click="getCustomerOrganisation">
-            <MazAvatar
-              :caption="userFullName"
-              size="1rem"
-              class="avatar"
-            />
-            <p>{{ userFullName}}</p>
+<!--        <div class="content-inner-container-right">-->
+<!--          <MazDropdown @click="getCustomerOrganisation">-->
+<!--            <MazAvatar-->
+<!--              :caption="userFullName"-->
+<!--              size="1rem"-->
+<!--              class="avatar"-->
+<!--            />-->
+<!--            <p>{{ userFullName}}</p>-->
 
-          <template #dropdown>
-            <div class="maz-grid maz-grid-cols-3 maz-gap-2">
-              
-            </div>
-          </template>
-        </MazDropdown>
+<!--          <template #dropdown>-->
+<!--            <div class="maz-grid maz-grid-cols-3 maz-gap-2">-->
+<!--              -->
+<!--            </div>-->
+<!--          </template>-->
+<!--        </MazDropdown>-->
 
-       
-        <MazDialog v-model="data.isOpen">
-          <template #title>
-            Change Organization
-          </template>
+<!--       -->
+<!--        <MazDialog v-model="data.isOpen">-->
+<!--          <template #title>-->
+<!--            Change Organization-->
+<!--          </template>-->
 
-          <template  #default>
-            <MazLoadingBar v-if="wait.isLoading('READ_ORGANISATION')" />
+<!--          <template  #default>-->
+<!--            <MazLoadingBar v-if="wait.isLoading('READ_ORGANISATION')" />-->
 
-           
-            <div v-else>
-              <div v-if="organisation?.length">
-                <div class="flex justify-between mb-3">
-                <p>Current Organisation : {{ organisation[0].organisationName}}</p>  
-               </div>
+<!--           -->
+<!--            <div v-else>-->
+<!--              <div v-if="organisation?.length">-->
+<!--                <div class="flex justify-between mb-3">-->
+<!--                <p>Current Organisation : {{ organisation[0].organisationName}}</p>  -->
+<!--               </div>-->
 
-                <MazSelect
-                  block
-                  v-model="selectedValue"
-                  label="Select Organisation"
-                  :options="organisation.map((item:any) => {return { value: item.organisationName, label: item.organisationName};})"
-                />
-              </div>
-              <div class="text-center" v-if="!organisation?.length">
-                <p class="py-5" >No Organisations</p>
-                <MazBtn>Create Organisation</MazBtn>
-              </div>
-            </div>
-           
-            </template> 
+<!--                <MazSelect-->
+<!--                  block-->
+<!--                  v-model="selectedValue"-->
+<!--                  label="Select Organisation"-->
+<!--                  :options="organisation.map((item:any) => {return { value: item.organisationName, label: item.organisationName};})"-->
+<!--                />-->
+<!--              </div>-->
+<!--              <div class="text-center" v-if="!organisation?.length">-->
+<!--                <p class="py-5" >No Organisations</p>-->
+<!--                <MazBtn>Create Organisation</MazBtn>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--           -->
+<!--            </template> -->
 
 
-            <template #footer>
-              <BaseButton v-if="organisation?.length">
-                Confirm
-              </BaseButton>
-              
-              </template>
-            
-        </MazDialog>
-                
-        </div>
+<!--            <template #footer>-->
+<!--              <BaseButton v-if="organisation?.length">-->
+<!--                Confirm-->
+<!--              </BaseButton>-->
+<!--              -->
+<!--              </template>-->
+<!--            -->
+<!--        </MazDialog>-->
+<!--                -->
+<!--        </div>-->
     </div>
         
 </template>

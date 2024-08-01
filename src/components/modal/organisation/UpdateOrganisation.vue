@@ -8,13 +8,14 @@ import { useToast, useWait } from 'maz-ui';
 import OrganisationRequest from '@/models/request/organisation/OrganisationRequest';
 import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
 
-const model: any = ref(OrganisationRequest.createOrganisation)
-const model2: any = ref(OrganisationRequest.completeCreateOrganisation)
-
-const onboardingStage = ref(StoreUtils.getter().organisation.getOnboardingStage)
+let model:any = ref(OrganisationRequest.createOrganisation)
 
 const user = computed(() => {
-    return StoreUtils.getter()?.auth.getUserInfo
+  return StoreUtils.getter()?.auth.getUserInfo
+})
+
+defineProps({
+    data:Object as any
 })
 
 
@@ -22,20 +23,19 @@ const toast = useToast()
 const wait = useWait()
 
 const loading = ref(false)
-const confirmPassword = ref(null)
-const mazDropzoneInstance = ref<MazDropzoneInstance>()
-const errorMessage = ref<string>()
+  const mazDropzoneInstance = ref<MazDropzoneInstance>()
+  const errorMessage = ref<string>()
 
-const error = ({ message }: any) => {
+  const error = ({ message } : any) => {
     errorMessage.value = message
-}
-const success = ({ file, response }: any) => {
+  }
+  const success = ({ file, response } : any) => {
     OrganisationRequest.createOrganisation.organisationLogo = file.dataURL
-    console.log('dropzone-like', file, response)
-}
+    console.log('dropzone-like', file, response )
+  }
 //   const sendFiles = () =>  mazDropzoneInstance.value?.processQueue()
 
-const dropzoneOptionsBase: MazDropzoneOptions = {
+  const dropzoneOptionsBase: MazDropzoneOptions = {
     url: 'https://httpbin.org/post',
     headers: { 'My-Awesome-Header': 'header value' },
     acceptedFiles: 'image/jpeg,image/jpg,image/png',
@@ -44,9 +44,9 @@ const dropzoneOptionsBase: MazDropzoneOptions = {
     maxThumbnailFilesize: 3,
     autoProcessQueue: true,
     autoRemoveOnError: true,
-} as any
+  } as any
 
-const translations: MazDropzoneOptions = {
+  const translations: MazDropzoneOptions = {
     dictDefaultMessage: 'Choose or drop a file',
     dictFilesDescriptions: `(PNG or JPG under ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
     dictFallbackMessage: 'Your browser is not supported',
@@ -56,12 +56,12 @@ const translations: MazDropzoneOptions = {
     dictCancelUpload: 'Cancel upload',
     dictMaxFilesExceeded: `You can not upload any more files. (max: ${(dropzoneOptionsBase as any).maxFiles})`,
     dictUploadCanceled: 'Upload canceled',
-} as any
+  } as any
 
-const dropzoneOptions: MazDropzoneOptions = {
+  const dropzoneOptions: MazDropzoneOptions = {
     ...dropzoneOptionsBase,
     ...translations
-}
+  }
 
 const emit = defineEmits<{
     (e: 'close', value: boolean): void;
@@ -75,19 +75,9 @@ function close() {
 
 async function createOrganisation() {
     wait.start('CREATING_ORGANISATION')
-    // model.value.organisationCustomerId = user.value?.userId
+    model.value.organisationCustomerId = user.value?.userId
 
     await StoreUtils.getter()?.organisation.createOrganisation(model.value, toast)
-    wait.stop('CREATING_ORGANISATION')
-    close()
-
-}
-
-async function completeCreateOrganisation() {
-    wait.start('CREATING_ORGANISATION')
-    // model.value.organisationCustomerId = user.value?.userId
-
-    await StoreUtils.getter()?.organisation.completeCreateOrganisation(model.value, toast)
     wait.stop('CREATING_ORGANISATION')
     close()
 
@@ -101,81 +91,60 @@ async function completeCreateOrganisation() {
         <template v-slot:child>
             <div class="modal-child-wrapper">
                 <div class="modal-child-header">
-                    <p class="req-term">Onboard Institution</p>
+                    <p class="req-term">Update Organisation</p>
                     <img src="../../../assets/icon/Frame.svg" @click="close" />
                 </div>
 
-                <div v-if="onboardingStage === '1'">
-                    <div class="modal-child-content">
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.userFirstName" placeholder="userFirstName"
-                                label="userFirstName" />
-                            <base-input type="text" v-model="model.userLastName" placeholder="userLastName"
-                                label="userLastName" />
-                        </div>
-
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.organisationName" placeholder="organisationName"
-                                label="organisationName" />
-                            <base-input type="text" v-model="model.userPhone" placeholder="userPhone"
-                                label="userPhone" />
-                        </div>
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.organisationEmail" placeholder="organisationEmail"
-                                label="organisationEmail" />
-                            <base-input type="text" v-model="model.organisationAddress"
-                                placeholder="organisationAddress" label="organisationWebsite" />
-                        </div>
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.userPassword" placeholder="userPassword"
-                                label="userPassword" />
-                            <base-input type="text" v-model="confirmPassword" placeholder="Confirm Password"
-                                label="Confirm Password" />
-
-                        </div>
-
-
+                <div class="modal-child-content">
+                    <div class="flex justify-between gap-10">
+                        <base-input type="text" v-model="model.organisationName" :placeholder="data?.organisationName"
+                            label="organisationName" />
+                        <base-input type="text" v-model="model.organisationPhone" :placeholder="data?.organisationPhone"
+                            label="organisationPhone" />
+                    </div>
+                    <div class="flex justify-between gap-10">
+                        <base-input type="text" v-model="model.organisationEmail" :placeholder="data?.organisationEmail"
+                            label="organisationEmail" />
+                        <base-input type="text" v-model="model.organisationWebsite" :placeholder="data?.organisationWebsite"
+                            label="organisationWebsite" />
                     </div>
 
+                    <div class="flex justify-between gap-10">
+                        <base-input type="text" v-model="model.organisationAddress" :placeholder="data?.organisationAddress"
+                            label="organisationAddress" />
+                        <base-input type="text" v-model="model.organisationRegistrationNumber" :placeholder="data?.organisationRegistrationNumber"
+                            label="organisationRegistrationNumber(CAC)" />
+                    </div>
 
-                    <!-- <div class="divider"></div> -->
+                    <div class="">
+                        <p class="pb-3">OrganisationLogo</p>
+                        <ClientOnly>
+                            <MazDropzone  ref="mazDropzoneInstance" :options="dropzoneOptions" @error="error"
+                                @success="success" @sending="loading = true" @complete="loading = false" />
+                        </ClientOnly>
 
+                        <p v-if="errorMessage" style="color: red; text-align: center;">
+                            {{ errorMessage }}
+                        </p>
 
-                    <div class="modal-child-footer">
-
-                        <BaseButton :loading="wait.isLoading('CREATING_ORGANISATION')" @click="createOrganisation">Send
-                            Request
-                        </BaseButton>
-
+                        <!-- <MazBtn left-icon="arrow-up-tray" :loading="loading" @click="">
+                            Send Files
+                        </MazBtn> -->
                     </div>
 
                 </div>
 
-                <div v-else>
-                    <div class="modal-child-content">
-                        <p>Complete Onboarding by providing the digits sent to the Institution emaill..</p>
 
-                       
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model2.referralCode" placeholder="referralCode"
-                                label="referralCode" />
-                            <base-input type="text" v-model="model2.otp" placeholder="otp"
-                                label="otp" />
-                        </div>
-                
-                    </div>
+                <!-- <div class="divider"></div> -->
 
 
-                    <!-- <div class="divider"></div> -->
+                <div class="modal-child-footer">
 
-
-                    <div class="modal-child-footer">
-
-                        <BaseButton :loading="wait.isLoading('COMPLETING_CREATING_ORGANISATION')" @click="completeCreateOrganisation">Proceed</BaseButton>
-
-                    </div>
+                    <BaseButton  :loading="wait.isLoading('CREATING_ORGANISATION')" @click="createOrganisation">Send Request
+                    </BaseButton>
 
                 </div>
+
             </div>
 
         </template>

@@ -19,11 +19,11 @@ export const  SidebarTopUtils = [
 
     {name:"Dashboard", icon:Dashboard, active:'active-nav', route:'/dashboard'},
     {name:"Transaction", icon:Card,active:'active-nav', route:'/transactions'},
-    {name:"Organizations", icon:Merchant,active:'active-nav', route:'/merchants'},
     {name:"Terminals", icon:Terminal,active:'active-nav', route:'/terminals'},
     {name:"Manage Charges", icon:ManageCharges,active:'active-nav', route:'/charges'},
+    {name:"Institutions", icon:Merchant, active:'active-nav', route:'/institutions'},
     {name:"Users", icon:Users,active:'active-nav', route:'/users'},
-    {name:"Logs", icon:Logs,active:'active-nav', route:'#'},
+
 
 ]
 

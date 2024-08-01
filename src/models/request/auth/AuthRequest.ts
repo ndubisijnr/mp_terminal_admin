@@ -21,12 +21,15 @@ class AuthRequest{
     }
 
     static LoginRequest = {
-        deviceId:	null,
-        latitude:	null,
-        longitude:	null,
-        userEmail:	null,
-        userPassword:	null
+        adminEmail: null,
+        adminPassword: null,
+        deviceId: null,
+        latitude: null,
+        longitude: null,
+        otp: null
     }
+
+
 
     static InitiatePasswordResetRequest = {
         userEmail:	null,

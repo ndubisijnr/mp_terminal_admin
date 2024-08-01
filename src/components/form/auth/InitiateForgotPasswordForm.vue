@@ -17,7 +17,9 @@
           <!-- <p class="text-[14px] leading-[25px] text-center text-gray-500">We can resend OTP in: <code>11:00</code></p>
           <base-button type="button" outline loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Resend OTP</base-button> -->
          
-          <base-button type="submit" loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Send Email</base-button>
+          <div style="padding-top: 1rem;">
+            <base-button type="submit" loadingColor="white"  :loading="wait.isLoading('DATA_SUBMITTING')">Send Email</base-button>
+          </div>
 
           <p class="text-[14px] leading-[21px] text-gray_1 text-center cursor-pointer py-4" @click="toLogin">I have an account? <span class="sign-up">Log in</span></p>
 
@@ -57,7 +59,7 @@
   import BaseCheckbox from "@/components/checkbox/BaseCheckbox.vue";
   import BaseButton from "@/components/button/BaseButton.vue";
   import {router} from "@/router/index";
-  import AuthRequest from "@/models/request/AuthRequest"
+  import AuthRequest from "@/models/request/auth/AuthRequest"
   import StoreUtiils from "@/util/storeUtils.ts"
   import { useToast, useWait } from 'maz-ui'
   import { computed } from "vue";

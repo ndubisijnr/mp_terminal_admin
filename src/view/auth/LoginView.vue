@@ -1,9 +1,5 @@
 <template>
-  <Motion
-    :initial="{opacity: 0, x: -100}"
-    :animate="{opacity: 1, x: 0}"
-    :transition="{duration: 0.5}"
-  >
+
     <div class="container">
       <div class="min-container p-10">
         <div class="w-full h-[20%]">
@@ -15,12 +11,10 @@
       </div>
       <div class="min-container bg-image"></div>
     </div>
-  </Motion>
 </template>
 
 <script setup lang="ts">
 import LoginForm from "@/components/form/auth/LoginForm.vue";
-import { Motion } from "motion/vue"
 // import documentTitle from "@/util/helper/documentTitle.ts";
 
 // documentTitle(`Login | ${getEnv("VITE_APP_NAME")}`)
@@ -56,5 +50,12 @@ import { Motion } from "motion/vue"
   .img-container{
     width: 100%;
     height: 100%;
+  }
+
+  @media (max-width:1080px) {
+    .bg-image{
+      display: none;
+    }
+    
   }
 </style>

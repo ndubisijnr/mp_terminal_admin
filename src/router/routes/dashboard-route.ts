@@ -7,6 +7,14 @@ export const dashboardRoute: BaseRouteProps[] = [
         component: () => import("@/view/dashboard/HomePageView.vue"),
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, manage your transactions in real time!'},
     },
+
+    {
+        name: RouteConstantUtil.dashboard.institutions,
+        path: '/institutions',
+        component: () => import("@/view/dashboard/Institutions.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, manage your institutions in real time!'},
+    },
+    
     {
         name: RouteConstantUtil.dashboard.teminalPage,
         path: '/terminals',
@@ -30,6 +38,18 @@ export const dashboardRoute: BaseRouteProps[] = [
         path: '/charges',
         component: () => import("@/view/dashboard/ManageCharges.vue"),
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage charges!'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.terminalTransactions,
+        path: '/terminal-transaction',
+        component: () => import("@/view/dashboard/TerminalTransactions.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage Terminal Transactions!'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.institutionsCharges,
+        path: '/institution/charges',
+        component: () => import("@/view/dashboard/InstitutionCharges.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Manage Institution!'},
     },
     {
         name: RouteConstantUtil.dashboard.user,

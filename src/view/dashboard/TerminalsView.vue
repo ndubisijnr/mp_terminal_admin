@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import BaseButton from '@/components/button/BaseButton.vue';
 import RequestTerminal from '@/components/modal/terminal/RequestTerminal.vue';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, onMounted } from 'vue';
 import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
-import { Motion } from "motion/vue";
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import StoreUtils from "@/util/storeUtils.ts";
 import DataTable from 'primevue/datatable';
@@ -21,13 +20,18 @@ import MazDialogPromise, {
 import MazDialog from 'maz-ui/components/MazDialog'
 import UpdateTerminal from '@/components/modal/terminal/UpdateTerminal.vue'
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
+import Breadcrumb from 'primevue/breadcrumb';
+import { router } from '@/router';
+import {RouteConstantUtil} from "../../util/constant/RouteConstantUtil.ts";
+
 
 const reactiveData = reactive({
   showRequestTerminal: false,
   showAssignTerminal: false,
   visible: false,
   selectedRow: {} as any,
-  showUpdateTerminal: false
+  showUpdateTerminal: false,
+  readTerminalTransactions:false
 })
 
 
@@ -90,14 +94,45 @@ const terminalHeaders = [
   { label: 'terminalId', key: 'terminalId' },
   { label: 'terminalSerialNumber', key: 'terminalSerialNumber' },
   { label: 'terminalMerchantNameLocation', key: 'terminalMerchantNameLocation' },
+  { label: 'terminalBalance', key: 'terminalBalance' },
   { label: 'terminalCreatedAt', key: 'terminalCreatedAt' }]
 
+
+// function generateDummyData(numEntries) {
+//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
+
+//   const dummyData = [];
+
+//   for (let i = 0; i < numEntries; i++) {
+//     dummyData.push({
+//       terminalId: getRandomNumber(100, 10000), // Random amount between 100 and 10000
+//       terminalSerialNumber: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
+//       terminalCreatedAt: new Date().toISOString(), // Current timestamp
+//       terminalMerchantNameLocation: getRandomString(14), // Random string for account type
+//     });
+//   }
+
+//   return dummyData;
+// }
+
+// const terminalOrganizations = generateDummyData(10)
 
 const terminalOrganizations = computed(() => StoreUtils.getter()?.terminal?.getTerminalOrganisations)
 
 const organisations = computed(() => {
   return StoreUtils.getter()?.organisation.getCurrentOrganisation
 })
+
+const transactionsHeaders = [
+  { label: 'Organisation Name', key: 'transactionRequestAmount' },
+  { label: 'Terminal ID', key: 'transactionStatus' },
+  { label: 'Merchant Name', key: 'transactionTerminalId' },
+  { label: 'Transaction Amount', key: 'transactionTransactionTime' },
+  { label: 'Transaction ResponseCode', key: 'transactionToAccountType' },
+  { label: 'Location', key: 'transactionToAccountIdentification' },
+  { label: 'AppLabel', key: 'transactionToAccountIdentification' },
+  { label: 'RRN', key: 'transactionToAccountIdentification' }]
 
 const getSeverity = (status: string) => {
   switch (status) {
@@ -140,6 +175,13 @@ const items = ref([
         }
       },
       {
+        label: 'Terminal Transactions',
+        icon: 'pi pi-refresh',
+        command: () => {
+          router.push({name:RouteConstantUtil.dashboard.terminalTransactions, query:{terminalID:reactiveData.selectedRow.terminalId}})
+        }
+      },
+      {
         label: 'Edit',
         icon: 'pi pi-upload',
         command: () => {
@@ -157,6 +199,8 @@ const items = ref([
   }
 ]);
 
+
+
 const metaKey = ref(true);
 
 
@@ -171,17 +215,29 @@ function requestTerminal() {
 
 }
 
-function init() {
-  console.log('Auth', StoreUtils.getter()?.auth.getUserInfo.userRoleId)
-  StoreUtils.getter()?.terminal?.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId) ?? "")
-}
+const terminalTransactions = computed(() => {
+  return StoreUtils.getter()?.transactions?.terminalTransactions
+})
 
-init()
+// function init() {
+//   StoreUtils.getter()?.terminal?.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId) ?? "")
+// }
+
+// init()
+
+const menus = ref([
+    { label: 'Terminals', route:'/terminals' }, 
+    { label: 'Transactions' }, 
+]);
+
+onMounted(() => {
+  StoreUtils.getter().terminal.getOrganisationTerminal()
+})
 
 </script>
 
 <template>
-  <Dialog v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
+  <Dialog header="Terminal Overview"v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
       <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
@@ -217,14 +273,15 @@ init()
   <RequestTerminal v-if="reactiveData.showRequestTerminal" @close="handleClose" />
   <UpdateTerminal :data="reactiveData.selectedRow" v-if="reactiveData.showUpdateTerminal" @close="handleClose" />
   <AssignTerminal v-if="reactiveData.showAssignTerminal" @close="handleClose" />
-  <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }" :transition="{ duration: 0.5 }">
     <ContentHeader />
 
     <div class="content-table-section">
+      <Breadcrumb :model="menus" v-if="reactiveData.readTerminalTransactions"/>
+
       <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
 
         <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">Terminal Holders List</p>
+          <p class="text-xl text-black">{{reactiveData.readTerminalTransactions ? `${reactiveData.selectedRow.terminalId} Transactions` : 'Terminal Holders List'}}</p>
           <img src="../../assets/icon/alert-circle.svg" />
           <!-- <div>
                 <input class="terminal_search"  placeholder="Search"/>
@@ -254,8 +311,56 @@ init()
 
 
       <div class="overflow-auto rounded-lg shadow">
+        <DataTable v-if="reactiveData.readTerminalTransactions" v-model:filters="filters" :value="terminalTransactions" :metaKeySelection="metaKey" selectionMode="single"
+            paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+            :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
 
-        <DataTable v-model:filters="filters" :value="terminalOrganizations" :metaKeySelection="metaKey"
+            <template #header>
+              <div class="flex justify-end">
+                <span class="relative">
+                  <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+                  <InputText v-model="filters['global'].value" placeholder="Keyword Search"
+                    class="pl-10 font-normal terminal_search" />
+                </span>
+              </div>
+            </template>
+
+            <template #empty>
+              <div class="text-center">
+                No Transactions found.
+              </div>
+            </template>
+            <template #loading> Loading customers data. Please wait. </template>
+
+            <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+            <!--terminal status-->
+            <Column field="terminalStatus" header="terminalStatus">
+                  <template #body="slotProps">
+                        
+                        <div v-if="slotProps.data.terminalStatus">
+                          <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />
+                        </div>
+                          
+                        </template>
+                </Column> 
+            <Column header="actions">
+
+              <template #body="">
+                <div class="flex">
+
+                  <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
+
+                  <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+                </div>
+              </template>
+            </Column>
+
+
+          </DataTable>
+
+        <DataTable v-else v-model:filters="filters" :value="terminalOrganizations" :metaKeySelection="metaKey"
           selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows
           tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
@@ -281,15 +386,15 @@ init()
 
           <Column v-for="col of terminalHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <!--terminal status-->
-          <Column field="terminalStatus" header="terminalStatus">
-            <template #body="slotProps">
+<!--          <Column field="terminalStatus" header="terminalStatus">-->
+<!--            <template #body="slotProps">-->
 
-              <div v-if="slotProps.data.terminalStatus">
-                <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />
-              </div>
+<!--              <div v-if="slotProps.data.terminalStatus">-->
+<!--                <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />-->
+<!--              </div>-->
 
-            </template>
-          </Column>
+<!--            </template>-->
+<!--          </Column>-->
           <Column header="actions">
 
             <template #body="">
@@ -308,7 +413,6 @@ init()
       </div>
 
     </div>
-  </Motion>
 </template>
 
 <style scoped>

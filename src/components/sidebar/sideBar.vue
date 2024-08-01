@@ -1,39 +1,54 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive } from 'vue';
+import { computed} from 'vue';
 import { useRouter } from 'vue-router';
-import sideBar from "../../components/sidebar/sideBar.vue"
+
+import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtils.ts';
 
 const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
 
 const router = useRouter();
 
-const data = reactive({
-  mounting: true
-});
-
 const getCurrentRoute:any = computed(() => router.currentRoute.value.name);
 
+const getCurrentRoutePath = computed(() => router.currentRoute.value.fullPath);
 
 const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
-
-onMounted(() => {
-  setTimeout(() => {
-    data.mounting = false;
-     
-  }, 500);
-});
 </script>
 
 <template>
-      <div class="loading-wrapper" v-if="data.mounting"></div>
-      <div class="dashboard-wrapper-layout" v-else v-cloak>
-        <sideBar />
-        <div class="dashboard-main" :class="{ 'authView': isAuthRoute }">
-         
-         <slot name="children"></slot>
+    <div class="sidebar-wrapper" v-if="!isAuthRoute">
+          <div class="sidebar-wrapper-header">
+            <img class="logo shadow-lg" src="../../assets/icon/cropped.png" alt="">
+          </div>
+          <!-- <div class="search-wrapper">
+            <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
+          </div> -->
+          <div class="sidebar-menubar">
+            <div class="sidebar-top-nav">
+              <router-link
+                :to="i.route"
+                v-for="(i, index) in SidebarTopUtils"
+                :key="index"
+                class="nav-item-base"
+                :class="{ 'active-nav': getCurrentRoutePath === i.route }"
+              >
+                <img :src="i.icon" alt="" />
+                <p>{{ i.name }}</p>
+              </router-link>
+            </div>
+            <div class="sidebar-bottom-nav">
+              <router-link
+                :to="i.route"
+                v-for="(i, index) in SidebarBottomUtils"
+                :key="index"
+                class="nav-item-base"
+              >
+                <img :src="i.icon" />
+                <p>{{ i.name }}</p>
+              </router-link>
+            </div>
+          </div>
         </div>
-      </div>
-  
 </template>
 
 <style scoped>

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import BaseButton from '@/components/button/BaseButton.vue';
 import { computed, reactive, ref, onMounted } from 'vue';
-import { Motion } from "motion/vue";
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import StoreUtils from "@/util/storeUtils.ts";
 import AddUser from "@/components/modal/user/AddUser.vue";
@@ -122,7 +121,6 @@ onMounted(() => {
 <template>
   <AddUser v-if="reactiveData.showUserModal" @close="handleClose" />
   <AddRole v-if="reactiveData.showRoleModal" @close="handleClose" />
-  <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }" :transition="{ duration: 0.5 }">
     <ContentHeader />
 
     <div class="content-table-section">
@@ -194,7 +192,6 @@ onMounted(() => {
       </div>
 
     </div>
-  </Motion>
 </template>
 
 <style scoped>

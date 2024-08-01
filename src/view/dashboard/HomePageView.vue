@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import Chart from 'primevue/chart';
-import { Motion } from "motion/vue";
 import { ref, onMounted, reactive, computed } from "vue";
 import { useToast, useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils.ts";
@@ -10,6 +9,7 @@ import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from 'primevue/api';
+import { useAuthStore } from "@/store/module/auth";
 
 const toast = useToast()
 const wait = useWait()
@@ -23,12 +23,55 @@ const chartData = ref();
 
 const chartOptions = ref();
 
-const user = StoreUtils.getter()?.auth.userInfo
-const transactions = StoreUtils.getter()?.transactions.getTransactions
+const user = useAuthStore()
+// const transactions = StoreUtils.getter()?.transactions.getTransactions
 
-const terminalOrganizations = computed(() => {
-  return StoreUtils.getter()?.terminal?.getTerminalOrganisations
-})
+// const terminalOrganizations = computed(() => {
+//   return StoreUtils.getter()?.terminal?.getTerminalOrganisations
+// })
+
+// function generateDummyData2(numEntries) {
+//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
+
+//   const dummyData = [];
+
+//   for (let i = 0; i < numEntries; i++) {
+//     dummyData.push({
+//       transactionRequestAmount: getRandomString(12), // Random amount between 100 and 10000
+//       transactionStatus: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID ['Pending', 'Completed', 'Failed'][getRandomNumber(0, 2)], // Random status
+//       transactionTerminalId: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
+//       transactionTransactionTime: new Date().toISOString(), // Current timestamp
+//       transactionToAccountType: ['23', '00', '00'][getRandomNumber(0, 1)], // Random string for account type
+//       transactionToAccountIdentification: getRandomString(12) // Random string for account identification
+//     });
+//   }
+
+//   return dummyData;
+// }
+
+const transactions = []
+
+
+// function generateDummyData(numEntries) {
+//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
+
+//   const dummyData = [];
+
+//   for (let i = 0; i < numEntries; i++) {
+//     dummyData.push({
+//       terminalId: getRandomNumber(100, 10000), // Random amount between 100 and 10000
+//       terminalSerialNumber: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
+//       terminalCreatedAt: new Date().toISOString(), // Current timestamp
+//       terminalMerchantNameLocation: getRandomString(14), // Random string for account type
+//     });
+//   }
+
+//   return dummyData;
+// }
+
+const terminalOrganizations = []
 
 
 const reactiveData = reactive({
@@ -39,11 +82,8 @@ const reactiveData = reactive({
 onMounted(async () => {
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
-  if (!user) {
-    wait.start()
-    await StoreUtils?.getter()?.auth?.userDetails(toast)
-    wait.stop()
-  }
+  console.log(user.userInfo)
+  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
 });
 
 
@@ -146,12 +186,14 @@ const setChartOptions = () => {
 }
 
 const transactionsHeaders = [
-  { label: 'transactionRequestAmount', key: 'transactionRequestAmount' },
-  { label: 'transactionStatus', key: 'transactionStatus' },
-  { label: 'transactionTerminalId', key: 'transactionTerminalId' },
-  { label: 'transactionTransactionTime', key: 'transactionTransactionTime' },
-  { label: 'transactionToAccountType', key: 'transactionToAccountType' },
-  { label: 'transactionToAccountIdentification', key: 'transactionToAccountIdentification' }]
+  { label: 'Organisation Name', key: 'transactionRequestAmount' },
+  { label: 'Terminal ID', key: 'transactionStatus' },
+  { label: 'Merchant Name', key: 'transactionTerminalId' },
+  { label: 'Transaction Amount', key: 'transactionTransactionTime' },
+  { label: 'Transaction ResponseCode', key: 'transactionToAccountType' },
+  { label: 'Location', key: 'transactionToAccountIdentification' },
+  { label: 'AppLabel', key: 'transactionToAccountIdentification' },
+  { label: 'RRN', key: 'transactionToAccountIdentification' }]
 
 const terminalHeaders = [
   { label: 'terminalId', key: 'terminalId' },
@@ -169,7 +211,6 @@ const terminalHeaders = [
   </MazFullscreenLoader>
 
 
-  <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }" :transition="{ duration: 0.5 }">
     <ContentHeader />
     <div class="content">
       <div class="content-card-section">
@@ -179,7 +220,7 @@ const terminalHeaders = [
         <base-card text="Failed Transaction" amount="32" :analytics="true"></base-card>
       </div>
 
-      <div class="content-chart-section">
+      <!-- <div class="content-chart-section">
         <div style="display: flex; align-items: center; justify-content: space-between;margin:25px 0">
           <div style="display: flex; align-items: center; justify-content: center;gap:20px">
             <p class="text-xl text-black">Statistics</p>
@@ -208,7 +249,7 @@ const terminalHeaders = [
         </div>
         <Chart type="line" :data="chartData" :options="chartOptions" class="h-100rem" />
 
-      </div>
+      </div> -->
 
       <div class="content-table-section">
         <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
@@ -280,7 +321,6 @@ const terminalHeaders = [
 
       </div>
     </div>
-  </Motion>
 
 </template>
 
@@ -342,6 +382,12 @@ const terminalHeaders = [
   gap: 25px;
   overflow-x: scroll;
   justify-content: space-between;
+}
+
+@media (max-width:1080px) {
+  .content-card-section{
+    width: 100%;
+  }
 }
 
 .content-card-section::-webkit-scrollbar {

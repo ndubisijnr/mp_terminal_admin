@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import BaseButton from '@/components/button/BaseButton.vue';
 import { reactive, computed, onMounted, ref } from 'vue';
-import {Motion} from "motion/vue";
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import AddManageCharges from '@/components/modal/charges/AddManageCharges.vue';
 import StoreUtils from '@/util/storeUtils';
@@ -18,6 +17,9 @@ import MazDialogPromise, {
 // import { DialogCustomButton } from 'maz-ui/types/components/MazDialogPromise/use-maz-dialog-promise.js'; 
 import ChargesRequest from '@/models/request/charges/ChargesRequest';
 import { useToast } from 'maz-ui';
+import { useAuthStore } from '@/store/module/auth';
+
+const user = useAuthStore()
 
 
 const toast = useToast()
@@ -98,7 +100,6 @@ const headers = [
   {label:'pricingMaxAmount',key:'pricingMaxAmount'},]
 
 
-
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     pricingType: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -160,7 +161,9 @@ function requestAddCharges(){
 
 }
 
-onMounted(() => {
+ onMounted(async () => {
+  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
+
   StoreUtils.getter()?.charges.getOrganizationCharges()
 })
 
@@ -179,7 +182,6 @@ onMounted(() => {
     <AddManageCharges v-if="reactiveData.showManageCharges" @close="handleClose"></AddManageCharges>
    
     <UpdateManageCharges v-if="reactiveData.showUpdateCharges" :data="reactiveData.selectedRow"  @close="handleClose"></UpdateManageCharges>
-    <Motion :initial="{opacity: 0, x: -100}" :animate="{opacity: 1, x: 0}" :transition="{duration: 0.5}">  
     <ContentHeader />
 
     <div class="content-table-section">
@@ -252,7 +254,6 @@ onMounted(() => {
         
       </div>
     </div>
-    </Motion>
 </template>
 
 <style scoped>

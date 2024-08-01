@@ -4,38 +4,13 @@
       <div class="">
         <h1 class="font-[800] text-[37px] font-inter-Medium">Sign Up</h1>
         <p class="text-[16px] leading-[25px]" >Manage your business with ease!</p>
-        <div>
-            <!--progress tracker -->
-            <!-- <div class="relative flex items-center justify-start mt-5">
-                <div @click="steps='1'" class="w-14 h-14 border-4 border-white  rounded-full ellipse"></div>
-                <div class="w-full max-w-xs border-t-2 border-gray-500"></div>
-                <div class="w-14 h-14 border-4 border-white  rounded-full ellipse"></div>
-            </div> -->
-
-            <div>
-                <!--steps-->
-     
     
-                <!-- <div class="flex justify-between">
-                    <div>
-                        <p class="pb-2"> Step 1</p>
-                        <p>Bussiness Details</p>
-                        <p>Complete</p>
-                    </div>
-                    <div>
-                        <p>Step 2</p>
-                        <p>Login Info</p>
-                        <p>Pending</p>
-                    </div>
-                </div> -->
-            </div>
-        </div>
         <form class="" @submit.prevent="initiateEnrolment">
           <div v-if="steps === '1'">  
             <base-input v-model="AuthRequest.InitiateEnrollmentRequest.organisationName" placeholder="Enter your business name"  label="Business Name"/>
             <base-input v-model="AuthRequest.InitiateEnrollmentRequest.organisationAddress" placeholder="Address" label="Address"/>
 
-            <div class="flex gap-10 py-4">
+            <div class="flex gap-10 py-4 grouped_input">
                 <base-input v-model="AuthRequest.InitiateEnrollmentRequest.userFirstName" placeholder="Enter your first name"  label="First Name"/>
                 <base-input v-model="AuthRequest.InitiateEnrollmentRequest.userLastName" placeholder="Enter your last name" label="Last Name"/>
             </div>
@@ -87,7 +62,7 @@
   import {router} from "@/router/index";
   import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
   import { reactive, ref } from 'vue'
-  import AuthRequest from "@/models/request/AuthRequest.ts";
+  import AuthRequest from "@/models/request/auth/AuthRequest";
   import { useToast, useWait } from 'maz-ui'
   import StoreUtils from "@/util/storeUtils.ts";
   
@@ -120,7 +95,7 @@ async function initiateEnrolment(){
  
   </script>
   
-  <style scoped >
+  <style scoped>
 
   .ellipse{
    /* Ellipse 270 */
@@ -146,8 +121,16 @@ async function initiateEnrolment(){
       justify-content: center; */
     }
     
-    form{
+
+    @media (max-width:1080px) {
+      .form-container{
+        width: 100%;
+      }
+      .grouped_input{
+        flex-direction: column;
+      }
     }
+    
 
 
     .forgot-password-container{

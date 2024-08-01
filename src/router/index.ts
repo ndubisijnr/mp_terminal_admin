@@ -77,9 +77,7 @@ router.beforeResolve(async (routeTo:any, routeFrom:any, next:(...args: any[]) =>
     next();
 });
 
-router.afterEach(() => {
-
-});
+router.afterEach(() => {});
 
 
 // router.beforeEach((to, from, next)=>{

@@ -1,3 +1,4 @@
+
 export const RouteConstantUtil = {
     auth:{
         login: "Login",
@@ -13,8 +14,11 @@ export const RouteConstantUtil = {
         teminalPage:"Terminals",
         transactions:"Transactions",
         organisations:"Organisations",
+        terminalTransactions:"Terminal Transactions",
         charges:"Manage Charges",
+        institutions:"Manage Institutions",
+        institutionsCharges:"Institutions Statistics",
         user:"User",
-        authRequired:true
+        authRequired:false
     },
 }

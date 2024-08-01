@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
-import { Motion } from "motion/vue";
 import { onMounted, ref, reactive } from "vue";
 import { useToast, useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
@@ -12,6 +11,8 @@ import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
+import { useAuthStore } from "@/store/module/auth";
+
 
 const toast = useToast()
 
@@ -24,17 +25,40 @@ const reactiveData = reactive({
 })
 
 
-const user = StoreUtils.getter()?.auth?.getUserInfo
+const user = useAuthStore()
 
-const transactions = StoreUtils.getter()?.transactions?.transactions
 
 const transactionsHeaders = [
-  { label: 'transactionRequestAmount', key: 'transactionRequestAmount' },
-  { label: 'transactionStatus', key: 'transactionStatus' },
-  { label: 'transactionTerminalId', key: 'transactionTerminalId' },
-  { label: 'transactionTransactionTime', key: 'transactionTransactionTime' },
-  { label: 'transactionToAccountType', key: 'transactionToAccountType' },
-  { label: 'transactionToAccountIdentification', key: 'transactionToAccountIdentification' }]
+  { label: 'Terminal ID', key: 'transactionTerminalId' },
+  { label: 'Merchant Name', key: 'transactionReceivingInstitutionId' },
+  { label: 'Amount', key: 'transactionRequestAmount' },
+  { label: 'ResponseCode', key: 'transactionResponseCode' },
+  { label: 'Stan', key: 'transactionStan' },
+  { label: 'MaskedPan', key: 'transactionMaskedPan' }]
+
+
+// function generateDummyData(numEntries) {
+//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
+
+//   const dummyData = [];
+
+//   for (let i = 0; i < numEntries; i++) {
+//     dummyData.push({
+//       transactionRequestAmount: getRandomString(12), // Random amount between 100 and 10000
+//       transactionStatus: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID ['Pending', 'Completed', 'Failed'][getRandomNumber(0, 2)], // Random status
+//       transactionTerminalId: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
+//       transactionTransactionTime: new Date().toISOString(), // Current timestamp
+//       transactionToAccountType: ['23', '00', '00'][getRandomNumber(0, 1)], // Random string for account type
+//       transactionToAccountIdentification: getRandomString(12) // Random string for account identification
+//     });
+//   }
+
+//   return dummyData;
+// }
+
+const transactions = StoreUtils.getter().transactions.getTransactions
+
 
 const onRowSelect = (event: any) => {
   reactiveData.selectedRow = event.data
@@ -66,13 +90,13 @@ const filters = ref({
   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const toggle = (event:any) => {
+const toggle = (event: any) => {
   menu.value.toggle(event);
 }
 
 const items = ref([
   {
-    label: 'Options',
+    // label: 'Options',
     items: [
       {
         label: 'View',
@@ -100,19 +124,24 @@ const items = ref([
 ]);
 const metaKey = ref(true);
 
+//
+// onMounted(async () => {
+//   if (!user) {
+//     wait.start()
+//     await StoreUtils?.getter()?.auth?.userDetails(toast)
+//     wait.stop()
+//   }
+//   if (!transactions) {
+//     wait.start()
+//     await StoreUtils?.getter()?.transactions?.readCustomerOrganisationTransactions()
+//     wait.stop()
+//   }
+// });
 
-onMounted(async () => {
-  if (!user) {
-    wait.start()
-    await StoreUtils?.getter()?.auth?.userDetails(toast)
-    wait.stop()
-  }
-  if (!transactions) {
-    wait.start()
-    await StoreUtils?.getter()?.transactions?.readCustomerOrganisationTransactions()
-    wait.stop()
-  }
-});
+
+onMounted(() => {
+  StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+})
 
 
 </script>
@@ -124,7 +153,7 @@ onMounted(async () => {
     </p>
   </MazFullscreenLoader>
 
-  <Dialog v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
+  <Dialog header="Transaction Overview" v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
       <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
@@ -133,53 +162,52 @@ onMounted(async () => {
   </Dialog>
 
 
-  <Motion :initial="{ opacity: 0, x: -100 }" :animate="{ opacity: 1, x: 0 }" :transition="{ duration: 0.5 }">
-    <ContentHeader />
-    <div class="content">
-      <div class="content-card-section">
-        <base-card text="Total Transactions Amount" :analytics="true" amount="200,420"></base-card>
-        <base-card text="Successfull Transaction" :analytics="true" amount="1,198"></base-card>
-        <base-card text="Pending Transaction" :analytics="true" amount="2"></base-card>
-        <base-card text="Failed Transaction" :analytics="true" amount="32"></base-card>
+  <ContentHeader />
+  <div class="content">
+    <div class="content-card-section">
+      <base-card text="Total Transactions Amount" :analytics="true" amount="200,420"></base-card>
+      <base-card text="Successfull Transaction" :analytics="true" amount="1,198"></base-card>
+      <base-card text="Pending Transaction" :analytics="true" amount="2"></base-card>
+      <base-card text="Failed Transaction" :analytics="true" amount="32"></base-card>
+    </div>
+
+
+
+
+    <div class="content-table-section">
+      <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+        <p class="text-xl text-black">Recent Transaction</p>
+        <img src="../../assets/icon/alert-circle.svg" />
       </div>
+      <div class="overflow-auto rounded-lg shadow">
 
+        <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
+        <DataTable v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
+          paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+          :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
 
+          <template #header>
+            <div class="flex justify-end">
+              <span class="relative">
+                <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+                <InputText v-model="filters['global'].value" placeholder="Keyword Search"
+                  class="pl-10 font-normal terminal_search" />
+              </span>
+            </div>
+          </template>
 
+          <template #empty>
+            <div class="text-center">
+              No Transactions found.
+            </div>
+          </template>
+          <template #loading> Loading customers data. Please wait. </template>
 
-      <div class="content-table-section">
-        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
-          <p class="text-xl text-black">Recent Transaction</p>
-          <img src="../../assets/icon/alert-circle.svg" />
-        </div>
-        <div class="overflow-auto rounded-lg shadow">
-
-          <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-          <DataTable v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
-            paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
-            :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
-
-            <template #header>
-              <div class="flex justify-end">
-                <span class="relative">
-                  <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-                  <InputText v-model="filters['global'].value" placeholder="Keyword Search"
-                    class="pl-10 font-normal terminal_search" />
-                </span>
-              </div>
-            </template>
-
-            <template #empty>
-              <div class="text-center">
-                No Transactions found.
-              </div>
-            </template>
-            <template #loading> Loading customers data. Please wait. </template>
-
-            <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
-            <!--terminal status-->
-            <!-- <Column field="terminalStatus" header="terminalStatus">
+          <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+          <!--terminal status-->
+          <!-- <Column field="terminalStatus" header="terminalStatus">
                   <template #body="slotProps">
                         
                         <div v-if="slotProps.data.terminalStatus">
@@ -188,24 +216,23 @@ onMounted(async () => {
                           
                         </template>
                 </Column> -->
-            <Column header="actions">
+          <Column header="actions">
 
-              <template #body="">
-                <div class="flex">
+            <template #body="">
+              <div class="flex">
 
-                  <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
+                <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
 
-                  <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-                </div>
-              </template>
-            </Column>
+                <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+              </div>
+            </template>
+          </Column>
 
 
-          </DataTable>
-        </div>
+        </DataTable>
       </div>
     </div>
-  </Motion>
+  </div>
 
 </template>
 
