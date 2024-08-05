@@ -10,7 +10,7 @@ import { useToast, useWait } from 'maz-ui';
 const toast = useToast()
 const wait = useWait()
 
-const model:any = ref(TerminalRequest.createTerminal)
+const model:any = ref(TerminalRequest.uploadTerminalSerial)
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
@@ -28,9 +28,8 @@ function close(){
 
 async function createTerminal(){
     wait.start('CREATING_TERMINAL')
-    model.value.terminalOrganisationId = organisations.value?.organisationId;
 
-    await StoreUtils.getter()?.terminal.createNewTerminal(model.value, toast)
+    await StoreUtils.getter()?.terminal.uploadNewTerminalSerial(model.value, toast)
     wait.stop('CREATING_TERMINAL')
     close()
    
@@ -44,7 +43,7 @@ async function createTerminal(){
         <template v-slot:child>
                 <div class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add Terminal</p>
+                        <p class="req-term">Add Terminal Serial</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
 
@@ -52,6 +51,10 @@ async function createTerminal(){
                         <div class="flex justify-between gap-10">
                             <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
                             <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Pin"  label="TerminalPin" />
+                        </div>
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.terminalSerialNumber" placeholder="Terminal Serial Name"  label="Terminal Serial Name" />
+                            <base-input type="text" v-model="model.terminalPin" placeholder="Terminal Serial Version"  label="Terminal Serial Version" />
                         </div>
                        
                     </div>

@@ -25,6 +25,10 @@ class ChargesRequest {
   static deleteCharges = {
     pricingId: null
   }
+
+  static deleteOrgCharges = {
+    organisationPricingPricingId: null
+  }
 }
 
 export default ChargesRequest 

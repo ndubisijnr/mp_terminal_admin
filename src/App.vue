@@ -16,7 +16,7 @@ import { onMounted, computed } from "vue";
 const isRouterReady = computed(() => {return router.isReady()})
 
 onMounted(() => {
-  document.body.classList.toggle('maintms')
+  document.body.classList.toggle('corestep')
  
 })
 

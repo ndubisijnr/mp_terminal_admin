@@ -3,6 +3,8 @@ import { computed} from 'vue';
 import { useRouter } from 'vue-router';
 
 import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtils.ts';
+import Logout from "@/assets/icon/sidebar-icon/Button.svg"
+
 
 const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
 
@@ -13,12 +15,17 @@ const getCurrentRoute:any = computed(() => router.currentRoute.value.name);
 const getCurrentRoutePath = computed(() => router.currentRoute.value.fullPath);
 
 const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
+
+function logout(){
+  sessionStorage.clear()
+  location.reload()
+}
 </script>
 
 <template>
     <div class="sidebar-wrapper" v-if="!isAuthRoute">
           <div class="sidebar-wrapper-header">
-            <img class="logo shadow-lg" src="../../assets/icon/cropped.png" alt="">
+            <h3 class="text-3xl text-white font-semibold">TMS PORTAL</h3>
           </div>
           <!-- <div class="search-wrapper">
             <input class="search-input" type="text" placeholder="Search..." autocomplete="off" />
@@ -35,6 +42,7 @@ const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
                 <img :src="i.icon" alt="" />
                 <p>{{ i.name }}</p>
               </router-link>
+            
             </div>
             <div class="sidebar-bottom-nav">
               <router-link
@@ -46,6 +54,10 @@ const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
                 <img :src="i.icon" />
                 <p>{{ i.name }}</p>
               </router-link>
+              <div class="nav-item-base" @click="logout">
+                <img :src="Logout" alt="" />
+                <p>Logout</p>
+              </div>
             </div>
           </div>
         </div>
@@ -53,15 +65,11 @@ const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
 
 <style scoped>
 .logo{
-  @apply bg-primary;
   width: 150px;
-  height: 57px;
   padding: 10px;
-  border-bottom-right-radius: 2rem;
+  border-top-left-radius: 2rem;
+  background-color: #F7F7F7;
 }
-[v-cloak] {
-    display: none;
-  }
 
   .sidebar-menubar{
     display: flex;
@@ -84,40 +92,8 @@ const isAuthRoute = computed(() => authRoutes.includes(getCurrentRoute.value));
 
 
 
-.logo{
-  width: 150px;
-  height: 57px;
-}
-
-
-  .loading-wrapper{
-    width: 100%;
-    min-height: 100vh;
-    background-color: #fff;
-  }
-.dashboard-wrapper-layout{
-  width: 100%;
-  background-color: #fafafa !important;
-  display: flex;
-  height: 100vh;
-
-}
-
-.dashboard-main{
-  width: calc(100% - 294px);
-  min-height: 100%;
-  overflow: auto;
-  background-color: #fafafa
-}
-
-.authView{
-  width: 100% !important;
-}
-
-
-
 .sidebar-wrapper{
-  width: 294px;
+  width: 250px;
   background-color: var(--light_primary);
   display: block;
   transition: ease-in 0.3s;
@@ -207,7 +183,7 @@ flex-grow: 0; */
   background-color: #0F3E5F;
   color: #fafafa;
   font-weight: 700;
-  background: #0F3E5F;
+  background: #ffc10735;
   border-radius: 6.3px;
 
 }
@@ -216,7 +192,7 @@ flex-grow: 0; */
   background-color: #0F3E5F;
   color: #fafafa;
   font-weight: 700;
-  background: #0F3E5F;
+  background: #ffc107;
   border-radius: 6.3px;
 }
 
@@ -233,19 +209,5 @@ flex-grow: 0; */
 
   }
 
-}
-
-@media (max-width: 1024px) {
-  .dashboard-main{
-    width: 100%;
-    min-height: 100%;
-  }
-
-}
-
-@media (max-width: 700px) {
-  .dashboard-wrapper-layout{
-    display: flex;
-  }
 }
 </style>

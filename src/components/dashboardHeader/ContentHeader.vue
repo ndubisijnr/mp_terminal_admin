@@ -68,8 +68,6 @@ onMounted(() => {
 
 <template>
       <div class="content-header">
-      
-
         <!-- <div class="card flex justify-center">
           <Dialog v-model:visible="visible" modal header="Header" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
               <p class="mb-8">
@@ -110,9 +108,14 @@ onMounted(() => {
           <h3 class="text-4xl text-black mb-0.5">{{getCurrentRoute}}</h3>
           <p class="text-sm">{{getCurrentRouteSubTitle}}</p>
         </div>
-<!--        <div class="content-inner-container-right">-->
-<!--          <MazDropdown @click="getCustomerOrganisation">-->
-<!--            <MazAvatar-->
+
+        <div>
+          <img class="logo" src="../../assets/image/coresteplogo.png" alt="">
+
+        </div>
+       <!-- <div class="content-inner-container-right">-->
+         <!-- <MazDropdown @click="getCustomerOrganisation">-->
+           <!-- <MazAvatar-->
 <!--              :caption="userFullName"-->
 <!--              size="1rem"-->
 <!--              class="avatar"-->
@@ -167,7 +170,7 @@ onMounted(() => {
 <!--            -->
 <!--        </MazDialog>-->
 <!--                -->
-<!--        </div>-->
+<!--        </div> -->
     </div>
         
 </template>
@@ -185,5 +188,11 @@ onMounted(() => {
   align-items: center;
 }
 
+.logo{
+  width: 150px;
+  /* padding: 10px; */
+  border-top-left-radius: 2rem;
+  /* background-color: #F7F7F7; */
+}
 
 </style>

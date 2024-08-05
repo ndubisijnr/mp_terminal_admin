@@ -37,42 +37,17 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.logo{
-  @apply bg-primary;
-  width: 150px;
-  height: 57px;
-  padding: 10px;
-  border-bottom-right-radius: 2rem;
-}
 [v-cloak] {
     display: none;
   }
 
-  .sidebar-menubar{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 100px;
-    height: calc(100% - 30%);
-    transform: scale(.9);
-    transform-origin:0 0;
 
-  }
-
-  .sidebar-wrapper-header{
-    margin-bottom: 2rem;
-  }
 
   .hideShow{
     display: none;
   }
 
 
-
-.logo{
-  width: 150px;
-  height: 57px;
-}
 
 
   .loading-wrapper{
@@ -89,8 +64,8 @@ onMounted(() => {
 }
 
 .dashboard-main{
-  width: calc(100% - 294px);
-  min-height: 100%;
+  width: calc(100% - 250px);
+  height: 100vh;
   overflow: auto;
   background-color: #fafafa
 }
@@ -99,126 +74,6 @@ onMounted(() => {
   width: 100% !important;
 }
 
-
-
-.sidebar-wrapper{
-  width: 294px;
-  background-color: var(--light_primary);
-  display: block;
-  transition: ease-in 0.3s;
-  /* Sidebar navigation */
-  padding: 25px;
-  height: 100vh;
-  overflow: auto;
-
-  /* Bizgem primary */
-
-  /* Inside auto layout */
-
-}
-
-
-
-.sidebar-top-nav{
-  width: 100%;
-}
-
-.sidebar-bottom-nav{
-  width: 100%;
-}
-
-.search-input{
-  /* Input */
-
-box-sizing: border-box;
-
-/* Auto layout */
-display: flex;
-flex-direction: row;
-align-items: center;
-padding: 10.5px 14.7px;
-gap: 8.4px;
-
-width: 100%;
-height: 47px;
-
-background: rgba(167, 196, 222, 0.02);
-/* White */
-border: 1.05px solid #F7F7F7;
-box-shadow: 0px 1.05px 2.1px rgba(16, 24, 40, 0.05);
-border-radius: 8.4px;
-margin: 25px 0;
-
-/* Inside auto layout */
-flex: none;
-/* order: 0;
-align-self: stretch;
-flex-grow: 0; */
-
-}
-
-.search-input::placeholder{
-  color: #fff;
-}
-
-
-.nav-item-base{
-  /* _Nav item base */
-
-  /* Auto layout */
-  display: flex;
-  align-items: center;
-  padding: 8.4px 12.6px;
-  gap: .4rem;
-
-  width: 100%;
-  height: 42px;
-  /* Text */
-
-  font-style: normal;
-  font-weight: 700;
-  line-height: 25px;
-  /* identical to box height, or 150% */
-
-  /* Gray/100 */
-  color: #fff;
-
-  margin-bottom: 12px;
-  cursor: pointer;
-
-}
-
-.nav-item-base:hover{
-  background-color: #0F3E5F;
-  color: #fafafa;
-  font-weight: 700;
-  background: #0F3E5F;
-  border-radius: 6.3px;
-
-}
-
-.active-nav{
-  background-color: #0F3E5F;
-  color: #fafafa;
-  font-weight: 700;
-  background: #0F3E5F;
-  border-radius: 6.3px;
-}
-
-.no-sidebar{
-  width: 0;
-  opacity:0;
-  background-color: #fff;
-  display: none;
-}
-
-@media (max-width: 1024px) {
-  .sidebar-wrapper{
-    display: none;
-
-  }
-
-}
 
 @media (max-width: 1024px) {
   .dashboard-main{

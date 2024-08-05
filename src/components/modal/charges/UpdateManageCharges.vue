@@ -36,7 +36,6 @@ async function addCharges(){
     await StoreUtils.getter()?.charges.updateCharges(model.value, toast)
     wait.stop('UPDATING_CHARGES')
     close()
-   
 }
 
 
@@ -84,9 +83,7 @@ async function addCharges(){
                         </div>
                     
                     </div>
-                   
-                
-
+                           
                     <!-- <div class="divider"></div> -->
 
 

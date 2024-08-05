@@ -4,6 +4,7 @@ import {useTerminalStore} from "@/store/module/terminal.ts";
 import { useChargesStore } from "./module/charges";
 import { useUser_Store } from "./module/users";
 import { useTransactionStore } from "./module/transactions";
+import {useFundTransfer_Store} from "./module/fundtransfer"
 
 const stores = {
     auth: useAuthStore(),
@@ -11,7 +12,8 @@ const stores = {
     terminal: useTerminalStore(),
     charges:useChargesStore(),
     user:useUser_Store(),
-    transactions:useTransactionStore()
+    transactions:useTransactionStore(),
+    fundTransfer:useFundTransfer_Store()
 }
 
 export default stores

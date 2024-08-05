@@ -17,8 +17,10 @@ export const RouteConstantUtil = {
         terminalTransactions:"Terminal Transactions",
         charges:"Manage Charges",
         institutions:"Manage Institutions",
+        settings:"Settings",
+        support:"Support",
         institutionsCharges:"Institutions Statistics",
         user:"User",
-        authRequired:false
+        authRequired:true
     },
 }

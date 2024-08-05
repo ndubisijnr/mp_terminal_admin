@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import { onMounted, ref, reactive } from "vue";
-import { useToast, useWait } from 'maz-ui'
+import {useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
 import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
@@ -11,30 +11,30 @@ import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
-import { useAuthStore } from "@/store/module/auth";
-
-
-const toast = useToast()
+import { computed } from "vue";
+import MazSpinner from "maz-ui/components/MazSpinner";
+import Receipt from "@/components/modal/Receipt.vue";
 
 const wait = useWait()
 
 const reactiveData = reactive({
 
   visible: false,
-  selectedRow: null
+  selectedRow: null,
+  showReceipt:false
 })
 
-
-const user = useAuthStore()
 
 
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
-  { label: 'Merchant Name', key: 'transactionReceivingInstitutionId' },
+  { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  { label: 'ResponseCode', key: 'transactionResponseCode' },
   { label: 'Stan', key: 'transactionStan' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' }]
+  { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  { label: 'AppLabel', key: 'transactionAppLabel'},
+  { label: 'Created At', key: 'transactionCreatedAt'},
+{label:'Response Status', key:'transactionResponseCode'}]
 
 
 // function generateDummyData(numEntries) {
@@ -57,7 +57,9 @@ const transactionsHeaders = [
 //   return dummyData;
 // }
 
-const transactions = StoreUtils.getter().transactions.getTransactions
+const transactions =computed(() => {
+  return StoreUtils.getter().transactions.getTransactions
+}) 
 
 
 const onRowSelect = (event: any) => {
@@ -65,7 +67,11 @@ const onRowSelect = (event: any) => {
   console.log(event)
 }
 
-
+const getSeverity = (status: string) => {
+  if(status === '00') return 'success'
+  else return 'danger'
+  
+};
 
 
 const menu = ref()
@@ -96,13 +102,20 @@ const toggle = (event: any) => {
 
 const items = ref([
   {
-    // label: 'Options',
+    label: 'Options',
     items: [
       {
         label: 'View',
         icon: 'pi pi-refresh',
         command: () => {
           reactiveData.visible = !reactiveData.visible
+        }
+      },
+      {
+        label: 'Reciept',
+        icon: 'pi pi-refresh',
+        command: () => {
+          reactiveData.showReceipt = !reactiveData.showReceipt
         }
       },
       // {
@@ -122,6 +135,11 @@ const items = ref([
     ]
   }
 ]);
+
+function handleClose(payload: any) {
+  reactiveData.showReceipt = payload;
+ 
+}
 const metaKey = ref(true);
 
 //
@@ -138,20 +156,22 @@ const metaKey = ref(true);
 //   }
 // });
 
+const adminStats = computed(() => {
+  return StoreUtils.getter().organisation.getAdminStats
+})
 
-onMounted(() => {
-  StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+
+onMounted(async () => {
+  wait.start('READ_TRANSACTION')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+  wait.stop('READ_TRANSACTION')
 })
 
 
 </script>
 
 <template>
-  <MazFullscreenLoader style="position: fixed;z-index: 9999;" v-if="wait.isLoading()">
-    <p>
-      Loading...
-    </p>
-  </MazFullscreenLoader>
+
 
   <Dialog header="Transaction Overview" v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
@@ -163,12 +183,16 @@ onMounted(() => {
 
 
   <ContentHeader />
+  <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
   <div class="content">
     <div class="content-card-section">
-      <base-card text="Total Transactions Amount" :analytics="true" amount="200,420"></base-card>
-      <base-card text="Successfull Transaction" :analytics="true" amount="1,198"></base-card>
-      <base-card text="Pending Transaction" :analytics="true" amount="2"></base-card>
-      <base-card text="Failed Transaction" :analytics="true" amount="32"></base-card>
+      <base-card text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card> 
+        <base-card text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
+        <base-card text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
+        <base-card text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
+        <base-card text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume" :analytics="true"></base-card>
+        <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume" :analytics="true"></base-card>
+  
     </div>
 
 
@@ -182,7 +206,7 @@ onMounted(() => {
       <div class="overflow-auto rounded-lg shadow">
 
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
+        <DataTable :loading="wait.isLoading('READ_TRANSACTION')"  v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
           paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -203,15 +227,17 @@ onMounted(() => {
               No Transactions found.
             </div>
           </template>
-          <template #loading> Loading customers data. Please wait. </template>
+          <template #loading> 
+            <MazSpinner v-if="wait.isLoading('READ_TRANSACTION')"  color="secondary"></MazSpinner>
+          </template>
 
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <!--terminal status-->
-          <!-- <Column field="terminalStatus" header="terminalStatus">
+          <!-- <Column field="transactionResponseCode" header="transactionResponseCode">
                   <template #body="slotProps">
                         
-                        <div v-if="slotProps.data.terminalStatus">
-                          <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />
+                        <div v-if="slotProps.data.transactionResponseCode">
+                          <Tag :value="slotProps.data.transactionResponseCode" :severity="getSeverity(slotProps.data.transactionResponseCode)" />
                         </div>
                           
                         </template>

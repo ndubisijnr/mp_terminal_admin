@@ -1,6 +1,7 @@
 import axios from "axios";
 import appConfig from "../config/app-config"
 import StoreUtils from "@/util/storeUtils";
+import { router} from '../router/index'
 
 export const appClient = axios.create({
     baseURL: appConfig.baseUrl,
@@ -25,14 +26,17 @@ export const appClient1 = axios.create({
 
 appClient.interceptors.request.use(config => {
     config.headers.Authorization = sessionStorage.token;
-    config.headers.mid = StoreUtils.getter()?.organisation.getCurrentOrganisation.organisationId || sessionStorage?.id
+    config.headers.mid = 0
     return config
 })
 
 appClient.interceptors.response.use(response => {
     if (response != null) {
         if (response.data != null) {
-            if (response.data.responseCode === '22') {
+            if (response.data.responseCode === '115') {
+                 sessionStorage.clear()
+                 router.push({path:'/',  query: { error: 'SessionTimedOut'}})
+                //  location.reload()
                 // StoreUtils.getter().auth.commitSessionStory(true)
                 // sessionStorage.removeItem('token')
                 // localStorage.clear();

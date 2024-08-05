@@ -8,9 +8,11 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         loading: false,
         organisations:null,
         currentOrganisation:{} as currentOrganisation,
-        onboardingStage:'1',
+        onboardingStage:'false',
         organisationStats:null,
-        organisationPricing:null
+        organisationPricing:null,
+        adminStats:null,
+        organisationTransaction:null
     }),
 
     getters: {
@@ -19,16 +21,22 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         getCurrentOrganisation:state => state.currentOrganisation,
         getOnboardingStage:state => state.onboardingStage,
         getOrganisationStats:state => state.organisationStats,
-        getOrganisationPricing:state => state.organisationPricing
+        getOrganisationPricing:state => state.organisationPricing,
+        getAdminStats:state => state.adminStats,
+        getOrganisationTransaction:state => state.organisationTransaction
+
+
 
     },
 
     actions: {
         async readCustomerOrganisation(){
+            if(!this.organisations) this.loading = true
             const response = await OrganisationController.readOrganisation()
             const responseData = response.data
 
             try{
+                this.loading = false
                 if(responseData.responseCode === '00'){
                     this.organisations= responseData.data
                     this.currentOrganisation = responseData.data[0]
@@ -40,7 +48,9 @@ export const useOrganisationStore = defineStore('organisation_Store', {
                 }else{
                     console.log(responseData.responseCode)
                 }
-            }catch(e){}
+            }catch(e){
+                this.loading = false
+            }
         },
 
         async createOrganisation(payload:any, toast:any){
@@ -48,11 +58,15 @@ export const useOrganisationStore = defineStore('organisation_Store', {
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){
-                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    this.onboardingStage = '2'
-
+                    if(this.onboardingStage === 'true') {
+                        this.onboardingStage = 'false'
+                        toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 1000 })
+                    }else{
+                        this.onboardingStage = 'true'
+                    }
+                
                 }else{
-                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 1000 })
                 }
             }catch(e){}
         },
@@ -63,8 +77,8 @@ export const useOrganisationStore = defineStore('organisation_Store', {
 
             try{
                 if(responseData.responseCode === '00'){
-                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    StoreUtils.getter()?.organisation.readCustomerOrganisation()
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 1000 })
+                
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
@@ -98,17 +112,37 @@ export const useOrganisationStore = defineStore('organisation_Store', {
 
             try{
                 if(responseData.responseCode === '00'){
-                    this.organisationStats = responseData.data
+                    this.organisationStats = responseData
                 }else{
                     console.log(responseData)
 
                 }
+            
+
             }catch(e){
                 console.log('readOrganizationTerminal error', e)
             }
-            await StoreUtils.getter()?.organisation.readOrganisationPricing(organisationId)
-            await StoreUtils.getter()?.terminal.readOrganisationTerminalOrganisationId(organisationId)
+            
 
+        },
+
+        async readAdminStats(startDate:string, endDate:string){
+            const response = await OrganisationController.organisationAdminStats(startDate,endDate)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    this.adminStats = responseData
+                }else{
+                    console.log(responseData)
+
+                }
+            
+
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+            
 
         },
 
@@ -118,11 +152,24 @@ export const useOrganisationStore = defineStore('organisation_Store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                     this.onboardingStage = '1'
+                     this.onboardingStage = 'false'
                      StoreUtils.getter().organisation.readCustomerOrganisation()
 
                 }else{
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }
+            }catch(e){}
+        },
+
+        async readOrganisationTransactionsByOrganisationId(payload:string, startDate:string, endDate:string){
+            const response = await OrganisationController.readTransctionByOrganisationId(payload, startDate, endDate)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    this.organisationTransaction= responseData.data
+                }else{
+                    console.log(responseData.responseCode)
                 }
             }catch(e){}
         },

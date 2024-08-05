@@ -66,6 +66,23 @@ export const useChargesStore = defineStore('charges_store', {
             }
         },
 
+        async deleteOrgCharges(payload:{}, toast:any){
+            const response = await ChargesController.deleteOrganisationCharges(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
         async updateCharges(payload:{}, toast:any){
             const response = await ChargesController.updateCharges(payload)
             const responseData = response.data
@@ -83,6 +100,25 @@ export const useChargesStore = defineStore('charges_store', {
                 console.log('readOrganizationTerminal error', e)
             }
         },
+
+        async updateOrganisationCharges(payload:{}, toast:any){
+            const response = await ChargesController.updateOrgCharges(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        
 
     }
 })

@@ -10,7 +10,10 @@ import Column from 'primevue/column';
 import Tag from 'primevue/tag';
 import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
+import { useWait } from 'maz-ui';
+import MazSpinner from 'maz-ui/components/MazSpinner';
 
+const wait = useWait()
 
 const reactiveData = reactive({
   showUserModal: false,
@@ -112,9 +115,10 @@ const filters = ref({
 const metaKey = ref(true);
 
 
-onMounted(() => {
-  console.log(user)
-  StoreUtils.getter()?.user.readUsers()
+onMounted(async () => {
+  wait.start('LOADING_USERS')
+  await StoreUtils.getter()?.user.readUsers()
+  wait.stop('LOADING_USERS')
 })
 </script>
 
@@ -139,13 +143,13 @@ onMounted(() => {
                 Add Role
             </div>
           </BaseButton> -->
-          <BaseButton @click="addUser">
+          <!-- <BaseButton @click="addUser">
             <div style="display: flex;align-items: center;gap: 5px;">
               <img src="../../assets/icon/Folder Add 2.svg" />
               Add User
             </div>
 
-          </BaseButton>
+          </BaseButton> -->
         </div>
       </div>
 
@@ -153,7 +157,7 @@ onMounted(() => {
 
       <div class="overflow-auto rounded-lg shadow">
 
-        <DataTable v-model:filters="filters" :value="user" :metaKeySelection="metaKey" selectionMode="single" paginator
+        <DataTable :loading="wait.isLoading('LOADING_USERS')" v-model:filters="filters" :value="user" :metaKeySelection="metaKey" selectionMode="single" paginator
           :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -174,7 +178,7 @@ onMounted(() => {
               No Users found.
             </div>
           </template>
-          <template #loading> Loading users data. Please wait. </template>
+          <template #loading> <MazSpinner v-if="wait.isLoading('LOADING_USERS')" color="secondary"></MazSpinner> </template>
 
           <Column field="userStatus" header="userStatus">
             <template #body="slotProps">

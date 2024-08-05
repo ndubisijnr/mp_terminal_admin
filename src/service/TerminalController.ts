@@ -3,9 +3,24 @@ export  class  TerminalController {
     static readTerminals(){
         return apiClient.appClient.get(`/dev/terminal/read`)
     }
-
+    
     static createTerminal(payload:{}){
         return apiClient.appClient.post('/dev/terminal/create', payload)
+    }
+
+    static createTerminalSerial(payload:{}){
+        return apiClient.appClient.post('/dev/terminal-serial/create', payload)
+    }
+
+    static readTerminalSerial(){
+        return apiClient.appClient.get('/dev/terminal-serial/read')
+    }
+
+    static reAssignTerminal(payload:{}){
+        return apiClient.appClient.post('/dev/terminal/reassign', payload)
+    }
+    static changeTerminalPin(payload:{}){
+        return apiClient.appClient.post('/dev/terminal/change-pin', payload)
     }
 
     static updateTerminal(payload:{}){

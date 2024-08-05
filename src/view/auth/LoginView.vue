@@ -1,11 +1,11 @@
 <template>
 
     <div class="container">
-      <div class="min-container p-10">
-        <div class="w-full h-[20%]">
-          <img class="logo shadow-lg" src="../../assets/icon/cropped.png" alt="">
-        </div>
-       
+      <div class="min-container">
+        <div class="flex items-center mb-8">
+          <img class="logo" src="../../assets/image/coresteplogo.png" alt="">
+          <p class="text-lg font-semibold">TMS PORTAL</p>
+        </div>        
         <login-form />
 
       </div>
@@ -15,18 +15,15 @@
 
 <script setup lang="ts">
 import LoginForm from "@/components/form/auth/LoginForm.vue";
-// import documentTitle from "@/util/helper/documentTitle.ts";
-
-// documentTitle(`Login | ${getEnv("VITE_APP_NAME")}`)
 </script>
 
 <style scoped>
 .logo{
-  @apply bg-primary;
+  /* @apply bg-primary; */
   width: 150px;
-  height: 57px;
+  /* height: 57px; */
   padding: 10px;
-  border-bottom-right-radius: 2rem;
+  border-top-left-radius: 2rem;
 }
 
 
@@ -34,12 +31,12 @@ import LoginForm from "@/components/form/auth/LoginForm.vue";
     min-width: 100%;
     min-height: 100vh;
     display: flex;
-    background-color: var(--light-bgcolor);
+    /* background-color: var(--light-bgcolor); */
   }
   .min-container{
     width: 100%;
     min-height: 100%;
-    background-color: var(--light-bgcolor);
+    /* background-color: var(--light-bgcolor); */
   }
 
   .bg-image{

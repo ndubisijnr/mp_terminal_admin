@@ -3,7 +3,6 @@ import BaseButton from '@/components/button/BaseButton.vue';
 import { reactive, onMounted, computed, ref } from 'vue';
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import AddOrganisation from '@/components/modal/organisation/AddOrganisation.vue'
-import { useWait } from 'maz-ui';
 import StoreUtils from '@/util/storeUtils';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -16,6 +15,9 @@ import AssignTerminal from '@/components/modal/terminal/AssignTerminal.vue';
 import AddInstitutionCharges from '@/components/modal/charges/AddInstitutionCharges.vue'
 import { RouteConstantUtil } from '@/util/constant/RouteConstantUtil';
 import { router } from '@/router';
+import MazSpinner from 'maz-ui/components/MazSpinner'
+import Tag from 'primevue/tag';
+import { useWait } from 'maz-ui';
 
 const wait = useWait()
 
@@ -28,9 +30,6 @@ const reactiveData = reactive({
   showAddOrganisationPricing:false
 })
 
-const mid:any = computed(() => {
-  return StoreUtils.getter()?.auth.getCurrentMid
-})
 
 
 const onRowSelect = (event:any) => {
@@ -38,21 +37,25 @@ const onRowSelect = (event:any) => {
   console.log(event)
 }
 
+const loading = computed(() => {
+  return StoreUtils.getter().organisation.getLoading
+})
+
 
 const menu = ref()
 
-// const getSeverity = (status:string) => {
-//     switch (status) {
-//         case 'Declined':
-//             return 'danger';
+const getSeverity = (status:string) => {
+    switch (status) {
+        case 'DECLINED':
+            return 'danger';
 
-//         case 'ACTIVE':
-//             return 'sucess';
+        case 'ACTIVE':
+            return 'sucess';
 
-//         case 'Pending':
-//             return 'warning';
-//     }
-// };
+        case 'PENDING':
+            return 'warning';
+    }
+};
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -140,13 +143,7 @@ const items = ref([
                   reactiveData.showUpdateOganisation = !reactiveData.showUpdateOganisation
                 }
             },
-            {
-                label: 'Assign Terminal',
-                icon: 'pi pi-upload',
-                command:() => {
-                  reactiveData.showAssignTerminal = true
-                }
-            },
+          
             {
                 label: 'Add Institution Pricing',
                 icon: 'pi pi-upload',
@@ -158,7 +155,7 @@ const items = ref([
                 label: 'View Stats/Charges',
                 icon: 'pi pi-upload',
                 command:() => {
-                  router.push({name:RouteConstantUtil.dashboard.institutionsCharges, query:{organisationID:reactiveData?.selectedRow?.organisationId}})
+                  router.push({name:RouteConstantUtil.dashboard.institutionsCharges, query:{organisationID:reactiveData?.selectedRow?.organisationId,organisationName:reactiveData?.selectedRow?.organisationName}})
                 }
             }
         ]
@@ -216,7 +213,7 @@ onMounted(() => {
         <!-- <BaseTable pagination="true" search="true" :headers="organsationHeaders" :bodies="organisation"></BaseTable> -->
 
         <div class="overflow-auto rounded-lg shadow">
-        <DataTable v-model:filters="filters" :value="organisation" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+        <DataTable :loading="loading" v-model:filters="filters" :value="organisation" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
             :globalFilterFields="['organisationName']" @rowSelect="onRowSelect">
@@ -235,16 +232,16 @@ onMounted(() => {
                     No Organisation found. 
                     </div>
                   </template>
-                <template #loading> Loading customers data. Please wait. </template>
+                <template #loading> <MazSpinner v-if="loading" color="secondary"></MazSpinner> </template>
           
                 <Column v-for="col of organsationHeaders"  :key="col.key" :field="col.key" :header="col.label"></Column>
                 <!-- terminal status-->
-                <!-- <Column field="organisationStatus" header="orgStatus">
+                <Column field="organisationStatus" header="organisationStatus">
                  <template #body="slotProps">
                   <Tag :value="slotProps.data.organisationStatus" :severity="getSeverity(slotProps.data.organisationStatus)" />
 
                   </template>
-            </Column>  -->
+            </Column> 
             <Column header="actions">
                 
                 <template #body="">

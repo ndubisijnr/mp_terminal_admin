@@ -88,6 +88,13 @@ body.maintms{
     --light-bgcolor: #fafafa;
 }
 
+body.corestep{
+    --light_primary:#413d52;
+    --dark_color: #000;
+    --light_color:#20180135;
+    --light-bgcolor: #ffc10781;
+}
+
 
 
 @media (prefers-color-scheme: light) {

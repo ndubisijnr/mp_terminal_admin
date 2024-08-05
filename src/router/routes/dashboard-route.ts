@@ -57,5 +57,17 @@ export const dashboardRoute: BaseRouteProps[] = [
         component: () => import("@/view/dashboard/UserView.vue"),
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage users!'},
     },
+    {
+        name: RouteConstantUtil.dashboard.settings,
+        path: '/settings',
+        component: () => import("@/view/dashboard/Settings.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Manage your account!'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.support,
+        path: '/support',
+        component: () => import("@/view/dashboard/Support.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage charges!'},
+    },
 
 ]

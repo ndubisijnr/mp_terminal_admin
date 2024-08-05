@@ -55,11 +55,13 @@ const menu = ref();
 
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
-  { label: 'Merchant Name', key: 'transactionReceivingInstitutionId' },
+  { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
   { label: 'ResponseCode', key: 'transactionResponseCode' },
   { label: 'Stan', key: 'transactionStan' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' }]
+  { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  { label: 'Created At', key: 'transactionCreatedAt'},
+  { label: 'AppLabel', key: 'transactionAppLabel'}]
 
 // const getSeverity = (status: string) => {
 //   switch (status) {
@@ -98,26 +100,12 @@ const items = ref([
         }
       },
       {
-        label: 'Terminal Transactions',
+        label: 'Reciept',
         icon: 'pi pi-refresh',
-        command: () => {
-          reactiveData.readTerminalTransactions = true
-        }
-      },
-      {
-        label: 'Edit',
-        icon: 'pi pi-upload',
-        command: () => {
-          reactiveData.showUpdateTerminal = !reactiveData.showUpdateTerminal
-        }
-      },
-      {
-        label: 'Delete',
-        icon: 'pi pi-upload',
         command: () => {
          
         }
-      }
+      },
     ]
   }
 ]);
@@ -209,7 +197,9 @@ onMounted(() => {
                 No Transactions found.
               </div>
             </template>
-            <template #loading> Loading customers data. Please wait. </template>
+            <template #loading> 
+
+            </template>
 
             <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
             <!--terminal status-->

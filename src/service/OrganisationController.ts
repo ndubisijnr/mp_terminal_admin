@@ -20,14 +20,22 @@ export const OrganisationController = {
         return apiClient.appClient.post('/dev/organisation-pricing/create', payload)
     },
 
+    organisationAdminStats(startDate:string, endDate:string){
+        return apiClient.appClient.get(`/dev/organisation/read-stats?startDate=${startDate}&endDate=${endDate}`)
+    },
+
     
 
     organisationStats(organisationId:string, startDate:string, endDate:string){
-        return apiClient.appClient.get(`/dev/organisation/organisation-stats/${organisationId}/${startDate}/${endDate}`)
+        return apiClient.appClient.get(`/dev/organisation/organisation-stats/${organisationId}?startDate=${startDate}&endDate=${endDate}`)
     },
 
     organisationPricing(organisationPricingOrganisationId:string){
-        return apiClient.appClient.get(`/{stage}/organisation-pricing/read-by-organisation-pricing-organisation-id/${organisationPricingOrganisationId}`)
+        return apiClient.appClient.get(`/dev/organisation-pricing/read-by-organisation-pricing-organisation-id/${organisationPricingOrganisationId}`)
+    },
+    
+    readTransctionByOrganisationId(organisationId:string, startDate:string, endDate:string){
+        return apiClient.appClient.get(`/dev/terminal-transaction/read-by-organisation-id/${organisationId}?startDate=${startDate}&endDate=${endDate}`)
     }
     
 }

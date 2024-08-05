@@ -2,7 +2,7 @@
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import Dropdown from 'primevue/dropdown';
-import { reactive, defineEmits, ref } from 'vue';
+import {defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
@@ -11,23 +11,16 @@ import StoreUtils from '@/util/storeUtils';
 const toast = useToast()
 const wait = useWait()
 
+const props = defineProps({
+    data:Object
+})
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
 
-const props = defineProps({
-    data:{}
-})
-
 const model = ref(ChargesRequest.organisationCreateChargesRequest)
 
-
-const data = reactive({
-    showConfirmAgain:true,
-    isRequestSent:false
-
-})
 
 
 function close(){
@@ -36,17 +29,15 @@ function close(){
 
 
 async function addCharges(){
-    console.log(model)
-    model.value.organisationPricingOrganisationId = props?.data?.organisationId
-    if(model.value.organisationPricingAmountType === 'FLAT'){
-        model.value.organisationPricingMaxAmount = model.value.organisationPricingAmount
-        model.value.organisationPricingMinAmount = model.value.organisationPricingAmount
-    }
-    wait.start('CREATING_ORGANISATION_CHARGES')
-    await StoreUtils.getter()?.organisation.organisationCreateCharges(model.value, toast)
-    await StoreUtils.getter()?.organisation.readOrganisationPricing(props?.data?.organisationId)
+    model.value.organisationPricingPricingId = props.data?.organisationPricingPricingId
+    model.value.organisationPricingOrganisationId = props?.data.organisationPricingOrganisationId
 
-    wait.stop('CREATING_ORGANISATION_CHARGES')
+    console.log(model)
+    wait.start('UPDATING_CHARGES')
+    await StoreUtils.getter()?.charges.updateOrganisationCharges(model.value, toast)
+    StoreUtils.getter()?.organisation.readOrganisationPricing(props?.data.organisationPricingOrganisationId)
+
+    wait.stop('UPDATING_CHARGES')
     close()
    
 }
@@ -61,40 +52,42 @@ async function addCharges(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div class="modal-child-wrapper">
+                <div  class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add New Charges For <span>"{{props.data?.organisationName}}"</span></p>
+                        <p class="req-term">Update Charges</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
+                
                     <!-- pricingAmount -->
-                    <form class="modal-child-content">
+                    <div class="modal-child-content">
                         <div class="flex justify-between gap-10 mt-3">
                             <div>
                                 <label>pricingAmountType</label>
-                                <Dropdown  optionLabel="name" v-model="model.organisationPricingAmountType" optionValue="code" placeholder="pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown optionLabel="name" v-model="model.organisationPricingAmountType" optionValue="code" :placeholder="props.data?.organisationPricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
                             </div>
                             <div>
                                 <label>pricingType</label>
-                                <Dropdown optionLabel="name" v-model="model.organisationPricingType" optionValue="code" placeholder="pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown optionLabel="name" v-model="model.organisationPricingType" optionValue="code" :placeholder="props.data?.organisationPricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
                             </div>
                         </div>
 
                         <div class="flex justify-between gap-10">
-                            <base-input required type="text"  v-model="model.organisationPricingAmount" :placeholder="model.organisationPricingAmountType === 'PERCENT' ? 'pricingAmountPercentage' : 'pricingAmount'"  :label="model.organisationPricingAmountType === 'PERCENT' ? 'pricingAmountPercentage(%)' : 'pricingAmount'" />
-                            <base-input required type="text" v-model="model.organisationPricingCode" placeholder="pricingCode"  label="pricingCode" />
+                            <base-input type="text"  v-model="model.organisationPricingAmount" :placeholder="props.data?.organisationPricingAmount"  label="pricingAmount" />
+                            <base-input type="text" v-model="model.organisationPricingCode" :placeholder="props.data?.organisationPricingCode"  label="pricingCode" />
                         </div>
                        
-                        <div class="flex justify-between gap-10" v-if="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'">
-                            <base-input :required="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'" type="text"  v-model="model.organisationPricingMinAmount" placeholder="pricingMinAmount"  label="pricingMinAmount" />
-                            <base-input :required="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'" type="text"  v-model="model.organisationPricingMaxAmount" placeholder="pricingMaxAmount"  label="pricingMaxAmount" />
+                        
+                        <div class="flex justify-between gap-10">
+                            <base-input type="text" v-model="model.organisationPricingMinAmount" :placeholder="props.data?.organisationPricingMinAmount"  label="pricingMinAmount" />
+                            <base-input type="text" v-model="model.organisationPricingMaxAmount" :placeholder="props.data?.organisationPricingMaxAmount"  label="pricingMaxAmount" />
                         </div>
 
                         
                         <div class="flex justify-between gap-10">
-                            <base-input required type="text" v-model="model.organisationPricingDescription" placeholder="pricingDescription"  label="pricingDescription" />
+                            <base-input type="text" v-model="model.organisationPricingDescription" :placeholder="props.data?.organisationPricingDescription"  label="pricingDescription" />
                         </div>
                     
-                    </form>
+                    </div>
                    
                 
 
@@ -103,7 +96,7 @@ async function addCharges(){
 
                     <div class="modal-child-footer">
                     
-                        <BaseButton type="sumbit" :loading="wait.isLoading('CREATING_ORGANISATION_CHARGES')" @click="addCharges">Add New Charges</BaseButton>
+                        <BaseButton :loading="wait.isLoading('UPDATING_CHARGES')" @click="addCharges">Update Charges</BaseButton>
 
                     </div>
 

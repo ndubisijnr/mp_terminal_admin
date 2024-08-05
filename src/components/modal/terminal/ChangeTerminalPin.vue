@@ -1,57 +1,54 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import Dropdown from 'primevue/dropdown';
-import { reactive, defineEmits, ref } from 'vue';
+import { defineEmits, computed, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
-import ChargesRequest  from '@/models/request/charges/ChargesRequest';
-import { useToast, useWait } from 'maz-ui';
 import StoreUtils from '@/util/storeUtils';
-
-const toast = useToast()
-const wait = useWait()
+import TerminalRequest from '@/models/request/terminal/TerminalRequest';
+import { useToast,useWait } from 'maz-ui';
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
+const toast = useToast()
+const wait = useWait()
+const model = ref(TerminalRequest.changeTerminalPin)
 
-const props = defineProps({
-    data:{}
+const terminal = defineProps({
+    terminalSeriaNumber:String
 })
 
-const model = ref(ChargesRequest.organisationCreateChargesRequest)
 
-
-const data = reactive({
-    showConfirmAgain:true,
-    isRequestSent:false
-
+const currentOrganisation:any = computed(() => {
+    return StoreUtils.getter().organisation.getCurrentOrganisation
 })
+
+
+const organisation:any = computed(() => {
+  return StoreUtils.getter()?.organisation.getOrganisation
+})
+
+
+
+// const data = reactive({
+//     showConfirmAgain:true,
+//     isRequestSent:false
+
+// })
+
+async function changeTerminalPin(){
+    wait.start('CHANGE_TERMINAL_TERMINAL')
+    model.value.terminalId =  terminal?.terminalSeriaNumber?.terminalId
+    await StoreUtils.getter().terminal.changePin(model.value,toast)
+    wait.stop('CHANGE_TERMINAL_TERMINAL')
+    close()
+}
 
 
 function close(){
    emit('close', false)
 }
-
-
-async function addCharges(){
-    console.log(model)
-    model.value.organisationPricingOrganisationId = props?.data?.organisationId
-    if(model.value.organisationPricingAmountType === 'FLAT'){
-        model.value.organisationPricingMaxAmount = model.value.organisationPricingAmount
-        model.value.organisationPricingMinAmount = model.value.organisationPricingAmount
-    }
-    wait.start('CREATING_ORGANISATION_CHARGES')
-    await StoreUtils.getter()?.organisation.organisationCreateCharges(model.value, toast)
-    await StoreUtils.getter()?.organisation.readOrganisationPricing(props?.data?.organisationId)
-
-    wait.stop('CREATING_ORGANISATION_CHARGES')
-    close()
-   
-}
-
-
 
 
 
@@ -61,49 +58,27 @@ async function addCharges(){
 <template>
     <BaseLayout>
         <template v-slot:child>
-                <div class="modal-child-wrapper">
+                <div  class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Add New Charges For <span>"{{props.data?.organisationName}}"</span></p>
+                        <p class="req-term">Change Terminal Pin</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
-                    <!-- pricingAmount -->
-                    <form class="modal-child-content">
-                        <div class="flex justify-between gap-10 mt-3">
-                            <div>
-                                <label>pricingAmountType</label>
-                                <Dropdown  optionLabel="name" v-model="model.organisationPricingAmountType" optionValue="code" placeholder="pricingAmountType" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
-                            </div>
-                            <div>
-                                <label>pricingType</label>
-                                <Dropdown optionLabel="name" v-model="model.organisationPricingType" optionValue="code" placeholder="pricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between gap-10">
-                            <base-input required type="text"  v-model="model.organisationPricingAmount" :placeholder="model.organisationPricingAmountType === 'PERCENT' ? 'pricingAmountPercentage' : 'pricingAmount'"  :label="model.organisationPricingAmountType === 'PERCENT' ? 'pricingAmountPercentage(%)' : 'pricingAmount'" />
-                            <base-input required type="text" v-model="model.organisationPricingCode" placeholder="pricingCode"  label="pricingCode" />
-                        </div>
-                       
-                        <div class="flex justify-between gap-10" v-if="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'">
-                            <base-input :required="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'" type="text"  v-model="model.organisationPricingMinAmount" placeholder="pricingMinAmount"  label="pricingMinAmount" />
-                            <base-input :required="model.organisationPricingAmountType && model.organisationPricingAmountType === 'PERCENT'" type="text"  v-model="model.organisationPricingMaxAmount" placeholder="pricingMaxAmount"  label="pricingMaxAmount" />
-                        </div>
-
-                        
-                        <div class="flex justify-between gap-10">
-                            <base-input required type="text" v-model="model.organisationPricingDescription" placeholder="pricingDescription"  label="pricingDescription" />
+                    <div class="modal-child-content">
+                        <div class="flex justify-between gap-10">                           
+                            <!-- <base-input type="text"  v-model="TerminalRequest.createTerminal.terminalSerialNumber"  placeholder="Terminal Serial Number"  label="TerminalSerialNumber" /> -->
+                            <base-input type="text"  placeholder="Terminal Pin" v-model="TerminalRequest.changeTerminalPin.terminalPin"  label="TerminalPin" />
                         </div>
                     
-                    </form>
-                   
+                    </div>
+
                 
 
                     <!-- <div class="divider"></div> -->
 
 
                     <div class="modal-child-footer">
-                    
-                        <BaseButton type="sumbit" :loading="wait.isLoading('CREATING_ORGANISATION_CHARGES')" @click="addCharges">Add New Charges</BaseButton>
+                       
+                        <BaseButton :loading="wait.isLoading('CHANGE_TERMINAL_TERMINAL')" @click="changeTerminalPin">Send Request</BaseButton>
 
                     </div>
 
@@ -186,6 +161,13 @@ color: #101828;
     align-self: stretch;
     flex-grow: 0;
 
+}
+.select_div {
+    height: 47px;
+    width: 100%;
+    padding:.5rem;
+    margin-top: 1rem;
+    border: solid rgba(175, 175, 175, 0.291);
 }
 .req-term{
     /* Assign Terminal */

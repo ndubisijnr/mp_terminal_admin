@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth_store', {
 
     getters: {
         getData:state => state.data,
-        getUserInfo:state => state.userInfo,
+        getUserInfo:state => state.userInfo || JSON.parse(sessionStorage.userInfo),
         getLoading: state => state.loading,
         getEnrolmentStage: state => state.enrolmentStage,
         getPasswordResetStage: state => state.passwordResetStage,
@@ -74,10 +74,13 @@ export const useAuthStore = defineStore('auth_store', {
              else {
                 if(this.multiFactor){
                     this.userInfo = response
+                    sessionStorage.userInfo = JSON.stringify(response)
                     sessionStorage.token = response.token
                     sessionStorage.id = response.userId
-                    await router.push({path: JSON.stringify(router.currentRoute.value.query.redirectFrom) ? JSON.stringify(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
-                    StoreUtils.getter()?.organisation.readCustomerOrganisation(response.userId)
+                    await router.push({path:router.currentRoute.value.query.redirectFrom ?router.currentRoute.value.query.redirectFrom : '/dashboard'})
+                    await StoreUtils.getter()?.organisation.readCustomerOrganisation(response.userId)
+                    await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+                    await StoreUtils.getter().organisation.readAdminStats('01-01-2024', '01-08-2024')
                     this.multiFactor = false;
                 }
                 else{

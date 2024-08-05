@@ -12,7 +12,7 @@ import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
-import { useToast } from 'maz-ui';
+import { useToast, useWait } from 'maz-ui';
 import MazDialogPromise, {
   useMazDialogPromise
 } from 'maz-ui/components/MazDialogPromise'
@@ -20,10 +20,11 @@ import MazDialogPromise, {
 import MazDialog from 'maz-ui/components/MazDialog'
 import UpdateTerminal from '@/components/modal/terminal/UpdateTerminal.vue'
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
-import Breadcrumb from 'primevue/breadcrumb';
 import { router } from '@/router';
-import {RouteConstantUtil} from "../../util/constant/RouteConstantUtil.ts";
-
+import { RouteConstantUtil } from "../../util/constant/RouteConstantUtil.ts";
+import MazSpinner from 'maz-ui/components/MazSpinner'
+import ReAssignTerminal from '@/components/modal/terminal/ReAssignTerminal.vue';
+import ChangeTerminalPin from '@/components/modal/terminal/ChangeTerminalPin.vue';
 
 const reactiveData = reactive({
   showRequestTerminal: false,
@@ -31,7 +32,9 @@ const reactiveData = reactive({
   visible: false,
   selectedRow: {} as any,
   showUpdateTerminal: false,
-  readTerminalTransactions:false
+  readTerminalTransactions: false,
+  showReassignTerminal:false,
+  changeTerminalPin:false
 })
 
 
@@ -72,7 +75,7 @@ async function askToUser() {
 
     if (responseOne === 'accept') {
       deleteTerminal()
-      await StoreUtils.getter()?.terminal.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId))
+      await StoreUtils.getter()?.terminal.getOrganisationTerminal()
 
     } else {
       console.log(responseOne)
@@ -87,7 +90,12 @@ async function askToUser() {
 
 const toast = useToast()
 
+const wait = useWait()
+
 const menu = ref();
+
+const menu2 = ref();
+
 
 
 const terminalHeaders = [
@@ -120,29 +128,30 @@ const terminalHeaders = [
 
 const terminalOrganizations = computed(() => StoreUtils.getter()?.terminal?.getTerminalOrganisations)
 
-const organisations = computed(() => {
-  return StoreUtils.getter()?.organisation.getCurrentOrganisation
-})
+const terminalOrganizationsSerials = computed(() => StoreUtils.getter()?.terminal?.getTerminalSerial)
 
-const transactionsHeaders = [
-  { label: 'Organisation Name', key: 'transactionRequestAmount' },
-  { label: 'Terminal ID', key: 'transactionStatus' },
-  { label: 'Merchant Name', key: 'transactionTerminalId' },
-  { label: 'Transaction Amount', key: 'transactionTransactionTime' },
-  { label: 'Transaction ResponseCode', key: 'transactionToAccountType' },
-  { label: 'Location', key: 'transactionToAccountIdentification' },
-  { label: 'AppLabel', key: 'transactionToAccountIdentification' },
-  { label: 'RRN', key: 'transactionToAccountIdentification' }]
+
+// const organisations = computed(() => {
+//   return StoreUtils.getter()?.organisation.getCurrentOrganisation
+// })
+
+
+
+const terminalSerialsHeaders = [
+  { label: 'terminalSerialNumber', key: 'terminalSerialNumber' },
+  { label: 'terminalSerialAssigned', key: 'terminalSerialAssigned' },
+  { label: 'terminalSerialCreatedAt', key: 'terminalSerialCreatedAt' },
+  { label: 'terminalSerialVersion', key: 'terminalSerialVersion' }]
 
 const getSeverity = (status: string) => {
   switch (status) {
-    case 'Declined':
+    case 'BLOCKED':
       return 'danger';
 
     case 'ACTIVE':
       return 'sucess';
 
-    case 'Pending':
+    case 'PENDING':
       return 'warning';
   }
 };
@@ -153,9 +162,18 @@ const filters = ref({
   // representative: { value: null, matchMode: FilterMatchMode.IN },
   terminalSerialNumber: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
+const filters2 = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  // representative: { value: null, matchMode: FilterMatchMode.IN },
+  terminalSerialNumber: { value: null, matchMode: FilterMatchMode.EQUALS },
+});
 
 const toggle = (event: any) => {
   menu.value.toggle(event);
+}
+
+const toggle2 = (event: any) => {
+  menu2.value.toggle(event);
 }
 
 const deleteTerminal = () => {
@@ -178,7 +196,14 @@ const items = ref([
         label: 'Terminal Transactions',
         icon: 'pi pi-refresh',
         command: () => {
-          router.push({name:RouteConstantUtil.dashboard.terminalTransactions, query:{terminalID:reactiveData.selectedRow.terminalId}})
+          router.push({ name: RouteConstantUtil.dashboard.terminalTransactions, query: { terminalID: reactiveData.selectedRow.terminalId } })
+        }
+      },
+      {
+        label: 'ReAssign Terminal',
+        icon: 'pi pi-upload',
+        command: () => {
+          reactiveData.showReassignTerminal = true
         }
       },
       {
@@ -186,6 +211,13 @@ const items = ref([
         icon: 'pi pi-upload',
         command: () => {
           reactiveData.showUpdateTerminal = !reactiveData.showUpdateTerminal
+        }
+      },
+      {
+        label: 'Change Pin',
+        icon: 'pi pi-upload',
+        command: () => {
+          reactiveData.changeTerminalPin = !reactiveData.changeTerminalPin
         }
       },
       {
@@ -200,6 +232,30 @@ const items = ref([
 ]);
 
 
+const items2 = ref([
+  {
+    label: 'Options',
+    items: [
+      {
+        label: 'View',
+        icon: 'pi pi-refresh',
+        command: () => {
+          reactiveData.visible = !reactiveData.visible
+        }
+      },
+      {
+        label: 'Assign Terminal',
+        icon: 'pi pi-upload',
+        command: () => {
+          reactiveData.showAssignTerminal = true
+        }
+      },
+
+    ]
+  }
+]);
+
+
 
 const metaKey = ref(true);
 
@@ -208,6 +264,9 @@ function handleClose(payload: any) {
   reactiveData.showRequestTerminal = payload;
   reactiveData.showAssignTerminal = payload;
   reactiveData.showUpdateTerminal = payload;
+  reactiveData.showReassignTerminal = payload
+  reactiveData.changeTerminalPin = payload
+
 }
 
 function requestTerminal() {
@@ -226,18 +285,31 @@ const terminalTransactions = computed(() => {
 // init()
 
 const menus = ref([
-    { label: 'Terminals', route:'/terminals' }, 
-    { label: 'Transactions' }, 
+  { label: 'Terminals', route: '/terminals' },
+  { label: 'Transactions' },
 ]);
 
-onMounted(() => {
-  StoreUtils.getter().terminal.getOrganisationTerminal()
+
+async function getCustomerOrganisation(){
+  wait.start('READ_ORGANISATION')
+  await StoreUtils.getter()?.organisation.readCustomerOrganisation()
+  wait.stop('READ_ORGANISATION')
+}
+
+onMounted(async () => {
+  wait.start('LOADING_TERMINALS')
+  await StoreUtils.getter().terminal.getOrganisationTerminal()
+  await StoreUtils.getter().terminal.readTerminalSerial()
+  wait.stop('LOADING_TERMINALS')
+
+  await getCustomerOrganisation()
+  
 })
 
 </script>
 
 <template>
-  <Dialog header="Terminal Overview"v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
+  <Dialog header="Terminal Overview" v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }"
     :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
       <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
@@ -251,10 +323,10 @@ onMounted(() => {
     <template #title>
       Do you really want to delete this user?
     </template>
-    <template #default>
+<template #default>
       Are you really sure you want to delete this user?
     </template>
-  </MazDialogPromise> -->
+</MazDialogPromise> -->
 
   <MazDialog v-model="confirmDialog">
     <template #title>
@@ -270,149 +342,177 @@ onMounted(() => {
     </template>
   </MazDialog>
 
-  <RequestTerminal v-if="reactiveData.showRequestTerminal" @close="handleClose" />
+  <ChangeTerminalPin v-if="reactiveData.changeTerminalPin" :terminalSeriaNumber="reactiveData.selectedRow" @close="handleClose"></ChangeTerminalPin>
+  <ReAssignTerminal v-if="reactiveData.showReassignTerminal" :terminalSeriaNumber="reactiveData.selectedRow" @close="handleClose"></ReAssignTerminal>
+  <RequestTerminal v-if="reactiveData.showRequestTerminal" @close="handleClose"  />
   <UpdateTerminal :data="reactiveData.selectedRow" v-if="reactiveData.showUpdateTerminal" @close="handleClose" />
-  <AssignTerminal v-if="reactiveData.showAssignTerminal" @close="handleClose" />
-    <ContentHeader />
+  <AssignTerminal v-if="reactiveData.showAssignTerminal" @close="handleClose" :terminalSeriaNumber="reactiveData.selectedRow" />
+  <ContentHeader />
 
-    <div class="content-table-section">
-      <Breadcrumb :model="menus" v-if="reactiveData.readTerminalTransactions"/>
+  <div class="content-table-section">
 
-      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
 
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">{{reactiveData.readTerminalTransactions ? `${reactiveData.selectedRow.terminalId} Transactions` : 'Terminal Holders List'}}</p>
-          <img src="../../assets/icon/alert-circle.svg" />
-          <!-- <div>
+      <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+        <p class="text-xl text-black"> Terminal Serials List</p>
+        <img src="../../assets/icon/alert-circle.svg" />
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
+        <BaseButton @click="requestTerminal">
+          <div style="display: flex;align-items: center;gap: 5px;">
+            <img src="../../assets/icon/Folder Add 2.svg" />
+            Upload Terminal Serial
+          </div>
+
+        </BaseButton>
+      </div>
+    </div>
+
+
+
+
+    <div class="overflow-auto rounded-lg shadow">
+
+
+      <DataTable :loading="wait.isLoading('LOADING_TERMINALS')" v-model:filters="filters2"
+        :value="terminalOrganizationsSerials" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10"
+        :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+        :globalFilterFields="['terminalStatus', 'terminalSerialNumber']" @rowSelect="onRowSelect">
+
+        <template #header>
+          <div class="flex justify-end">
+            <span class="relative">
+              <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+              <InputText v-model="filters2['global'].value" placeholder="Keyword Search"
+                class="pl-10 font-normal terminal_search" />
+            </span>
+          </div>
+        </template>
+
+        <template #empty>
+          <div class="text-center">
+            No Terminals found.
+          </div>
+        </template>
+        <template #loading>
+          <MazSpinner v-if="wait.isLoading('LOADING_TERMINALS')" color="secondary" />
+        </template>
+
+        <Column v-for="col of terminalSerialsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+        <!-- terminal status-->
+        <Column field="terminalStatus" header="terminalSerialStatus">
+          <template #body="slotProps">
+
+            <div v-if="slotProps.data.terminalSerialStatus">
+              <Tag :value="slotProps.data.terminalSerialStatus"
+                :severity="getSeverity(slotProps.data.terminalSerialStatus)" />
+            </div>
+
+          </template>
+        </Column>
+        <Column header="actions">
+
+          <template #body="">
+            <div class="flex">
+
+              <img src="../../assets/icon/Dropdown.svg" @click="toggle2" />
+
+              <Menu ref="menu2" id="overlay_menu2" :model="items2" :popup="true" />
+            </div>
+          </template>
+        </Column>
+
+
+      </DataTable>
+
+    </div>
+
+  </div>
+
+
+  <div class="content-table-section">
+
+    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+
+      <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+        <p class="text-xl text-black">{{ reactiveData.readTerminalTransactions ? `${reactiveData.selectedRow.terminalId}
+          Transactions` : 'Terminal Holders List' }}</p>
+        <img src="../../assets/icon/alert-circle.svg" />
+        <!-- <div>
                 <input class="terminal_search"  placeholder="Search"/>
               </div> -->
 
-        </div>
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-          <!-- <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
-                <img src="../../assets/icon/Group 2.svg" />
-                <p class="bnt-trans-text">Assgin Terminal</p>
-              
-              </BaseButton> -->
-          <BaseButton @click="requestTerminal">
-            <div style="display: flex;align-items: center;gap: 5px;">
-              <img src="../../assets/icon/Folder Add 2.svg" />
-              Create Terminal
-            </div>
-
-          </BaseButton>
-        </div>
       </div>
 
-      <!-- <BaseTable
+    </div>
+
+    <!-- <BaseTable
               pagination="true" search="true"
                 :headers="terminalHeaders" :bodies="terminalOrganizations"
             ></BaseTable> -->
 
 
-      <div class="overflow-auto rounded-lg shadow">
-        <DataTable v-if="reactiveData.readTerminalTransactions" v-model:filters="filters" :value="terminalTransactions" :metaKeySelection="metaKey" selectionMode="single"
-            paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
-            paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
-            :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
+    <div class="overflow-auto rounded-lg shadow">
 
-            <template #header>
-              <div class="flex justify-end">
-                <span class="relative">
-                  <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-                  <InputText v-model="filters['global'].value" placeholder="Keyword Search"
-                    class="pl-10 font-normal terminal_search" />
-                </span>
-              </div>
-            </template>
+      <DataTable :loading="wait.isLoading('LOADING_TERMINALS')" v-model:filters="filters" :value="terminalOrganizations"
+        :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]"
+        stripedRows tableStyle="min-width: 50rem"
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+        :globalFilterFields="['terminalStatus', 'terminalSerialNumber']" @rowSelect="onRowSelect">
 
-            <template #empty>
-              <div class="text-center">
-                No Transactions found.
-              </div>
-            </template>
-            <template #loading> Loading customers data. Please wait. </template>
+        <template #header>
+          <div class="flex justify-end">
+            <span class="relative">
+              <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+              <InputText v-model="filters['global'].value" placeholder="Keyword Search"
+                class="pl-10 font-normal terminal_search" />
+            </span>
+          </div>
+        </template>
 
-            <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
-            <!--terminal status-->
-            <Column field="terminalStatus" header="terminalStatus">
-                  <template #body="slotProps">
-                        
-                        <div v-if="slotProps.data.terminalStatus">
-                          <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />
-                        </div>
-                          
-                        </template>
-                </Column> 
-            <Column header="actions">
+        <template #empty>
+          <div class="text-center">
+            No Terminals found.
+          </div>
+        </template>
+        <template #loading>
+          <MazSpinner v-if="wait.isLoading('LOADING_TERMINALS')" color="secondary" />
+        </template>
 
-              <template #body="">
-                <div class="flex">
+        <Column v-for="col of terminalHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+        <!--terminal status-->
+        <Column field="terminalStatus" header="terminalStatus">
+          <template #body="slotProps">
 
-                  <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
+            <div v-if="slotProps.data.terminalStatus">
+              <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />
+            </div>
 
-                  <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-                </div>
-              </template>
-            </Column>
+          </template>
+        </Column>
+        <Column header="actions">
 
+          <template #body="">
+            <div class="flex">
 
-          </DataTable>
+              <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
 
-        <DataTable v-else v-model:filters="filters" :value="terminalOrganizations" :metaKeySelection="metaKey"
-          selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows
-          tableStyle="min-width: 50rem"
-          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-          currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
-          :globalFilterFields="['terminalStatus', 'terminalSerialNumber']" @rowSelect="onRowSelect">
-
-          <template #header>
-            <div class="flex justify-end">
-              <span class="relative">
-                <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-                <InputText v-model="filters['global'].value" placeholder="Keyword Search"
-                  class="pl-10 font-normal terminal_search" />
-              </span>
+              <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
             </div>
           </template>
-
-          <template #empty>
-            <div class="text-center">
-              No Terminals found.
-            </div>
-          </template>
-          <template #loading> Loading customers data. Please wait. </template>
-
-          <Column v-for="col of terminalHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
-          <!--terminal status-->
-<!--          <Column field="terminalStatus" header="terminalStatus">-->
-<!--            <template #body="slotProps">-->
-
-<!--              <div v-if="slotProps.data.terminalStatus">-->
-<!--                <Tag :value="slotProps.data.terminalStatus" :severity="getSeverity(slotProps.data.terminalStatus)" />-->
-<!--              </div>-->
-
-<!--            </template>-->
-<!--          </Column>-->
-          <Column header="actions">
-
-            <template #body="">
-              <div class="flex">
-
-                <img src="../../assets/icon/Dropdown.svg" @click="toggle" />
-
-                <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
-              </div>
-            </template>
-          </Column>
+        </Column>
 
 
-        </DataTable>
-
-      </div>
+      </DataTable>
 
     </div>
+
+  </div>
+
+
 </template>
 
 <style scoped>

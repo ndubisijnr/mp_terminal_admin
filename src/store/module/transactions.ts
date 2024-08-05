@@ -21,17 +21,21 @@ export const useTransactionStore = defineStore('transaction_Store', {
 
     
         async readCustomerOrganisationTransactions(page:Number, size:Number){
+            if(!this.transactions)this.loading = true
             const response = await TransactionsController.readTransactions(page, size)
             const responseData = response.data
 
             try{
+                this.loading = false
                 if(responseData.responseCode === '00'){
                     this.transactions= responseData.data
                     console.log(responseData)
                 }else{
                     console.log(responseData.responseCode)
                 }
-            }catch(e){}
+            }catch(e){
+                this.loading =false
+            }
         },
 
         async readTerminalTransactions(payload:string){

@@ -1,13 +1,35 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-// import Dropdown from 'primevue/dropdown';
-import { defineEmits } from 'vue';
+import Dropdown from 'primevue/dropdown';
+import { defineEmits, computed, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
+import StoreUtils from '@/util/storeUtils';
+import TerminalRequest from '@/models/request/terminal/TerminalRequest';
+import { useToast,useWait } from 'maz-ui';
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
+
+const toast = useToast()
+const wait = useWait()
+const model = ref(TerminalRequest.createTerminal)
+
+const terminal = defineProps({
+    terminalSeriaNumber:String
+})
+
+
+const currentOrganisation:any = computed(() => {
+    return StoreUtils.getter().organisation.getCurrentOrganisation
+})
+
+
+const organisation:any = computed(() => {
+  return StoreUtils.getter()?.organisation.getOrganisation
+})
+
 
 
 // const data = reactive({
@@ -15,6 +37,14 @@ const emit = defineEmits<{
 //     isRequestSent:false
 
 // })
+
+async function assignTerminal(){
+    wait.start('ASSIGN_TERMINAL')
+    TerminalRequest.createTerminal.terminalSerialNumber =  terminal?.terminalSeriaNumber?.terminalSerialNumber
+    await StoreUtils.getter().terminal.createNewTerminal(TerminalRequest.createTerminal,toast)
+    wait.stop('ASSIGN_TERMINAL')
+    close()
+}
 
 
 function close(){
@@ -31,14 +61,22 @@ function close(){
         <template v-slot:child>
                 <div  class="modal-child-wrapper">
                     <div class="modal-child-header">
-                        <p class="req-term">Assign Terminal</p>
+                        <p class="req-term">Assign Terminal {{ terminal?.terminalSeriaNumber?.terminalSerialNumber }}</p>
                         <img src="../../../assets/icon/Frame.svg"  @click="close"/>
                     </div>
-
                     <div class="modal-child-content">
+                        <label>Merchant Name</label>
+                        <Dropdown class="select_div" filter
+                                        :optionLabel="'organisationName'"
+                                        v-model="model.terminalOrganisationId"
+                                        :optionValue="'organisationId'"
+                                        placeholder="Merchant Name"
+                                        :options="organisation">
+                            </Dropdown>
                         <div class="flex justify-between gap-10">
-                            <base-input type="text"   placeholder="Terminal Serial Number"  label="TerminalSerialNumber" />
-                            <base-input type="text"  placeholder="Terminal Pin"  label="TerminalPin" />
+                           
+                            <!-- <base-input type="text"  v-model="TerminalRequest.createTerminal.terminalSerialNumber"  placeholder="Terminal Serial Number"  label="TerminalSerialNumber" /> -->
+                            <base-input type="text"  placeholder="Terminal Pin" v-model="TerminalRequest.createTerminal.terminalPin"  label="TerminalPin" />
                         </div>
                     
                     </div>
@@ -50,7 +88,7 @@ function close(){
 
                     <div class="modal-child-footer">
                        
-                        <BaseButton>Assign Terminal</BaseButton>
+                        <BaseButton :loading="wait.isLoading('ASSIGN_TERMINAL')" @click="assignTerminal">Assign Terminal</BaseButton>
 
                     </div>
 
@@ -133,6 +171,13 @@ color: #101828;
     align-self: stretch;
     flex-grow: 0;
 
+}
+.select_div {
+    height: 47px;
+    width: 100%;
+    padding:.5rem;
+    margin-top: 1rem;
+    border: solid rgba(175, 175, 175, 0.291);
 }
 .req-term{
     /* Assign Terminal */

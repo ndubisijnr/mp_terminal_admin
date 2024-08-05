@@ -16,13 +16,18 @@ import MazDialogPromise, {
   } from 'maz-ui/components/MazDialogPromise'
 // import { DialogCustomButton } from 'maz-ui/types/components/MazDialogPromise/use-maz-dialog-promise.js'; 
 import ChargesRequest from '@/models/request/charges/ChargesRequest';
-import { useToast } from 'maz-ui';
+import { useToast, useWait } from 'maz-ui';
 import { useAuthStore } from '@/store/module/auth';
+import {router} from '../../router/index'
+import MazSpinner from 'maz-ui/components/MazSpinner';
 
 const user = useAuthStore()
 
 
 const toast = useToast()
+
+const wait = useWait()
+
 const { showDialogAndWaitChoice, data } = useMazDialogPromise()
 
 const reactiveData= reactive({
@@ -37,11 +42,15 @@ data.value = {
     message: `Are you sure you want to delete charge`
 }
 
-const organisations = computed(() => {
-    return StoreUtils.getter()?.organisation.getCurrentOrganisation
-})
+// const organisations = computed(() => {
+//     return StoreUtils.getter()?.organisation.getCurrentOrganisation
+// })
 
 const menu = ref();
+
+const transactionID = computed(() => {
+    return router.currentRoute.value.query.organisationID
+})
 
 // const buttons: DialogCustomButton[] = [
 //     {
@@ -76,7 +85,7 @@ async function askToUser() {
 
       if(responseOne === 'accept'){
        deleteTerminal()
-       await StoreUtils.getter()?.terminal.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId))
+       await StoreUtils.getter()?.terminal.getOrganisationTerminal()
 
       }else{
         console.log(responseOne)
@@ -162,9 +171,9 @@ function requestAddCharges(){
 }
 
  onMounted(async () => {
-  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
-
-  StoreUtils.getter()?.charges.getOrganizationCharges()
+  wait.start('LOADING_CHARGES')
+  await StoreUtils.getter()?.charges.getOrganizationCharges()
+  wait.stop('LOADING_CHARGES')
 })
 
 </script>
@@ -214,7 +223,7 @@ function requestAddCharges(){
         <!-- <BaseTable pagination="true" search="true" :headers="" :bodies=""></BaseTable> -->
         <div class="overflow-auto rounded-lg shadow">
         
-        <DataTable v-model:filters="filters" :value="charges" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+        <DataTable :loading="wait.isLoading('LOADING_CHARGES')" v-model:filters="filters" :value="charges" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
             currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
             :globalFilterFields="['pricingCode','pricingType']" @rowSelect="onRowSelect">
@@ -233,7 +242,9 @@ function requestAddCharges(){
                     No Charges List. 
                     </div>
                   </template>
-                <template #loading> Loading customers data. Please wait. </template>
+                <template #loading> 
+                  <MazSpinner v-if="wait.isLoading('LOADING_CHARGES')" color="secondary"></MazSpinner>
+                </template>
           
                 <Column v-for="col of headers"  :key="col.key" :field="col.key" :header="col.label"></Column>
                 <!--terminal status-->

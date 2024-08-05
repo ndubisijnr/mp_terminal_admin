@@ -1,67 +1,33 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { defineEmits, computed, ref } from 'vue';
+import { defineEmits, computed, ref, watch } from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import OrganisationRequest from '@/models/request/organisation/OrganisationRequest';
-import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
+import MazInputCode from 'maz-ui/components/MazInputCode'
 
 const model: any = ref(OrganisationRequest.createOrganisation)
 const model2: any = ref(OrganisationRequest.completeCreateOrganisation)
 
-const onboardingStage = ref(StoreUtils.getter().organisation.getOnboardingStage)
+const onboardingStage = computed(() => {return StoreUtils.getter().organisation.getOnboardingStage})
 
-const user = computed(() => {
-    return StoreUtils.getter()?.auth.getUserInfo
+const isOtp = ref(false)
+
+
+
+watch(onboardingStage, (newV, oldV) => {
+    if(newV === 'true'){
+        isOtp.value = true
+    }
 })
 
+const code = ref()
 
 const toast = useToast()
 const wait = useWait()
 
-const loading = ref(false)
-const confirmPassword = ref(null)
-const mazDropzoneInstance = ref<MazDropzoneInstance>()
-const errorMessage = ref<string>()
-
-const error = ({ message }: any) => {
-    errorMessage.value = message
-}
-const success = ({ file, response }: any) => {
-    OrganisationRequest.createOrganisation.organisationLogo = file.dataURL
-    console.log('dropzone-like', file, response)
-}
-//   const sendFiles = () =>  mazDropzoneInstance.value?.processQueue()
-
-const dropzoneOptionsBase: MazDropzoneOptions = {
-    url: 'https://httpbin.org/post',
-    headers: { 'My-Awesome-Header': 'header value' },
-    acceptedFiles: 'image/jpeg,image/jpg,image/png',
-    maxFilesize: 5,
-    maxFiles: 5,
-    maxThumbnailFilesize: 3,
-    autoProcessQueue: true,
-    autoRemoveOnError: true,
-} as any
-
-const translations: MazDropzoneOptions = {
-    dictDefaultMessage: 'Choose or drop a file',
-    dictFilesDescriptions: `(PNG or JPG under ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictFallbackMessage: 'Your browser is not supported',
-    dictFileTooBig: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictInvalidFileType: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictRemoveFile: 'Remove',
-    dictCancelUpload: 'Cancel upload',
-    dictMaxFilesExceeded: `You can not upload any more files. (max: ${(dropzoneOptionsBase as any).maxFiles})`,
-    dictUploadCanceled: 'Upload canceled',
-} as any
-
-const dropzoneOptions: MazDropzoneOptions = {
-    ...dropzoneOptionsBase,
-    ...translations
-}
 
 const emit = defineEmits<{
     (e: 'close', value: boolean): void;
@@ -79,16 +45,21 @@ async function createOrganisation() {
 
     await StoreUtils.getter()?.organisation.createOrganisation(model.value, toast)
     wait.stop('CREATING_ORGANISATION')
-    close()
+   
 
 }
 
 async function completeCreateOrganisation() {
-    wait.start('CREATING_ORGANISATION')
-    // model.value.organisationCustomerId = user.value?.userId
+    wait.start('COMPLETING_CREATING_ORGANISATION')
+    model2.value.userEmail = model.value.userEmail
+    model2.value.otp = code.value
+    model2.value.organisationAddress =  model.value.organisationAddress,
+    model2.value.organisationName=  model.value.organisationName,
 
-    await StoreUtils.getter()?.organisation.completeCreateOrganisation(model.value, toast)
-    wait.stop('CREATING_ORGANISATION')
+    
+
+    await StoreUtils.getter()?.organisation.completeCreateOrganisation(model2.value, toast)
+    wait.stop('COMPLETING_CREATING_ORGANISATION')
     close()
 
 }
@@ -105,7 +76,7 @@ async function completeCreateOrganisation() {
                     <img src="../../../assets/icon/Frame.svg" @click="close" />
                 </div>
 
-                <div v-if="onboardingStage === '1'">
+                <div v-if="!isOtp">
                     <div class="modal-child-content">
                         <div class="flex justify-between gap-10">
                             <base-input type="text" v-model="model.userFirstName" placeholder="userFirstName"
@@ -121,17 +92,15 @@ async function completeCreateOrganisation() {
                                 label="userPhone" />
                         </div>
                         <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model.organisationEmail" placeholder="organisationEmail"
+                            <base-input type="text" v-model="model.userEmail" placeholder="organisationEmail"
                                 label="organisationEmail" />
                             <base-input type="text" v-model="model.organisationAddress"
-                                placeholder="organisationAddress" label="organisationWebsite" />
+                                placeholder="organisationAddress" label="organisationAddress" />
                         </div>
                         <div class="flex justify-between gap-10">
                             <base-input type="text" v-model="model.userPassword" placeholder="userPassword"
                                 label="userPassword" />
-                            <base-input type="text" v-model="confirmPassword" placeholder="Confirm Password"
-                                label="Confirm Password" />
-
+                           
                         </div>
 
 
@@ -152,15 +121,11 @@ async function completeCreateOrganisation() {
                 </div>
 
                 <div v-else>
+                    <p class="py-5 text-lg text-muted-500 text-center">Complete Onboarding by providing the digits sent to the {{model.userEmail}}</p>
                     <div class="modal-child-content">
-                        <p>Complete Onboarding by providing the digits sent to the Institution emaill..</p>
-
                        
-                        <div class="flex justify-between gap-10">
-                            <base-input type="text" v-model="model2.referralCode" placeholder="referralCode"
-                                label="referralCode" />
-                            <base-input type="text" v-model="model2.otp" placeholder="otp"
-                                label="otp" />
+                        <div class="flex justify-center gap-10">
+                            <MazInputCode v-model="code" :codeLength="6" />
                         </div>
                 
                     </div>

@@ -8,14 +8,16 @@ export const useTerminalStore = defineStore('terminal_store', {
         loading: false,
         terminalOrganisations: null,
         terminalOrganisationTransactions:null,
-        organisationTerminal:null
+        organisationTerminal:null,
+        terminalSerials:null,
     }),
 
     getters: {
         getTerminalOrganisations:state => state.terminalOrganisations,
         getTerminalOrganisationTransactions:state => state.terminalOrganisationTransactions,
         getLoading: state => state.loading,
-        getOrganisationTerminals:state => state.organisationTerminal
+        getOrganisationTerminals:state => state.organisationTerminal,
+        getTerminalSerial:state => state.terminalSerials
     },
 
     actions: {
@@ -70,6 +72,79 @@ export const useTerminalStore = defineStore('terminal_store', {
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
                     StoreUtils.getter()?.terminal.getOrganisationTerminal()
+                    StoreUtils.getter()?.terminal.readTerminalSerial()
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async reAssignTerminal(payload:any, toast:any){
+            const response = await TerminalController.reAssignTerminal(payload)
+            const responseData = response.data
+            console.log('readOrganizationTerminal', response)
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    StoreUtils.getter()?.terminal.getOrganisationTerminal()
+                    StoreUtils.getter()?.terminal.readTerminalSerial()
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async changePin(payload:any, toast:any){
+            const response = await TerminalController.changeTerminalPin(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                   
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+
+        async readTerminalSerial(){
+            const response = await TerminalController.readTerminalSerial()
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.terminalSerials = responseData.data
+                
+                }else{
+                    console.log(responseData)
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async uploadNewTerminalSerial(payload:any, toast:any){
+            const response = await TerminalController.createTerminalSerial(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    StoreUtils.getter()?.terminal.readTerminalSerial()
                 }else{
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
