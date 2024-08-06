@@ -46,6 +46,18 @@ export const useAuthStore = defineStore('auth_store', {
             }catch(e){}
         },
 
+        async resendOtp(payload:any, toast:any){
+            const response = await AuthController.resendOtp(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
+                }else{
+                    toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
+                }
+            }catch(e){}
+        },
+
         async completeEnrolment(payload:any, toast:any){
             const response = await AuthController.completeEnrolment(payload)
             const responseData = response.data

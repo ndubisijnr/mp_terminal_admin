@@ -351,7 +351,7 @@ onMounted(async () => {
 
   <div class="content-table-section">
 
-    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
 
       <div style="display: flex; align-items: center; justify-content: center;gap:20px">
         <p class="text-xl text-black"> Terminal Serials List</p>
@@ -434,7 +434,7 @@ onMounted(async () => {
 
   <div class="content-table-section">
 
-    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
 
       <div style="display: flex; align-items: center; justify-content: center;gap:20px">
         <p class="text-xl text-black">{{ reactiveData.readTerminalTransactions ? `${reactiveData.selectedRow.terminalId}

@@ -13,6 +13,8 @@ import Dialog from 'primevue/dialog';
 import { useWait } from 'maz-ui';
 import Breadcrumb from 'primevue/breadcrumb';
 import { router } from '@/router';
+import Receipt from "@/components/modal/Receipt.vue";
+
 
 const wait = useWait()
 
@@ -22,7 +24,9 @@ const reactiveData = reactive({
   visible: false,
   selectedRow: {} as any,
   showUpdateTerminal: false,
-  readTerminalTransactions:false
+  readTerminalTransactions:false,
+  showReceipt:false
+
 })
 
 
@@ -103,7 +107,8 @@ const items = ref([
         label: 'Reciept',
         icon: 'pi pi-refresh',
         command: () => {
-         
+          reactiveData.showReceipt = !reactiveData.showReceipt
+
         }
       },
     ]
@@ -120,6 +125,10 @@ const terminalTransactions = computed(() => {
   return StoreUtils.getter().terminal?.getTerminalOrganisationTransactions
 })
 
+function handleClose(payload: any) {
+  reactiveData.showReceipt = payload;
+ 
+}
 const item = ref([
     { label: 'Terminals', route:'/terminals' }, 
     { label: 'Transactions' }, 
@@ -148,8 +157,9 @@ onMounted(() => {
     </div>
   </Dialog>
 
+    <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
-  
+
     <ContentHeader />
 
     <div class="content-table-section">
@@ -198,7 +208,9 @@ onMounted(() => {
               </div>
             </template>
             <template #loading> 
-
+              <div class="text-center text-white text-xxl">
+               Please Wait, fetching records.
+              </div>
             </template>
 
             <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>

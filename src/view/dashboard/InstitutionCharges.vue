@@ -488,8 +488,8 @@ onMounted(async () => {
       </div>
 
     <div class="content-table-section">
-      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
-        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
+        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:10px 0">
           <p class="text-xl text-black">Institution Charges</p>
           <img src="../../assets/icon/alert-circle.svg" />
         </div>
@@ -550,9 +550,9 @@ onMounted(async () => {
     </div>
 
     <div class="content-table-section">
-      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
 
-        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:10px 0">
           <p class="text-xl text-black">Institution Terminals</p>
           <img src="../../assets/icon/alert-circle.svg" />
         </div>
@@ -606,9 +606,9 @@ onMounted(async () => {
     </div>
 
     <div class="content-table-section">
-      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
 
-        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+        <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:10px 0">
           <p class="text-xl text-black">Institution Transactions</p>
           <img src="../../assets/icon/alert-circle.svg" />
         </div>

@@ -3,7 +3,6 @@ import BaseCard from "../../components/cards/BaseCard.vue";
 import { onMounted, ref, reactive } from "vue";
 import {useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
-import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
