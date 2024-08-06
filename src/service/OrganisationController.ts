@@ -24,7 +24,6 @@ export const OrganisationController = {
         return apiClient.appClient.get(`/dev/organisation/read-stats?startDate=${startDate}&endDate=${endDate}`)
     },
 
-    
 
     organisationStats(organisationId:string, startDate:string, endDate:string){
         return apiClient.appClient.get(`/dev/organisation/organisation-stats/${organisationId}?startDate=${startDate}&endDate=${endDate}`)
