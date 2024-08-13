@@ -2,7 +2,7 @@
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
 import Dropdown from 'primevue/dropdown';
-import { reactive, defineEmits, ref } from 'vue';
+import { defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
@@ -17,17 +17,17 @@ const emit = defineEmits<{
 
 
 const props = defineProps({
-    data:{}
+    data:{} as any
 })
 
 const model = ref(ChargesRequest.organisationCreateChargesRequest)
 
 
-const data = reactive({
-    showConfirmAgain:true,
-    isRequestSent:false
-
-})
+// const data = reactive({
+//     showConfirmAgain:true,
+//     isRequestSent:false
+//
+// })
 
 
 function close(){

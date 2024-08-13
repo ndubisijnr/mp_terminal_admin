@@ -19,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 
-const model = ref(ChargesRequest.createChargesRequest)
+const model = ref(ChargesRequest.createChargesRequest) as any
 
 
 

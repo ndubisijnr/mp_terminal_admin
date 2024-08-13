@@ -12,7 +12,7 @@ const toast = useToast()
 const wait = useWait()
 
 const props = defineProps({
-    data:Object
+    data:{} as any
 })
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
@@ -29,7 +29,6 @@ function close(){
 
 
 async function addCharges(){
-    model.value.organisationPricingPricingId = props.data?.organisationPricingPricingId
     model.value.organisationPricingOrganisationId = props?.data.organisationPricingOrganisationId
 
     console.log(model)

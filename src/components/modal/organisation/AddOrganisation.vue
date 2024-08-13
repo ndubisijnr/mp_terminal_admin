@@ -18,6 +18,7 @@ const isOtp = ref(false)
 
 
 watch(onboardingStage, (newV, oldV) => {
+  console.log(oldV)
     if(newV === 'true'){
         isOtp.value = true
     }

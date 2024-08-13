@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import { ref, onMounted, reactive, computed } from "vue";
-import { useToast, useWait } from 'maz-ui'
+import { useToast } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils.ts";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { FilterMatchMode } from 'primevue/api';
+// import { FilterMatchMode } from 'primevue/api';
 import { useAuthStore } from "@/store/module/auth";
 import MazSpinner from 'maz-ui/components/MazSpinner'
 import Chart from "primevue/chart";
 import Receipt from "@/components/modal/Receipt.vue";
 
 const toast = useToast()
-const wait = useWait()
 const metaKey = ref(true);
 
 const readTerminalTransactionLoading = computed(() => {
@@ -29,7 +28,7 @@ const user = useAuthStore()
 const transactions = ref(StoreUtils.getter().transactions.getTransactions)
 
 const reactiveData = reactive({
-  selectedRow: null,
+  selectedRow: null as any,
   showReceipt: false
 
 })
@@ -53,12 +52,12 @@ const onRowSelect = (event: any) => {
   console.log(event)
 }
 
-const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  // representative: { value: null, matchMode: FilterMatchMode.IN },
-  transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
-});
+// const filters = ref({
+//   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+//   transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+//   // representative: { value: null, matchMode: FilterMatchMode.IN },
+//   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
+// });
 
 // const filters2 = ref({
 //   global: { value: null, matchMode: FilterMatchMode.CONTAINS },

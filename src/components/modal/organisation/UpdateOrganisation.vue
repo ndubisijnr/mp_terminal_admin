@@ -6,7 +6,6 @@ import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import OrganisationRequest from '@/models/request/organisation/OrganisationRequest';
-import MazDropzone, { MazDropzoneInstance, MazDropzoneOptions } from 'maz-ui/components/MazDropzone'
 
 let model:any = ref(OrganisationRequest.createOrganisation)
 
@@ -22,46 +21,7 @@ defineProps({
 const toast = useToast()
 const wait = useWait()
 
-const loading = ref(false)
-  const mazDropzoneInstance = ref<MazDropzoneInstance>()
-  const errorMessage = ref<string>()
 
-  const error = ({ message } : any) => {
-    errorMessage.value = message
-  }
-  const success = ({ file, response } : any) => {
-    OrganisationRequest.createOrganisation.organisationLogo = file.dataURL
-    console.log('dropzone-like', file, response )
-  }
-//   const sendFiles = () =>  mazDropzoneInstance.value?.processQueue()
-
-  const dropzoneOptionsBase: MazDropzoneOptions = {
-    url: 'https://httpbin.org/post',
-    headers: { 'My-Awesome-Header': 'header value' },
-    acceptedFiles: 'image/jpeg,image/jpg,image/png',
-    maxFilesize: 5,
-    maxFiles: 5,
-    maxThumbnailFilesize: 3,
-    autoProcessQueue: true,
-    autoRemoveOnError: true,
-  } as any
-
-  const translations: MazDropzoneOptions = {
-    dictDefaultMessage: 'Choose or drop a file',
-    dictFilesDescriptions: `(PNG or JPG under ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictFallbackMessage: 'Your browser is not supported',
-    dictFileTooBig: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictInvalidFileType: `File(s) too big (max: ${(dropzoneOptionsBase as any).maxFilesize} MB)`,
-    dictRemoveFile: 'Remove',
-    dictCancelUpload: 'Cancel upload',
-    dictMaxFilesExceeded: `You can not upload any more files. (max: ${(dropzoneOptionsBase as any).maxFiles})`,
-    dictUploadCanceled: 'Upload canceled',
-  } as any
-
-  const dropzoneOptions: MazDropzoneOptions = {
-    ...dropzoneOptionsBase,
-    ...translations
-  }
 
 const emit = defineEmits<{
     (e: 'close', value: boolean): void;
@@ -114,22 +74,6 @@ async function createOrganisation() {
                             label="organisationAddress" />
                         <base-input type="text" v-model="model.organisationRegistrationNumber" :placeholder="data?.organisationRegistrationNumber"
                             label="organisationRegistrationNumber(CAC)" />
-                    </div>
-
-                    <div class="">
-                        <p class="pb-3">OrganisationLogo</p>
-                        <ClientOnly>
-                            <MazDropzone  ref="mazDropzoneInstance" :options="dropzoneOptions" @error="error"
-                                @success="success" @sending="loading = true" @complete="loading = false" />
-                        </ClientOnly>
-
-                        <p v-if="errorMessage" style="color: red; text-align: center;">
-                            {{ errorMessage }}
-                        </p>
-
-                        <!-- <MazBtn left-icon="arrow-up-tray" :loading="loading" @click="">
-                            Send Files
-                        </MazBtn> -->
                     </div>
 
                 </div>

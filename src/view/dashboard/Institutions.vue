@@ -23,7 +23,7 @@ const wait = useWait()
 
 const reactiveData = reactive({
   showAddOrganisation:false,
-  selectedRow:null,
+  selectedRow:null as any,
   visible:false,
   showUpdateOganisation:false,
   showAssignTerminal:false,

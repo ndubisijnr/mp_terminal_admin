@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { defineEmits, computed, ref, reactive, onMounted } from 'vue';
+import { defineEmits, ref, reactive, onMounted } from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import MazAccordion from 'maz-ui/components/MazAccordion'
 import MazCheckbox from 'maz-ui/components/MazCheckbox'
-import MazTable from 'maz-ui/components/MazTable'
 
 
 const doneAddingTerminalSerial = ref(false)
@@ -22,43 +21,43 @@ const emit = defineEmits<{
     (e: 'close', value: boolean): void;
 }>();
 
-const organisations = computed(() => {
-    return StoreUtils.getter()?.organisation.getCurrentOrganisation
-})
+// const organisations = computed(() => {
+//     return StoreUtils.getter()?.organisation.getCurrentOrganisation
+// })
 
 
 
 
 const bulkTerminal = reactive({
-    terminal:[]
+    terminal:[] as any
 })
 
-function shallowEqual(obj1, obj2) {
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
+// function shallowEqual(obj1:any, obj2:any) {
+//     const keys1 = Object.keys(obj1);
+//     const keys2 = Object.keys(obj2);
+//
+//     if (keys1.length !== keys2.length) {
+//         return false;
+//     }
+//
+//     for (let key of keys1) {
+//         if (obj1[key] !== obj2[key]) {
+//             return false;
+//         }
+//     }
+//
+//     return true;
+// }
 
-    if (keys1.length !== keys2.length) {
-        return false;
-    }
+// function isObjectInArray(array, obj) {
+//     return array.some(item => shallowEqual(item, obj));
+// }
 
-    for (let key of keys1) {
-        if (obj1[key] !== obj2[key]) {
-            return false;
-        }
-    }
-
-    return true;
+function hasDuplicate(array:any, key:any, value:any) {
+    return array.some((item:any) => item[key] === value);
 }
 
-function isObjectInArray(array, obj) {
-    return array.some(item => shallowEqual(item, obj));
-}
-
-function hasDuplicate(array, key, value) {
-    return array.some(item => item[key] === value);
-}
-
-function addObjectIfUnique(array, obj, key) {
+function addObjectIfUnique(array:any, obj:any, key:any) {
     if (!hasDuplicate(array, key, obj[key])) {
         array.push({...obj});
         sessionStorage.bulkTermial = JSON.stringify(bulkTerminal.terminal)
@@ -92,9 +91,9 @@ function close() {
     emit('close', false)
 }
 
-function remove(terminalSerialNumber){
+function remove(terminalSerialNumber:string){
     console.log(terminalSerialNumber)
-    bulkTerminal.terminal = bulkTerminal.terminal.filter((it, index) => {
+    bulkTerminal.terminal = bulkTerminal.terminal.filter((it:any) => {
         return it.terminalSerialNumber !== terminalSerialNumber
     })
 }
@@ -132,7 +131,7 @@ onMounted(() => {
             <div class="modal-child-wrapper">
                 <div class="modal-child-header">
                     <p class="req-term">Add Terminal Serial</p>
-                    <img src="../../../assets/icon/Frame.svg" @click="close" />
+                    <img src="../../../assets/icon/Frame.svg" @click="close" alt="frame" />
                 </div>
 
                 <div class="modal-child-content">

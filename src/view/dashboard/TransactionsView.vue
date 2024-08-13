@@ -19,7 +19,7 @@ const wait = useWait()
 const reactiveData = reactive({
 
   visible: false,
-  selectedRow: null,
+  selectedRow: null as any,
   showReceipt:false
 })
 

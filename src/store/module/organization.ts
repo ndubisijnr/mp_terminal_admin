@@ -9,9 +9,9 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         organisations:null,
         currentOrganisation:{} as currentOrganisation,
         onboardingStage:'false',
-        organisationStats:null,
+        organisationStats:null as any,
         organisationPricing:null,
-        adminStats:null,
+        adminStats:null as any,
         organisationTransaction:null
     }),
 

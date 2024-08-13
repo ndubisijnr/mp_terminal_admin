@@ -21,7 +21,7 @@ import MazDialog from 'maz-ui/components/MazDialog'
 import UpdateTerminal from '@/components/modal/terminal/UpdateTerminal.vue'
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
 import { router } from '@/router';
-import { RouteConstantUtil } from "../../util/constant/RouteConstantUtil.ts";
+import { RouteConstantUtil } from "@/util/constant/RouteConstantUtil.ts";
 import MazSpinner from 'maz-ui/components/MazSpinner'
 import ReAssignTerminal from '@/components/modal/terminal/ReAssignTerminal.vue';
 import ChangeTerminalPin from '@/components/modal/terminal/ChangeTerminalPin.vue';

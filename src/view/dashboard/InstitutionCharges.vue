@@ -138,7 +138,7 @@ const item = ref([
 ]);
 
 const reactiveData = reactive({
-  selectedRow: null,
+  selectedRow: null as any,
   startDate: new Date(),
   showManageCharges: false,
   visible: false,
@@ -161,7 +161,7 @@ const toggle3 = (event: any) => {
 }
 
 const organisationID = computed(() => {
-  return router.currentRoute.value.query.organisationID
+  return String(router.currentRoute.value.query.organisationID)
 })
 
 

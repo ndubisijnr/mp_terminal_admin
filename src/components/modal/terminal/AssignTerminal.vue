@@ -17,13 +17,13 @@ const wait = useWait()
 const model = ref(TerminalRequest.createTerminal)
 
 const terminal = defineProps({
-    terminalSeriaNumber:String
+    terminalSeriaNumber:String as any
 })
 
 
-const currentOrganisation:any = computed(() => {
-    return StoreUtils.getter().organisation.getCurrentOrganisation
-})
+// const currentOrganisation:any = computed(() => {
+//     return StoreUtils.getter().organisation.getCurrentOrganisation
+// })
 
 
 const organisation:any = computed(() => {

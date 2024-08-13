@@ -119,7 +119,7 @@ const items = ref([
 const metaKey = ref(true);
 
 const terminalID = computed(() => {
-    return router.currentRoute.value.query.terminalID
+    return String(router.currentRoute.value.query.terminalID)
 })
 
 const redirectTo = computed(() => {

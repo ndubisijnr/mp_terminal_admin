@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { defineEmits, computed, ref } from 'vue';
+import { defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
 import StoreUtils from '@/util/storeUtils';
 import TerminalRequest from '@/models/request/terminal/TerminalRequest';
@@ -16,18 +16,18 @@ const wait = useWait()
 const model = ref(TerminalRequest.changeTerminalPin)
 
 const terminal = defineProps({
-    terminalSeriaNumber:String
+    terminalSeriaNumber:String as any
 })
 
 
-const currentOrganisation:any = computed(() => {
-    return StoreUtils.getter().organisation.getCurrentOrganisation
-})
+// const currentOrganisation:any = computed(() => {
+//     return StoreUtils.getter().organisation.getCurrentOrganisation
+// })
 
 
-const organisation:any = computed(() => {
-  return StoreUtils.getter()?.organisation.getOrganisation
-})
+// const organisation:any = computed(() => {
+//   return StoreUtils.getter()?.organisation.getOrganisation
+// })
 
 
 

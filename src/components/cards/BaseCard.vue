@@ -3,7 +3,7 @@ import formatAmount from '@/util/helper/formatAmount';
 
 defineProps({
   text: String,
-  amount: String,
+  amount: String as any,
   analytics: Boolean,
   currency: Boolean
 

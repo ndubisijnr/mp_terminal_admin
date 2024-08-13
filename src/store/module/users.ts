@@ -30,19 +30,19 @@ export const useUser_Store = defineStore('user_Store', {
             }catch(e){}
         },
 
-        async readByUsersId(payload:string){
-            const response = await UserController.readByUsersID(payload)
-            const responseData = response.data
-
-            try{
-                if(responseData.responseCode === '00'){
-                    this.users= responseData.data
-                    console.log(responseData)
-                }else{
-                    console.log(responseData.responseCode)
-                }
-            }catch(e){}
-        },
+        // async readByUsersId(payload:string){
+        //     const response = await UserController.readByUsersID(payload)
+        //     const responseData = response.data
+        //
+        //     try{
+        //         if(responseData.responseCode === '00'){
+        //             this.users= responseData.data
+        //             console.log(responseData)
+        //         }else{
+        //             console.log(responseData.responseCode)
+        //         }
+        //     }catch(e){}
+        // },
 
         async createUsers(payload:{}, toast:any){
             const response = await UserController.createUsers(payload)
