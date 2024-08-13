@@ -1,10 +1,11 @@
 import axios from "axios";
-import appConfig from "../config/app-config"
-import StoreUtils from "@/util/storeUtils";
-import { router} from '../router/index'
+import { router} from '@/router'
+
+const BASE_URL = window.location.hostname.includes("-dev.") ||  window.location.hostname === "localhost" ?
+    import.meta.env.VITE_BASE_URL_DEV : import.meta.env.VITE_BASE_URL_PROD
 
 export const appClient = axios.create({
-    baseURL: appConfig.baseUrl,
+    baseURL: BASE_URL,
     withCredentials: false,
     headers: {
          Accept: "application/json",
@@ -14,11 +15,11 @@ export const appClient = axios.create({
 });
 
 export const appClient1 = axios.create({
-    baseURL: appConfig.baseUrl,
+    baseURL: BASE_URL,
     withCredentials: false,
     headers: {
          Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
+        // "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
     }
 });
