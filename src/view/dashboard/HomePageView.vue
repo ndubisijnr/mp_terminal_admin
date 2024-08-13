@@ -16,8 +16,6 @@ const toast = useToast()
 const wait = useWait()
 const metaKey = ref(true);
 
-const metaKey2 = ref(true);
-
 const readTerminalTransactionLoading = computed(() => {
   return StoreUtils.getter().transactions.getLoading
 })
@@ -27,55 +25,8 @@ const chartData = ref();
 const chartOptions = ref();
 
 const user = useAuthStore()
-// const transactions = StoreUtils.getter()?.transactions.getTransactions
 
-// const terminalOrganizations = computed(() => {
-//   return StoreUtils.getter()?.terminal?.getTerminalOrganisations
-// })
-
-// function generateDummyData2(numEntries) {
-//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
-
-//   const dummyData = [];
-
-//   for (let i = 0; i < numEntries; i++) {
-//     dummyData.push({
-//       transactionRequestAmount: getRandomString(12), // Random amount between 100 and 10000
-//       transactionStatus: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID ['Pending', 'Completed', 'Failed'][getRandomNumber(0, 2)], // Random status
-//       transactionTerminalId: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
-//       transactionTransactionTime: new Date().toISOString(), // Current timestamp
-//       transactionToAccountType: ['23', '00', '00'][getRandomNumber(0, 1)], // Random string for account type
-//       transactionToAccountIdentification: getRandomString(12) // Random string for account identification
-//     });
-//   }
-
-//   return dummyData;
-// }
-
-
-
-// function generateDummyData(numEntries) {
-//   const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-//   const getRandomString = (length) => Math.random().toString(36).substring(2, 2 + length);
-
-//   const dummyData = [];
-
-//   for (let i = 0; i < numEntries; i++) {
-//     dummyData.push({
-//       terminalId: getRandomNumber(100, 10000), // Random amount between 100 and 10000
-//       terminalSerialNumber: `TID${getRandomNumber(1000, 9999)}`, // Random terminal ID
-//       terminalCreatedAt: new Date().toISOString(), // Current timestamp
-//       terminalMerchantNameLocation: getRandomString(14), // Random string for account type
-//     });
-//   }
-
-//   return dummyData;
-// }
-
-const transactions = computed(() => {
-  return StoreUtils.getter().transactions.getTransactions
-})
+const transactions = ref(StoreUtils.getter().transactions.getTransactions)
 
 const reactiveData = reactive({
   selectedRow: null,
@@ -109,19 +60,40 @@ const filters = ref({
   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
-const filters2 = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-  // representative: { value: null, matchMode: FilterMatchMode.IN },
-  transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
-});
+// const filters2 = ref({
+//   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+//   transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+//   // representative: { value: null, matchMode: FilterMatchMode.IN },
+//   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
+// });
+
+// function extractMonthsInWords(dates) {
+//   const monthNames = [
+//     "January", "February", "March", "April", "May", "June",
+//     "July", "August", "September", "October", "November", "December"
+//   ];
+//
+//     const months = dates.map(date => {
+//     const d = new Date(date); // Convert the date string to a Date object
+//     const month = d.getMonth(); // Get the month (0 = January, 11 = December)
+//     return monthNames[month]; // Return the corresponding month name
+//   });
+//
+//   // Use a Set to remove duplicates
+//   const uniqueMonths = [...new Set(months)];
+//
+//   return uniqueMonths;
+// }
 
 
 const setChartData = () => {
   const documentStyle = getComputedStyle(document.documentElement);
 
   return {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
     datasets: [
       {
         label: 'Dataset 1',
@@ -129,16 +101,9 @@ const setChartData = () => {
         borderColor: documentStyle.getPropertyValue('--cyan-500'),
         yAxisID: 'y',
         tension: 0.4,
-        data: [65, 59, 80, 81, 56, 55, 10]
+        data: [7000]
       },
-      {
-        label: 'Dataset 2',
-        fill: false,
-        borderColor: documentStyle.getPropertyValue('--gray-500'),
-        yAxisID: 'y1',
-        tension: 0.4,
-        data: [28, 48, 40, 19, 86, 27, 90]
-      }
+
     ]
   };
 };
@@ -169,29 +134,29 @@ const setChartOptions = () => {
           color: surfaceBorder
         }
       },
-      y: {
-        type: 'linear',
-        display: true,
-        position: 'left',
-        ticks: {
-          color: textColorSecondary
-        },
-        grid: {
-          color: surfaceBorder
-        }
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        ticks: {
-          color: textColorSecondary
-        },
-        grid: {
-          drawOnChartArea: false,
-          color: surfaceBorder
-        }
-      }
+      // y: {
+      //   type: 'linear',
+      //   display: true,
+      //   position: 'left',
+      //   ticks: {
+      //     color: textColorSecondary
+      //   },
+      //   grid: {
+      //     color: surfaceBorder
+      //   }
+      // },
+      // y1: {
+      //   type: 'linear',
+      //   display: true,
+      //   position: 'right',
+      //   ticks: {
+      //     color: textColorSecondary
+      //   },
+      //   grid: {
+      //     drawOnChartArea: false,
+      //     color: surfaceBorder
+      //   }
+      // }
     }
   };
 }
@@ -201,12 +166,13 @@ const adminStats = computed(() => {
 })
 
 
+
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
   { label: 'ResponseCode', key: 'transactionResponseCode' },
-  { label: 'Stan', key: 'transactionStan' },
+  { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'MaskedPan', key: 'transactionMaskedPan' },
   { label: 'AppLabel', key: 'transactionAppLabel' },
   { label: 'Created At', key: 'transactionCreatedAt' },
@@ -216,7 +182,7 @@ const transactionsHeaders = [
 onMounted(async () => {
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
-  await StoreUtils.getter().organisation.readAdminStats('01-01-2024', '01-08-2024')
+  await StoreUtils.getter().organisation.readAdminStats('01-08-2024', '07-08-2024')
   await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
 })
 </script>
@@ -239,7 +205,6 @@ onMounted(async () => {
       <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume"
         :analytics="true"></base-card>
     </div>
-
     <div class="content-chart-section">
       <div class="filter-reverse flex items-center justify-between">
         <div class="flex gap-2">
@@ -266,6 +231,9 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+
+      <!-- <canvas ref="transactionChart"></canvas> -->
+
       <Chart type="line" :data="chartData" :options="chartOptions" class="h-100rem" />
 
     </div>

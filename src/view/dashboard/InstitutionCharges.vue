@@ -6,7 +6,6 @@ import MazFullscreenLoader from 'maz-ui/components/MazFullscreenLoader'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from 'primevue/api';
-import { useAuthStore } from "@/store/module/auth";
 import { router } from "@/router";
 import Menu from 'primevue/menu';
 import BaseButton from "@/components/button/BaseButton.vue";
@@ -132,8 +131,6 @@ const menu3 = ref();
 const addInstituteCharge = ref();
 
 
-const user = useAuthStore()
-
 const item = ref([
     { label: 'Institutions', route:'/institutions'}, 
     { label: 'Overview' }, 
@@ -198,14 +195,14 @@ function addNewCharges(){
   reactiveData.showManageCharges = true
 }
 
-function getFormattedDate() {
-  const today = new Date();
-  const day = String(today.getDate()).padStart(2, '0');
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const year = today.getFullYear();
-
-  return `${day}-${month}-${year}`;
-}
+// function getFormattedDate() {
+//   const today = new Date();
+//   const day = String(today.getDate()).padStart(2, '0');
+//   const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+//   const year = today.getFullYear();
+//
+//   return `${day}-${month}-${year}`;
+// }
 
 const chargesHeaders = [
   { label: 'pricingAmount', key: 'organisationPricingAmount' },
@@ -394,7 +391,7 @@ onMounted(async () => {
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
   wait.start("LOADING_STATS")
-  await StoreUtils.getter().organisation.readOrganisationStats(organisationID?.value, '01-01-2024','01-08-2024')
+  await StoreUtils.getter().organisation.readOrganisationStats( organisationID?.value, '01-01-2024','01-08-2024')
   await StoreUtils.getter()?.organisation.readOrganisationPricing(organisationID?.value)
   await StoreUtils.getter()?.terminal.readOrganisationTerminalOrganisationId(organisationID?.value)
   await StoreUtils.getter()?.organisation.readOrganisationTransactionsByOrganisationId(organisationID?.value,'01-01-2024','01-08-2024')

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import BaseButton from '@/components/button/BaseButton.vue';
 import { computed, reactive, ref, onMounted } from 'vue';
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import StoreUtils from "@/util/storeUtils.ts";
@@ -42,10 +41,10 @@ function handleClose(payload: any) {
   reactiveData.showRoleModal = payload
 }
 
-function addUser() {
-  reactiveData.showUserModal = !reactiveData.showUserModal
-
-}
+// function addUser() {
+//   reactiveData.showUserModal = !reactiveData.showUserModal
+//
+// }
 
 
 const onRowSelect = (event: any) => {

@@ -117,7 +117,7 @@ function addOrganisation(){
 async function getCustomerOrganisation(){
   console.log(mid)
   wait.start('READ_ORGANISATION')
-  await StoreUtils.getter()?.organisation.readCustomerOrganisation(mid)
+  await StoreUtils.getter()?.organisation.readCustomerOrganisation()
   wait.stop('READ_ORGANISATION')
 }
 

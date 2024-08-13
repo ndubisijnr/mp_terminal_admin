@@ -12,6 +12,10 @@ export  class  TerminalController {
         return apiClient.appClient.post('/dev/terminal-serial/create', payload)
     }
 
+    static createBulkTerminalSerial(payload:{}){
+        return apiClient.appClient.post('/dev/terminal-serial/bulk-create', payload)
+    }
+
     static readTerminalSerial(){
         return apiClient.appClient.get('/dev/terminal-serial/read')
     }

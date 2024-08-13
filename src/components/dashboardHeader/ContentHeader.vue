@@ -1,51 +1,39 @@
 <script lang="ts" setup>
- import MazAvatar from 'maz-ui/components/MazAvatar';
- import MazDropdown from 'maz-ui/components/MazDropdown';
- import MazSelect from 'maz-ui/components/MazSelect';
- import MazDialog from 'maz-ui/components/MazDialog';
- import MazBtn from 'maz-ui/components/MazBtn';
- import MazLoadingBar from 'maz-ui/components/MazLoadingBar'
-import {computed, onMounted, ref, reactive} from "vue";
+import {computed} from "vue";
 import {router} from "@/router/index";
-import StoreUtils from "@/util/storeUtils.ts";
-import { useWait } from 'maz-ui';
-// import Dialog from 'primevue/dialog';
-import BaseButton from '../button/BaseButton.vue';
 
 
 
-const selectedValue = ref(null)
 
-const wait = useWait()
 
 // const isOpen = ref(false)
 
-const data = reactive({
-  isOpen:false,
-  visible:false,
-})
+// const data = reactive({
+//   isOpen:false,
+//   visible:false,
+// })
+//
+// const user = computed(() => {
+//   return StoreUtils.getter()?.auth.getUserInfo
+// })
 
-const user = computed(() => {
-  return StoreUtils.getter()?.auth.getUserInfo
-})
-
-const organisation:any = computed(() => {
-  return StoreUtils.getter()?.organisation.getOrganisation
-})
-
-const userFullName = computed(() => {
-  return StoreUtils.getter()?.auth.getUserInfo?.userFirstName + ' ' +  StoreUtils.getter()?.auth.getUserInfo?.userLastName
-})
+// const organisation:any = computed(() => {
+//   return StoreUtils.getter()?.organisation.getOrganisation
+// })
+//
+// const userFullName = computed(() => {
+//   return StoreUtils.getter()?.auth.getUserInfo?.userFirstName + ' ' +  StoreUtils.getter()?.auth.getUserInfo?.userLastName
+// })
 
 
 
-async function getCustomerOrganisation(){
-  data.isOpen = true 
-  console.log(user)
-  wait.start('READ_ORGANISATION')
-  await StoreUtils.getter()?.organisation.readCustomerOrganisation(user.value?.userId)
-  wait.stop('READ_ORGANISATION')
-}
+// async function getCustomerOrganisation(){
+//   data.isOpen = true
+//   console.log(user)
+//   wait.start('READ_ORGANISATION')
+//   await StoreUtils.getter()?.organisation.readCustomerOrganisation(user.value?.userId)
+//   wait.stop('READ_ORGANISATION')
+// }
 
 
 const getCurrentRoute:any = computed(() => {
@@ -61,9 +49,6 @@ const getCurrentRouteSubTitle = computed(() => {
 })
     
 
-
-onMounted(() => {
-})
 </script>
 
 <template>

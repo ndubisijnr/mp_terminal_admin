@@ -17,11 +17,8 @@ import MazDialogPromise, {
 // import { DialogCustomButton } from 'maz-ui/types/components/MazDialogPromise/use-maz-dialog-promise.js'; 
 import ChargesRequest from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
-import { useAuthStore } from '@/store/module/auth';
-import {router} from '../../router/index'
 import MazSpinner from 'maz-ui/components/MazSpinner';
 
-const user = useAuthStore()
 
 
 const toast = useToast()
@@ -48,9 +45,6 @@ data.value = {
 
 const menu = ref();
 
-const transactionID = computed(() => {
-    return router.currentRoute.value.query.organisationID
-})
 
 // const buttons: DialogCustomButton[] = [
 //     {

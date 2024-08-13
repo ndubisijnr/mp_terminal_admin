@@ -274,9 +274,9 @@ function requestTerminal() {
 
 }
 
-const terminalTransactions = computed(() => {
-  return StoreUtils.getter()?.transactions?.terminalTransactions
-})
+// const terminalTransactions = computed(() => {
+//   return StoreUtils.getter()?.transactions?.terminalTransactions
+// })
 
 // function init() {
 //   StoreUtils.getter()?.terminal?.getOrganisationTerminal(JSON.stringify(organisations.value?.organisationId) ?? "")
@@ -284,10 +284,10 @@ const terminalTransactions = computed(() => {
 
 // init()
 
-const menus = ref([
-  { label: 'Terminals', route: '/terminals' },
-  { label: 'Transactions' },
-]);
+// const menus = ref([
+//   { label: 'Terminals', route: '/terminals' },
+//   { label: 'Transactions' },
+// ]);
 
 
 async function getCustomerOrganisation(){

@@ -61,11 +61,12 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  { label: 'ResponseCode', key: 'transactionResponseCode' },
-  { label: 'Stan', key: 'transactionStan' },
+  {label:'Response Status', key:'transactionResponseCode'},
+  { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
-  { label: 'AppLabel', key: 'transactionAppLabel'}]
+]
 
 // const getSeverity = (status: string) => {
 //   switch (status) {
@@ -121,6 +122,10 @@ const terminalID = computed(() => {
     return router.currentRoute.value.query.terminalID
 })
 
+const redirectTo = computed(() => {
+    return router.currentRoute.value.query.redirect
+})
+
 const terminalTransactions = computed(() => {
   return StoreUtils.getter().terminal?.getTerminalOrganisationTransactions
 })
@@ -130,7 +135,7 @@ function handleClose(payload: any) {
  
 }
 const item = ref([
-    { label: 'Terminals', route:'/terminals' }, 
+    { label: `${redirectTo.value ? 'Organisations' : 'Terminals'}`, route:`${redirectTo.value ? redirectTo.value : '/terminals'}` },
     { label: 'Transactions' }, 
 ]);
 

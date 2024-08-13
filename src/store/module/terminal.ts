@@ -155,6 +155,23 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
+        async uploadBulkTerminalSerial(payload:any, toast:any){
+            const response = await TerminalController.createBulkTerminalSerial(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    StoreUtils.getter()?.terminal.readTerminalSerial()
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
         async updateTerminal(payload:any, toast:any){
             const response = await TerminalController.updateTerminal(payload)
             const responseData = response.data

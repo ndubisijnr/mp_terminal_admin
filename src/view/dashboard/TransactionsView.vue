@@ -29,11 +29,12 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  { label: 'Stan', key: 'transactionStan' },
+  {label:'Response Status', key:'transactionResponseCode'},
+  { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'MaskedPan', key: 'transactionMaskedPan' },
   { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
-{label:'Response Status', key:'transactionResponseCode'}]
+]
 
 
 // function generateDummyData(numEntries) {
@@ -66,11 +67,11 @@ const onRowSelect = (event: any) => {
   console.log(event)
 }
 
-const getSeverity = (status: string) => {
-  if(status === '00') return 'success'
-  else return 'danger'
-  
-};
+// const getSeverity = (status: string) => {
+//   if(status === '00') return 'success'
+//   else return 'danger'
+//
+// };
 
 
 const menu = ref()

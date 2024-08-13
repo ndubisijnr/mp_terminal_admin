@@ -17,8 +17,8 @@ export const appClient1 = axios.create({
     baseURL: appConfig.baseUrl,
     withCredentials: false,
     headers: {
-         //Accept: "application/json",
-        // "Access-Control-Allow-Origin": "*",
+         Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
         "Content-Type": "application/json",
     }
 });
