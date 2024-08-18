@@ -1,31 +1,31 @@
 import { apiClient } from "./BaseService.ts"
 export  class  ChargesController {
     static readCharges(){
-        return apiClient.appClient.get(`/dev/pricing/read`)
+        return apiClient.appClient.get(`pricing/read`)
     }
     static readOrgCharges(){
-        return apiClient.appClient.get(`/dev/organisation-pricing/read`)
+        return apiClient.appClient.get(`organisation-pricing/read`)
     }
 
 
     static createCharges(payload:{}){
-        return apiClient.appClient.post('/dev/pricing/create', payload)
+        return apiClient.appClient.post('pricing/create', payload)
     }
 
     static deleteCharges(payload:{}){
-        return apiClient.appClient.post('/dev/pricing/delete', payload)
+        return apiClient.appClient.post('pricing/delete', payload)
     }
 
     static deleteOrganisationCharges(payload:{}){
-        return apiClient.appClient.post('/dev/organisation-pricing/delete', payload)
+        return apiClient.appClient.post('organisation-pricing/delete', payload)
     }
 
     static updateCharges(payload:{}){
-        return apiClient.appClient.post('/dev/pricing/update', payload)
+        return apiClient.appClient.post('pricing/update', payload)
     }
    
     static updateOrgCharges(payload:{}){
-        return apiClient.appClient.post('/dev/organisation-pricing/update', payload)
+        return apiClient.appClient.post('organisation-pricing/update', payload)
     }
     
 }

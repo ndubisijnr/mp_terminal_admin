@@ -1,19 +1,19 @@
 import { apiClient } from "./BaseService.js"
 export default {
     readRoles(){
-        return apiClient.appClient.get(`/dev/role/read`)
+        return apiClient.appClient.get(`role/read`)
     },
 
     createRole(){
-        return apiClient.appClient.get(`/dev/role/create`)
+        return apiClient.appClient.get(`role/create`)
     },
 
     deleteRole(){
-        return apiClient.appClient.get(`/dev/role/delete`)
+        return apiClient.appClient.get(`role/delete`)
     },
 
     updateeRole(){
-        return apiClient.appClient.get(`/dev/role/update`)
+        return apiClient.appClient.get(`role/update`)
     },
     
 }

@@ -76,7 +76,7 @@ import { router } from "@/router/index";
 import AuthRequest from "@/models/request/auth/AuthRequest"
 import StoreUtiils from "@/util/storeUtils.ts"
 import { useToast, useWait } from 'maz-ui'
-import {computed, onMounted, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import MazSpinner from 'maz-ui/components/MazSpinner'
 import StoreUtils from "@/util/storeUtils.ts";
 
@@ -85,10 +85,10 @@ const wait = useWait()
 const notYet = ref(false)
 
 
-const reactive1 = reactive({
-  timer:30,
-  timerInterval:null
-})
+// const reactive1 = reactive({
+//   timer:30,
+//   timerInterval:null
+// })
 
 const otpRequest = reactive({
   adminEmail:null
@@ -107,14 +107,6 @@ async function resendotp(){
 }
 
 
-watch(reactive1.timer, (newVal, oldVal)=> {
-  console.log(oldVal)
-  if(newVal === 0){
-    clearInterval(reactive1.timerInterval)
-    reactive1.timer = 30
-  }
-
-})
 function toLogin() {
   router.push({ path: '/' });
 }
@@ -122,9 +114,6 @@ function toLogin() {
 async function initiateForgotPassword() {
 
   await StoreUtiils.getter()?.auth.initiatePasswordReset(AuthRequest.InitiatePasswordResetRequest, wait, toast)
-  // if(passwordResetStage.value === '2'){
-  //   await startTimer()
-  // }
 
 }
 
@@ -135,9 +124,9 @@ async function completeForgotPassword() {
   wait.stop('DATA_SUBMITTING')
 }
 
-function toSignUp() {
-  router.push({ path: '/sign-up' })
-}
+// function toSignUp() {
+//   router.push({ path: '/sign-up' })
+// }
 
 // async  function startTimer() {
 //   reactive1.timerInterval = setInterval(() => {

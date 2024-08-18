@@ -1,50 +1,50 @@
 import { apiClient } from "./BaseService.ts"
 export  class  TerminalController {
     static readTerminals(){
-        return apiClient.appClient.get(`/dev/terminal/read`)
+        return apiClient.appClient.get(`terminal/read`)
     }
     
     static createTerminal(payload:{}){
-        return apiClient.appClient.post('/dev/terminal/create', payload)
+        return apiClient.appClient.post('terminal/create', payload)
     }
 
     static createTerminalSerial(payload:{}){
-        return apiClient.appClient.post('/dev/terminal-serial/create', payload)
+        return apiClient.appClient.post('terminal-serial/create', payload)
     }
 
     static createBulkTerminalSerial(payload:{}){
-        return apiClient.appClient.post('/dev/terminal-serial/bulk-create', payload)
+        return apiClient.appClient.post('terminal-serial/bulk-create', payload)
     }
 
     static readTerminalSerial(){
-        return apiClient.appClient.get('/dev/terminal-serial/read')
+        return apiClient.appClient.get('terminal-serial/read')
     }
 
     static reAssignTerminal(payload:{}){
-        return apiClient.appClient.post('/dev/terminal/reassign', payload)
+        return apiClient.appClient.post('terminal/reassign', payload)
     }
     static changeTerminalPin(payload:{}){
-        return apiClient.appClient.post('/dev/terminal/change-pin', payload)
+        return apiClient.appClient.post('terminal/change-pin', payload)
     }
 
     static updateTerminal(payload:{}){
-        return apiClient.appClient.post('/dev/terminal/update', payload)
+        return apiClient.appClient.post('terminal/update', payload)
     }
 
     static readOrganisationTerminal(payload: string){
-        return apiClient.appClient.get(`/dev/terminal/read-by-terminal-organization-id/${payload}`)
+        return apiClient.appClient.get(`terminal/read-by-terminal-organization-id/${payload}`)
     }
 
     static deleteTerminal(payload: {}){
-        return apiClient.appClient.post(`/dev/terminal/delete`, payload)
+        return apiClient.appClient.post(`terminal/delete`, payload)
     }
 
     static readTerminaTransactionByOrganisationId(organisationId: string){
-        return apiClient.appClient.post(`/dev/terminal-transaction/read-by-terminal-transaction-organisation-id/${organisationId}`)
+        return apiClient.appClient.post(`terminal-transaction/read-by-terminal-transaction-organisation-id/${organisationId}`)
     }
 
     static readTerminaTransactionByTerminalId(terminalId: string){
-        return apiClient.appClient.get(`/dev/terminal-transaction/read-by-terminal-id/${terminalId}`)
+        return apiClient.appClient.get(`terminal-transaction/read-by-terminal-id/${terminalId}`)
     }
 
    
