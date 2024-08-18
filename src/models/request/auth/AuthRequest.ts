@@ -17,7 +17,7 @@ class AuthRequest{
         organisationName:	null,
         otp:	null,
         referralCode:	null,
-        userEmail:	null
+        adminEmail:	null
     }
 
     static LoginRequest = {
@@ -32,13 +32,13 @@ class AuthRequest{
 
 
     static InitiatePasswordResetRequest = {
-        userEmail:	null,
+        adminEmail:	null,
     }
 
     static CompletePasswordResetRequest = {
         otp:	null,
-        userEmail:	null,
-        userPassword:	null,
+        adminEmail:	null,
+        adminPassword:	null,
         }
 
 }
