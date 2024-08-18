@@ -1,5 +1,5 @@
 const appConfig = {
-    baseUrl: ``,
+    baseUrl: `https://tms-api-prod.corestepbank.com/`,
     AppName: ""
 }
 

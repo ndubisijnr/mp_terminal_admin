@@ -20,8 +20,7 @@
           <base-button type="button" outline loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Resend OTP</base-button> -->
 
         <div style="padding-top: 1rem;">
-          <base-button type="submit" loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Send
-            Email</base-button>
+          <base-button type="submit" loadingColor="white" :loading="wait.isLoading('DATA_SUBMITTING')">Request Otp</base-button>
         </div>
 
         <p class="text-[14px] leading-[21px] text-gray_1 text-center cursor-pointer py-4" @click="toLogin">I have an
@@ -85,9 +84,7 @@ function toLogin() {
 
 async function initiateForgotPassword() {
 
-  wait.start('DATA_SUBMITTING')
-  await StoreUtiils.getter()?.auth.initiatePasswordReset(AuthRequest.InitiatePasswordResetRequest, toast)
-  wait.stop('DATA_SUBMITTING')
+  await StoreUtiils.getter()?.auth.initiatePasswordReset(AuthRequest.InitiatePasswordResetRequest, wait, toast)
 }
 
 async function completeForgotPassword() {

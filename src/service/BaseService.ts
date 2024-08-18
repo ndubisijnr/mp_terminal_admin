@@ -15,7 +15,7 @@ export const appClient = axios.create({
 });
 
 export const appClient1 = axios.create({
-    baseURL: BASE_URL,
+    baseURL:BASE_URL,
     withCredentials: false,
     headers: {
          Accept: "application/json",

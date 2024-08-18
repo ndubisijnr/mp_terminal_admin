@@ -124,18 +124,15 @@ export const useAuthStore = defineStore('auth_store', {
 
         },
 
-        async initiatePasswordReset(payload:any, toast:any){
-            const response = await AuthController.initiatePasswordReset(payload)
-            const responseData = response.data
+        async initiatePasswordReset(payload:any, wait:any, toast:any){
+            wait.start('DATA_SUBMITTING')
+            const response:any = await globalDispatch(payload, toast, wait, AuthController, 'initiatePasswordReset', 'top-right')
 
-            try{
-                if(responseData.responseCode === '00'){
-                    this.passwordResetStage = '2'
-                    console.log(responseData)
-                }else{
-                    toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
-                }
-            }catch(e){}
+            if(response.responseCode === '00'){
+                this.passwordResetStage = '2'
+            }else{
+                toast.error(response.responseMessage, { position: 'top-right', timeout: 3000 })
+            }
         },
 
         async completePasswordReset(payload:any, toast:any){

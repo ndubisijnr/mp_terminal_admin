@@ -2,6 +2,7 @@
     try{
         const response = await controller[service](payload)
         const responseData = response.data
+        console.log(responseData)
         await wait.stop('DATA_SUBMITTING')
         return responseData;
         
