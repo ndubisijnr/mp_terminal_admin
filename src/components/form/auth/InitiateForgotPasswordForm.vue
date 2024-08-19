@@ -95,7 +95,7 @@ const otpRequest = reactive({
 })
 
 async function resendotp(){
-  otpRequest.adminEmail = AuthRequest.LoginRequest.adminEmail
+  otpRequest.adminEmail = AuthRequest.InitiatePasswordResetRequest.adminEmail
   notYet.value = true
   wait.start('RESENDING')
   await StoreUtils.getter().auth.resendOtp(otpRequest, toast)
