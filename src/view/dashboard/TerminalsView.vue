@@ -34,7 +34,8 @@ const reactiveData = reactive({
   showUpdateTerminal: false,
   readTerminalTransactions: false,
   showReassignTerminal:false,
-  changeTerminalPin:false
+  changeTerminalPin:false,
+  terminalUploadType:'single'
 })
 
 
@@ -269,7 +270,8 @@ function handleClose(payload: any) {
 
 }
 
-function requestTerminal() {
+function requestTerminal(payload:string) {
+  reactiveData.terminalUploadType = payload
   reactiveData.showRequestTerminal = !reactiveData.showRequestTerminal
 
 }
@@ -344,7 +346,7 @@ onMounted(async () => {
 
   <ChangeTerminalPin v-if="reactiveData.changeTerminalPin" :terminalSeriaNumber="reactiveData.selectedRow" @close="handleClose"></ChangeTerminalPin>
   <ReAssignTerminal v-if="reactiveData.showReassignTerminal" :terminalSeriaNumber="reactiveData.selectedRow" @close="handleClose"></ReAssignTerminal>
-  <RequestTerminal v-if="reactiveData.showRequestTerminal" @close="handleClose"  />
+  <RequestTerminal v-if="reactiveData.showRequestTerminal" @close="handleClose" :terminal-upload-type="reactiveData.terminalUploadType"  />
   <UpdateTerminal :data="reactiveData.selectedRow" v-if="reactiveData.showUpdateTerminal" @close="handleClose" />
   <AssignTerminal v-if="reactiveData.showAssignTerminal" @close="handleClose" :terminalSeriaNumber="reactiveData.selectedRow" />
   <ContentHeader />
@@ -358,7 +360,14 @@ onMounted(async () => {
         <img src="../../assets/icon/alert-circle.svg" />
       </div>
       <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-        <BaseButton @click="requestTerminal">
+        <BaseButton @click="requestTerminal('bulk')" style="width:18rem">
+          <div style="display: flex;align-items: center;gap: 5px;">
+            <img src="../../assets/icon/Folder Add 2.svg" />
+            Upload Bulk Terminal Serial
+          </div>
+
+        </BaseButton>
+        <BaseButton @click="requestTerminal('single')" style="width:18rem">
           <div style="display: flex;align-items: center;gap: 5px;">
             <img src="../../assets/icon/Folder Add 2.svg" />
             Upload Terminal Serial

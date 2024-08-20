@@ -142,7 +142,7 @@ export const useAuthStore = defineStore('auth_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
-                    location.href='/login'
+                    router.push({path:'/login'})
                 }else{
                     toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
                 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
-import { onMounted, ref, reactive } from "vue";
+import { onMounted, ref, reactive, watch } from "vue";
 import {useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
@@ -13,8 +13,57 @@ import Dialog from 'primevue/dialog';
 import { computed } from "vue";
 import MazSpinner from "maz-ui/components/MazSpinner";
 import Receipt from "@/components/modal/Receipt.vue";
+import MazPicker from "maz-ui/components/MazPicker";
 
 const wait = useWait()
+
+function getFirstOfMonth() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year and month
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+
+  // Set the day to '01' to represent the first day of the current month
+  const day = '01';
+
+  // Format the date components into a readable string (First day of the current month)
+  return `${year}-${month}-${day}`;
+}
+
+function getCurrentDate() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year, month, and day
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+  const day = now.getDate().toString().padStart(2, '0'); // getDate() returns the day of the month
+
+  // Format the date components into a readable string (Current date)
+  return `${year}-${month}-${day}`;
+}
+
+const rangeValues = ref({
+  start: '',
+  end: '',
+})
+
+const minMaxDates = ref({
+  min: '2024-01-01',
+  max: '2024-12-31',
+})
+
+watch(rangeValues, async (newVal, oldVal) => {
+  console.log(oldVal)
+  if(newVal){
+    wait.start('READING_TRANSACTION')
+    await StoreUtils?.getter()?.transactions?.readOrganisationTransactionsByOrganisationId(JSON.stringify(organisations.value?.organisationId), rangeValues.value.start, rangeValues.value.end)
+    wait.stop('READING_TRANSACTION')
+  }
+})
+
 
 const reactiveData = reactive({
 
@@ -162,8 +211,10 @@ const adminStats = computed(() => {
 
 
 onMounted(async () => {
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
   wait.start('READ_TRANSACTION')
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start)
   wait.stop('READ_TRANSACTION')
 })
 
@@ -183,25 +234,38 @@ onMounted(async () => {
 
 
   <ContentHeader />
+
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
+
   <div class="content">
     <div class="content-card-section">
       <base-card text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card> 
-        <base-card text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
-        <base-card text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
-        <base-card text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
-        <base-card text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume" :analytics="true"></base-card>
-        <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume" :analytics="true"></base-card>
-  
+      <base-card text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
+      <base-card text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
+      <base-card text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
+      <base-card text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume" :analytics="true"></base-card>
+      <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume" :analytics="true"></base-card>
     </div>
-
-
-
 
     <div class="content-table-section">
       <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
-        <p class="text-xl text-black">Recent Transaction</p>
-        <img src="../../assets/icon/alert-circle.svg" />
+        <p class="text-xl text-black">Transactions</p>
+        <img src="../../assets/icon/alert-circle.svg" alt="sjsj"/>
+        <div class="flex justify-between relative">
+          <div class="flex items-center gap-5">
+            <span>Filter Transactions:</span>
+            <MazPicker
+                autoClose
+                v-model="rangeValues"
+                label=""
+                color="white"
+                :min-date="minMaxDates.min"
+                :max-date="minMaxDates.max"
+                double
+            />
+          </div>
+
+        </div>
       </div>
       <div class="overflow-auto rounded-lg shadow">
 

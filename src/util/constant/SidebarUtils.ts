@@ -20,7 +20,7 @@ export const  SidebarTopUtils = [
     {name:"Terminals", icon:Terminal,active:'active-nav', route:'/terminals'},
     {name:"Manage Charges", icon:ManageCharges,active:'active-nav', route:'/charges'},
     {name:"Institutions", icon:Merchant, active:'active-nav', route:'/institutions'},
-    {name:"Users", icon:Users,active:'active-nav', route:'/users'},
+    {name:"Merchant Users", icon:Users,active:'active-nav', route:'/users'},
 
 ]
 

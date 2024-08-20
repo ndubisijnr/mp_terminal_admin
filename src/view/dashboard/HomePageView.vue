@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
-import { ref, onMounted, reactive, computed } from "vue";
+import { ref, onMounted, reactive, computed, watch } from "vue";
 import { useToast } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils.ts";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
@@ -11,6 +11,54 @@ import { useAuthStore } from "@/store/module/auth";
 import MazSpinner from 'maz-ui/components/MazSpinner'
 import Chart from "primevue/chart";
 import Receipt from "@/components/modal/Receipt.vue";
+import MazPicker from 'maz-ui/components/MazPicker'
+
+
+function getFirstOfMonth() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year and month
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+
+  // Set the day to '01' to represent the first day of the current month
+  const day = '01';
+
+  // Format the date components into a readable string (First day of the current month)
+  return `${year}-${month}-${day}`;
+}
+
+function getCurrentDate() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year, month, and day
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+  const day = now.getDate().toString().padStart(2, '0'); // getDate() returns the day of the month
+
+  // Format the date components into a readable string (Current date)
+  return `${year}-${month}-${day}`;
+}
+
+const rangeValues = ref({
+  start: '',
+  end: '',
+})
+
+const minMaxDates = ref({
+  min: '2024-01-01',
+  max: '2024-12-31',
+})
+
+watch(rangeValues, async (newVal, oldVal) => {
+  console.log(oldVal)
+  if(newVal){
+    wait.start('LOADING_STATS')
+    await StoreUtils.getter()?.organisation.readOrganisationStats(organisation?.value.organisationId, rangeValues.value.start, rangeValues.value.end)
+    wait.stop('LOADING_STATS')  }
+})
 
 const toast = useToast()
 const metaKey = ref(true);
@@ -179,9 +227,11 @@ const transactionsHeaders = [
 ]
 
 onMounted(async () => {
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
-  await StoreUtils.getter().organisation.readAdminStats('01-08-2024', '07-08-2024')
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
   await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
 })
 </script>
@@ -205,8 +255,28 @@ onMounted(async () => {
         :analytics="true"></base-card>
     </div>
     <div class="content-chart-section">
-      <div class="filter-reverse flex items-center justify-between">
-        <div class="flex gap-2">
+
+      <div class="flex justify-between relative">
+        <div class="flex items-center gap-5">
+          <span>Filter Statistics:</span>
+          <MazPicker
+              autoClose
+              v-model="rangeValues"
+              label=""
+              color="white"
+              :min-date="minMaxDates.min"
+              :max-date="minMaxDates.max"
+              double
+          />
+
+          <!--            <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">-->
+          <!--              <img src="../../assets/icon/Ic.svg" alt="">-->
+          <!--              <p>July 12, 2021 - August 10, 2021</p>-->
+
+          <!--            </div>-->
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
           <p class="text-xl text-black">Statistics</p>
           <img src="../../assets/icon/alert-circle.svg" />
           <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
@@ -222,16 +292,7 @@ onMounted(async () => {
             <p>Failed</p>
           </div>
         </div>
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">
-            <img src="../../assets/icon/Ic.svg" alt="">
-            <p>July 12, 2021 - August 10, 2021</p>
-
-          </div>
-        </div>
       </div>
-
-      <!-- <canvas ref="transactionChart"></canvas> -->
 
       <Chart type="line" :data="chartData" :options="chartOptions" class="h-100rem" />
 

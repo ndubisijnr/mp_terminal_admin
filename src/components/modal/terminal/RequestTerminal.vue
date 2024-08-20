@@ -15,6 +15,10 @@ const doneAddingTerminalSerial = ref(false)
 const toast = useToast()
 const wait = useWait()
 
+defineProps({
+  terminalUploadType:String
+})
+
 const model: any = ref(TerminalRequest.uploadTerminalSerial)
 
 const emit = defineEmits<{
@@ -130,13 +134,12 @@ onMounted(() => {
         <template v-slot:child>
             <div class="modal-child-wrapper">
                 <div class="modal-child-header">
-                    <p class="req-term">Add Terminal Serial</p>
+                    <p class="req-term">{{ terminalUploadType === 'bulk' ? 'Upload Bulk Terminal Serial' : 'Add Terminal Serial' }}</p>
                     <img src="../../../assets/icon/Frame.svg" @click="close" alt="frame" />
                 </div>
 
-                <div class="modal-child-content">
-                    <BaseButton :disabled="doneAddingTerminalSerial" @click="addMoreTerminalSerial" style="width: 100px;">Add More
-                    </BaseButton>
+                <div v-if="terminalUploadType !== 'bulk'" class="modal-child-content">
+
                     <div class="flex justify-between gap-10">
                         <base-input type="text" v-model="model.terminalSerialNumber"
                             placeholder="Terminal Serial Number" label="TerminalSerialNumber" />
@@ -150,29 +153,37 @@ onMounted(() => {
                             label="Terminal Serial Version" />
                     </div>
 
-                   <div class="mt-5" :style="bulkTerminal.terminal.length ? {'max-height':'200px','overflow-y':'scroll'} : {}" v-if="bulkTerminal?.terminal?.length">
-                       
-                        <MazAccordion>
-                            <template #title-1>
-                                <h3 class="text-muted text-xl">Terminal Serial Added</h3>
-                            </template>
-                            <template #content-1>
-                           <div v-for="(i, index) in bulkTerminal.terminal" :key="index">
-                                <div class="flex justify-between">
-                                    <p>{{ i.terminalSerialNumber }}</p>
-                                    <p class="text-sm text-red-500 underline cursor-pointer hover:text-muted" @click="remove(i.terminalSerialNumber)">remove</p>
-                                </div>
-                           </div>
-                            </template>
-                        </MazAccordion>
-                   </div>
-                   <button v-if="bulkTerminal?.terminal?.length" class="p-2 mt-4 bg-gray-300 rounded-md" @click="clearAll">Clear All</button>
+<!--                   <div class="mt-5" :style="bulkTerminal.terminal.length ? {'max-height':'200px','overflow-y':'scroll'} : {}" v-if="bulkTerminal?.terminal?.length">-->
+<!--                       -->
+<!--                        <MazAccordion>-->
+<!--                            <template #title-1>-->
+<!--                                <h3 class="text-muted text-xl">Terminal Serial Added</h3>-->
+<!--                            </template>-->
+<!--                            <template #content-1>-->
+<!--                           <div v-for="(i, index) in bulkTerminal.terminal" :key="index">-->
+<!--                                <div class="flex justify-between">-->
+<!--                                    <p>{{ i.terminalSerialNumber }}</p>-->
+<!--                                    <p class="text-sm text-red-500 underline cursor-pointer hover:text-muted" @click="remove(i.terminalSerialNumber)">remove</p>-->
+<!--                                </div>-->
+<!--                           </div>-->
+<!--                            </template>-->
+<!--                        </MazAccordion>-->
+<!--                   </div>-->
+<!--                   <button v-if="bulkTerminal?.terminal?.length" class="p-2 mt-4 bg-gray-300 rounded-md" @click="clearAll">Clear All</button>-->
 
 
-                   <MazCheckbox v-if="bulkTerminal?.terminal?.length" class="mt-4 ml-4"v-model="doneAddingTerminalSerial" label="Done Adding Terminal" />
+<!--                   <MazCheckbox  class="mt-4 ml-4"v-model="doneAddingTerminalSerial" label="Done Adding Terminal" />-->
 
 
                 </div>
+
+                <div v-else class="modal-child-content">
+                <BaseButton :disabled="doneAddingTerminalSerial" @click="addMoreTerminalSerial" style="width: 16rem;">Download
+                  Upload Sample
+                </BaseButton>
+
+
+              </div>
 
 
                 <!-- <div class="divider"></div> -->
@@ -180,7 +191,7 @@ onMounted(() => {
 
                 <div class="modal-child-footer">
 
-                    <BaseButton :disabled="!doneAddingTerminalSerial" :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request
+                    <BaseButton  :loading="wait.isLoading('CREATING_TERMINAL')" @click="createTerminal">Send Request
                     </BaseButton>
 
                 </div>

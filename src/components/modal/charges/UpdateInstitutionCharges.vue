@@ -66,7 +66,7 @@ async function addCharges(){
                             </div>
                             <div>
                                 <label>pricingType</label>
-                                <Dropdown optionLabel="name" v-model="model.organisationPricingType" optionValue="code" :placeholder="props.data?.organisationPricingType" :options="[{name:'FUND_TRANSFER', code:'FUND_TRANSFER'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
+                                <Dropdown optionLabel="name" v-model="model.organisationPricingType" optionValue="code" :placeholder="props.data?.organisationPricingType" :options="[{name:'TRANSFER INWARD', code:'TRANSFER_INWARD'},{name:'TRANSFER INTERNAL', code:'TRANSFER_INTERNAL'},{name:'TRANSFER OUTWARD', code:'TRANSFER_OUTWARD'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
                             </div>
                         </div>
 

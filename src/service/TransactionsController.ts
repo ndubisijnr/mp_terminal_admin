@@ -1,7 +1,7 @@
 import { apiClient } from "./BaseService.ts"
 export default {
-    readTransactions(page:Number, size:Number){
-        return apiClient.appClient.get(`terminal-transaction/read?page=${page}&pageSize=${size}`)
+    readTransactions(page:Number, size:Number,endDate:string, startDate:string){
+        return apiClient.appClient.get(`terminal-transaction/read?page=${page}&pageSize=${size}&startDate=${startDate}&endDate=${endDate}`)
     },
 
     readTransactionsByTransactionTerminalID(transactionTerminalId:string){
