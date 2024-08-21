@@ -12,6 +12,7 @@ import MazSpinner from 'maz-ui/components/MazSpinner'
 import Chart from "primevue/chart";
 import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from 'maz-ui/components/MazPicker'
+import getResponse from "@/util/helper/globalResponse.ts";
 // import MazFullscreenLoader from "maz-ui/components/MazFullscreenLoader";
 
 
@@ -215,7 +216,6 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  { label: 'ResponseCode', key: 'transactionResponseCode' },
   { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'MaskedPan', key: 'transactionMaskedPan' },
   { label: 'AppLabel', key: 'transactionAppLabel' },
@@ -335,6 +335,15 @@ onMounted(async () => {
           </template>
 
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+          <Column field="transactionResponseCode" header="transactionResponse">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.transactionResponseCode">
+                <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
+              </div>
+
+            </template>
+          </Column>
           <Column header="actions">
 
             <template #body="">

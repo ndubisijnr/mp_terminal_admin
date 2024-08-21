@@ -14,6 +14,7 @@ import { computed } from "vue";
 import MazSpinner from "maz-ui/components/MazSpinner";
 import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from "maz-ui/components/MazPicker";
+import getResponse from "@/util/helper/globalResponse.ts";
 
 const wait = useWait()
 
@@ -78,7 +79,6 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  {label:'Response Status', key:'transactionResponseCode'},
   { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'MaskedPan', key: 'transactionMaskedPan' },
   { label: 'AppLabel', key: 'transactionAppLabel'},
@@ -297,15 +297,15 @@ onMounted(async () => {
 
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <!--terminal status-->
-          <!-- <Column field="transactionResponseCode" header="transactionResponseCode">
+          <Column field="transactionResponseCode" header="transactionResponse">
                   <template #body="slotProps">
-                        
+
                         <div v-if="slotProps.data.transactionResponseCode">
-                          <Tag :value="slotProps.data.transactionResponseCode" :severity="getSeverity(slotProps.data.transactionResponseCode)" />
+                          <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
                         </div>
-                          
+
                         </template>
-                </Column> -->
+                </Column>
           <Column header="actions">
 
             <template #body="">

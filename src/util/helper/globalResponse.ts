@@ -117,6 +117,6 @@ const GLOBAL_RESPONSE = [
 
 export default function getResponse(code:string) {
     const response = GLOBAL_RESPONSE.filter(it => it.responseCode === code)
-    if (response.length < 1) return `${code} | Something Went Wrong`
-    else return `${response[0].responseCode} | ${response[0].responseMessage}`
+    if (response.length < 1) return `Something Went Wrong`
+    else return `${response[0].responseMessage}`
 }
