@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import { ref, onMounted, reactive, computed, watch } from "vue";
-import { useToast } from 'maz-ui'
+import { useToast, useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils.ts";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
@@ -12,6 +12,7 @@ import MazSpinner from 'maz-ui/components/MazSpinner'
 import Chart from "primevue/chart";
 import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from 'maz-ui/components/MazPicker'
+// import MazFullscreenLoader from "maz-ui/components/MazFullscreenLoader";
 
 
 function getFirstOfMonth() {
@@ -52,15 +53,10 @@ const minMaxDates = ref({
   max: '2024-12-31',
 })
 
-watch(rangeValues, async (newVal, oldVal) => {
-  console.log(oldVal)
-  if(newVal){
-    wait.start('LOADING_STATS')
-    await StoreUtils.getter()?.organisation.readOrganisationStats(organisation?.value.organisationId, rangeValues.value.start, rangeValues.value.end)
-    wait.stop('LOADING_STATS')  }
-})
+
 
 const toast = useToast()
+const wait = useWait()
 const metaKey = ref(true);
 
 const readTerminalTransactionLoading = computed(() => {
@@ -73,7 +69,9 @@ const chartOptions = ref();
 
 const user = useAuthStore()
 
-const transactions = ref(StoreUtils.getter().transactions.getTransactions)
+const transactions = computed(() => {
+  return StoreUtils.getter().transactions.getTransactions
+})
 
 const reactiveData = reactive({
   selectedRow: null as any,
@@ -86,14 +84,13 @@ function handleClose(payload: any) {
 
 }
 
-
-onMounted(async () => {
-  chartData.value = setChartData();
-  chartOptions.value = setChartOptions();
-  console.log(user.userInfo)
-  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
-});
-
+watch(rangeValues, async (newVal, oldVal) => {
+  console.log(oldVal)
+  if(newVal){
+    wait.start('LOADING_STATS')
+    await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+    wait.stop('LOADING_STATS')  }
+})
 
 const onRowSelect = (event: any) => {
   reactiveData.selectedRow = event.data
@@ -231,14 +228,21 @@ onMounted(async () => {
   rangeValues.value.end = getCurrentDate()
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
+  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
+  wait.start('DASHBOARD')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start)
+  wait.stop('DASHBOARD')
+
 })
 </script>
 
 <template>
-
-
+<!--  <MazFullscreenLoader v-if="wait.isLoading('DASHBOARD')">-->
+<!--    <p class="text-2xl text-white-900">-->
+<!--      Loading...-->
+<!--    </p>-->
+<!--  </MazFullscreenLoader>-->
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
   <ContentHeader />
@@ -348,7 +352,6 @@ onMounted(async () => {
 
     </div>
   </div>
-
 </template>
 
 <style scoped>

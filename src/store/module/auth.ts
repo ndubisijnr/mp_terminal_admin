@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import AuthController from '../../service/AuthController.js'
 import {router} from "@/router";
-import StoreUtils from '@/util/storeUtils.js';
 import { globalDispatch } from '@/util/helper/globalDispatcher.js';
 
 
@@ -90,9 +89,6 @@ export const useAuthStore = defineStore('auth_store', {
                     sessionStorage.token = response.token
                     sessionStorage.id = response.userId
                     await router.push({path:router.currentRoute.value.query.redirectFrom ? String(router.currentRoute.value.query.redirectFrom) : '/dashboard'})
-                    await StoreUtils.getter()?.organisation.readCustomerOrganisation()
-                    await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100)
-                    await StoreUtils.getter().organisation.readAdminStats('01-01-2024', '01-08-2024')
                     this.multiFactor = false;
                 }
                 else{
@@ -142,7 +138,7 @@ export const useAuthStore = defineStore('auth_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
-                    router.push({path:'/login'})
+                    await router.push({path: '/login'})
                 }else{
                     toast.error(responseData.responseMessage, { position: 'top-right', timeout: 3000 })
                 }
