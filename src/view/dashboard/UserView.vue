@@ -11,7 +11,7 @@ import { FilterMatchMode } from 'primevue/api';
 import InputText from 'primevue/inputtext';
 import { useWait } from 'maz-ui';
 import MazSpinner from 'maz-ui/components/MazSpinner';
-
+import BaseButton from "@/components/button/BaseButton.vue";
 const wait = useWait()
 
 const reactiveData = reactive({
@@ -25,6 +25,11 @@ const user = computed(() => {
   return StoreUtils.getter()?.user.getUsers
 })
 
+const adminUser = computed(() => {
+  return StoreUtils.getter()?.user.getAdminUsers
+})
+
+
 
 const headers = [
   { label: 'userEmail', key: 'userEmail' },
@@ -33,6 +38,14 @@ const headers = [
   // {label:'userMiddleName',key:'userMiddleName'},
 
   { label: 'userPhone', key: 'userPhone' }, { label: 'userCreatedAt', key: 'userCreatedAt' }]
+
+
+const adminHeaders = [
+  { label: 'adminEmail', key: 'adminEmail' },
+  { label: 'adminFirstName', key: 'adminFirstName' },
+  { label: 'adminLastName', key: 'adminLastName' },
+  { label: 'adminPhone', key: 'adminPhoneNumber' }, { label: 'adminCreatedAt', key: 'adminCreatedAt' }]
+
 
 
 
@@ -73,6 +86,14 @@ const filters = ref({
   userFirstName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
   // representative: { value: null, matchMode: FilterMatchMode.IN },
   userLastName: { value: null, matchMode: FilterMatchMode.EQUALS },
+});
+
+
+const filters2 = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  adminFirstName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+  // representative: { value: null, matchMode: FilterMatchMode.IN },
+  adminLastName: { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
 // const toggle = (event) => {
@@ -117,20 +138,74 @@ const metaKey = ref(true);
 onMounted(async () => {
   wait.start('LOADING_USERS')
   await StoreUtils.getter()?.user.readUsers()
+  await StoreUtils.getter()?.user.readAdminUsers(1)
   wait.stop('LOADING_USERS')
 })
+
+
 </script>
 
 <template>
   <AddUser v-if="reactiveData.showUserModal" @close="handleClose" />
   <AddRole v-if="reactiveData.showRoleModal" @close="handleClose" />
-    <ContentHeader />
+  <ContentHeader />
+  <div class="content-table-section">
+    <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
 
-    <div class="content-table-section">
+      <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+        <p class="text-xl text-black">Admin User List</p>
+        <img src="../../assets/icon/alert-circle.svg" alt="lslsls"/>
+
+
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
+         <BaseButton  bg-color="transparent" bg-border="#D0D5DD" @click="reactiveData.showUserModal=true">
+          <div style="display: flex;align-items: center;gap: 5px;">
+              <img src="../../assets/icon/Folder Add 2.svg" alt="t"/>
+              Add Admin User
+          </div>
+        </BaseButton>
+      </div>
+    </div>
+
+
+
+    <div class="overflow-auto rounded-lg shadow">
+      <DataTable :loading="wait.isLoading('LOADING_USERS')" v-model:filters="filters2" :value="adminUser" :metaKeySelection="metaKey" selectionMode="single" paginator
+                 :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+                 paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+                 currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+                 :globalFilterFields="['adminFirstName', 'adminEmail', 'adminLastName']" @rowSelect="onRowSelect">
+
+        <template #header>
+          <div class="flex justify-end">
+              <span class="relative">
+                <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+                <InputText v-model="filters['global'].value" placeholder="Keyword Search"
+                           class="pl-10 font-normal terminal_search" />
+              </span>
+          </div>
+        </template>
+
+        <template #empty>
+          <div class="text-center">
+            No Users found.
+          </div>
+        </template>
+
+        <template #loading> <MazSpinner v-if="wait.isLoading('LOADING_USERS')" color="secondary"></MazSpinner> </template>
+
+        <Column v-for="col of adminHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+
+      </DataTable>
+    </div>
+
+  </div>
+  <div class="content-table-section">
       <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
 
         <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">User List</p>
+          <p class="text-xl text-black">Merchant User List</p>
           <img src="../../assets/icon/alert-circle.svg" />
 
 

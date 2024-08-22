@@ -209,6 +209,10 @@ const adminStats = computed(() => {
   return StoreUtils.getter().organisation.getAdminStats
 })
 
+const sortedItems:any = transactions?.value?.sort((a:any, b:any) => {
+  return new Date(b.transactionCreatedAt).getTime() - new Date(a.transactionCreatedAt).getTime();
+});
+
 
 onMounted(async () => {
   rangeValues.value.start = getFirstOfMonth()
@@ -270,7 +274,7 @@ onMounted(async () => {
       <div class="overflow-auto rounded-lg shadow">
 
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable :loading="wait.isLoading('READ_TRANSACTION')"  v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
+        <DataTable :loading="wait.isLoading('READ_TRANSACTION')"  v-model:filters="filters" :value="sortedItems" :metaKeySelection="metaKey" selectionMode="single"
           paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -306,6 +310,7 @@ onMounted(async () => {
 
                         </template>
                 </Column>
+
           <Column header="actions">
 
             <template #body="">
@@ -317,7 +322,6 @@ onMounted(async () => {
               </div>
             </template>
           </Column>
-
 
         </DataTable>
       </div>

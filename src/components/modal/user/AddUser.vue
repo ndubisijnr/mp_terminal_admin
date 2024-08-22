@@ -6,7 +6,7 @@ import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import UserRequest from '@/models/request/user/UserRequest'
-import Dropdown from 'primevue/dropdown';
+// import Dropdown from 'primevue/dropdown';
 
 const model = ref(UserRequest.CreateUpdateUserRequest)
 
@@ -31,10 +31,7 @@ async function createNewUser() {
     await StoreUtils.getter()?.user.createUsers(model.value, toast)
     wait.stop('CREATING_USER')
     close()
-
 }
-
-
 
 </script>
 
@@ -49,31 +46,18 @@ async function createNewUser() {
 
                 <div class="modal-child-content">
                     <div class="flex justify-between gap-10">
-                        <base-input type="text" v-model="model.userFirstName" placeholder="userFirstName"
+                        <base-input type="text" v-model="model.adminFirstName" placeholder="userFirstName"
                             label="userFirstName" />
-                        <base-input type="text" v-model="model.userLastName" placeholder="userMiddleName"
-                            label="userMiddleName" />
-                        <base-input type="text" v-model="model.userMiddleName" placeholder="userLastName"
+
+                        <base-input type="text" v-model="model.adminLastName" placeholder="userLastName"
                         label="userLastName" />
                     </div>
                     <div class="flex justify-between gap-10">
-                        <base-input type="text" v-model="model.userPhone" placeholder="userPhone"
+                        <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"
                             label="userPhone" />
-                        <base-input type="text" v-model="model.userEmail" placeholder="userEmail"
+                        <base-input type="text" v-model="model.adminEmail" placeholder="userEmail"
                             label="userEmail" />
-                        
                     </div>
-                    <div class="flex justify-between gap-10">
-                        <div class="mt-5"> 
-                            <!-- {name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'} -->
-                            <p class="pb-5">userRoleId</p>
-                            <Dropdown optionLabel="name" v-model="model.userRoleId" optionValue="code" placeholder="userRole" :options="[]" class="select-drowdown"></Dropdown>
-                        </div>
-
-                        <base-input type="text" v-model="model.userPassword" placeholder="userPassword"
-                        label="userPassword" />
-                    </div>
-
                   
                 </div>
 
@@ -89,8 +73,6 @@ async function createNewUser() {
                 </div>
 
             </div>
-
-
         </template>
     </BaseLayout>
 </template>

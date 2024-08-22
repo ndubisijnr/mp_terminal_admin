@@ -1,12 +1,12 @@
 class UserRequest {
   static CreateUpdateUserRequest = {
-      userEmail: null,
-      userFirstName: null,
-      userLastName: null,
-      userMiddleName: null,
-      userPassword: null,
-      userPhone: null,
-      userRoleId: 0
+      adminChecker: null,
+      adminEmail: null,
+      adminFirstName: null,
+      adminLastName: null,
+      adminMaker: null,
+      adminPhoneNumber: null,
+      adminRoleId: 0
     }
 
     static DeleteUserRequest = {

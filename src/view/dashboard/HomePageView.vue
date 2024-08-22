@@ -54,8 +54,6 @@ const minMaxDates = ref({
   max: '2024-12-31',
 })
 
-
-
 const toast = useToast()
 const wait = useWait()
 const metaKey = ref(true);
@@ -210,8 +208,6 @@ const adminStats = computed(() => {
   return StoreUtils.getter().organisation.getAdminStats
 })
 
-
-
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
@@ -222,6 +218,11 @@ const transactionsHeaders = [
   { label: 'Created At', key: 'transactionCreatedAt' },
 
 ]
+
+const sortedItems:any = transactions?.value?.sort((a:any, b:any) => {
+  return new Date(b.transactionCreatedAt).getTime() - new Date(a.transactionCreatedAt).getTime();
+});
+
 
 onMounted(async () => {
   rangeValues.value.start = getFirstOfMonth()
@@ -314,7 +315,7 @@ onMounted(async () => {
         <div class="overflow-auto rounded-lg shadow"> -->
 
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable :loading="readTerminalTransactionLoading" :value="transactions" :metaKeySelection="metaKey"
+        <DataTable :loading="readTerminalTransactionLoading" :value="sortedItems" :metaKeySelection="metaKey"
           selectionMode="single" :rows="10" paginator stripedRows tableStyle="min-width: 50rem" dataKey="id"
           filterDisplay="row" @rowSelect="onRowSelect">
 
@@ -350,7 +351,7 @@ onMounted(async () => {
               <div class="flex">
 
                 <p @click="reactiveData.showReceipt = !reactiveData.showReceipt"
-                  class="bg-gray-100 shadow p-1 rounded-md text-sm hover:bg-green-600 hover:text-white">Show Reciept</p>
+                  class="bg-gray-100 shadow p-1 rounded-md text-sm hover:bg-green-600 hover:text-white">Reciept</p>
 
               </div>
             </template>

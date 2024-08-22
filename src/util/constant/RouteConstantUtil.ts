@@ -19,8 +19,9 @@ export const RouteConstantUtil = {
         institutions:"Manage Institutions",
         settings:"Settings",
         support:"Support",
+        adminUsers:"AdminUsers",
         institutionsCharges:"Institutions Statistics",
-        user:"User",
+        user:"Users",
         authRequired:true
     },
 }
