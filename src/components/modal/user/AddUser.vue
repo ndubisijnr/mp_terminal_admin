@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import { defineEmits, ref } from 'vue';
+import {computed, defineEmits, ref} from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import UserRequest from '@/models/request/user/UserRequest'
 // import Dropdown from 'primevue/dropdown';
 
-const model = ref(UserRequest.CreateUpdateUserRequest)
+const model:any = ref(UserRequest.CreateUpdateUserRequest)
+const currentAdmin = computed(() => {
+  return StoreUtils.getter().auth.getUserInfo
+})
 
 
 
@@ -27,8 +30,11 @@ function close() {
 
 
 async function createNewUser() {
+    model.value.adminMaker = currentAdmin.value.userEmail
+    model.value.adminChecker = " "
     wait.start('CREATING_USER')
     await StoreUtils.getter()?.user.createUsers(model.value, toast)
+    await StoreUtils.getter()?.user.readAdminUsers(1)
     wait.stop('CREATING_USER')
     close()
 }

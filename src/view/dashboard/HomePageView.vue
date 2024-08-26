@@ -219,9 +219,9 @@ const transactionsHeaders = [
 
 ]
 
-const sortedItems:any = transactions?.value?.sort((a:any, b:any) => {
-  return new Date(b.transactionCreatedAt).getTime() - new Date(a.transactionCreatedAt).getTime();
-});
+// const sortedItems:any = transactions?.value?.sort((a:any, b:any) => {
+//   return new Date(b.transactionCreatedAt).getTime() - new Date(a.transactionCreatedAt).getTime();
+// });
 
 
 onMounted(async () => {
@@ -315,7 +315,7 @@ onMounted(async () => {
         <div class="overflow-auto rounded-lg shadow"> -->
 
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable :loading="readTerminalTransactionLoading" :value="sortedItems" :metaKeySelection="metaKey"
+        <DataTable :loading="readTerminalTransactionLoading" :value="transactions" :metaKeySelection="metaKey"
           selectionMode="single" :rows="10" paginator stripedRows tableStyle="min-width: 50rem" dataKey="id"
           filterDisplay="row" @rowSelect="onRowSelect">
 

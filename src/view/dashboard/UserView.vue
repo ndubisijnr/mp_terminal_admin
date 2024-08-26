@@ -134,6 +134,8 @@ const filters2 = ref({
 
 const metaKey = ref(true);
 
+const metaKey2 = ref(true);
+
 
 onMounted(async () => {
   wait.start('LOADING_USERS')
@@ -171,7 +173,7 @@ onMounted(async () => {
 
 
     <div class="overflow-auto rounded-lg shadow">
-      <DataTable :loading="wait.isLoading('LOADING_USERS')" v-model:filters="filters2" :value="adminUser" :metaKeySelection="metaKey" selectionMode="single" paginator
+      <DataTable :loading="wait.isLoading('LOADING_USERS')" v-model:filters="filters2" :value="adminUser" :metaKeySelection="metaKey2" selectionMode="single" paginator
                  :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
                  paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                  currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -181,7 +183,7 @@ onMounted(async () => {
           <div class="flex justify-end">
               <span class="relative">
                 <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
-                <InputText v-model="filters['global'].value" placeholder="Keyword Search"
+                <InputText v-model="filters2['global'].value" placeholder="Keyword Search"
                            class="pl-10 font-normal terminal_search" />
               </span>
           </div>
