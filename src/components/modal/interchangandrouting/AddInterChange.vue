@@ -52,17 +52,49 @@ async function createNewUser() {
 
         <div class="modal-child-content">
           <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminFirstName" placeholder="interchangeName"
+            <base-input type="text" v-model="model.adminFirstName"
                         label="interchangeName" />
 
-            <base-input type="text" v-model="model.adminLastName" placeholder="interchangeType"
+            <base-input type="text" v-model="model.adminLastName"
                         label="interchangeType" />
           </div>
           <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="interchangeSinkHost"
+            <base-input type="text" v-model="model.adminPhoneNumber"
                         label="interchangeSinkHost" />
-            <base-input type="text" v-model="model.adminEmail" placeholder="interchangeSinkPort"
+            <base-input type="text" v-model="model.adminEmail"
                         label="interchangeSinkPort" />
+          </div>
+          <div class="flex justify-between gap-10">
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangeEncryptedInterchangeKey" />
+            <base-input type="text" v-model="model.adminEmail"
+                        label="interchangeEncryptedSinkZpk" />
+          </div>
+          <div class="flex justify-between gap-10">
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangeMcc" />
+            <base-input type="text" v-model="model.adminEmail"
+                        label="interchangeTransferDestinationAccount" />
+          </div>
+          <div class="flex justify-between gap-10">
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangePayee" />
+            <base-input type="text" v-model="model.adminEmail"
+                        label="interchangeReceivingInstitutionId" />
+          </div>
+          <div class="flex justify-between gap-10">
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangeExtendedTransactionType" />
+            <base-input type="text" v-model="model.adminEmail"
+                        label="interchangeForwardingInstitutionId" />
+          </div>
+          <div class="flex justify-between gap-10">
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangeDescription" />
+
+            <base-input type="text" v-model="model.adminPhoneNumber"
+                        label="interchangePinTranslationRequired" />
+
           </div>
 
         </div>
@@ -206,7 +238,7 @@ async function createNewUser() {
   /* Shadow/sm */
   box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
   border-radius: 8px;
-  margin: 100px auto;
+  margin: 10px auto;
 
 
 }

@@ -111,6 +111,40 @@ const toast = useToast()
 const wait = useWait()
 const { showDialogAndWaitChoice, data } = useMazDialogPromise()
 
+function getFirstOfMonth() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year and month
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+
+  // Set the day to '01' to represent the first day of the current month
+  const day = '01';
+
+  // Format the date components into a readable string (First day of the current month)
+  return `${year}-${month}-${day}`;
+}
+
+function getCurrentDate() {
+  // Create a new Date object for the current date
+  const now = new Date();
+
+  // Extract the current year, month, and day
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0'); // getMonth() returns 0-based index, so add 1
+  const day = now.getDate().toString().padStart(2, '0'); // getDate() returns the day of the month
+
+  // Format the date components into a readable string (Current date)
+  return `${year}-${month}-${day}`;
+}
+
+
+const rangeValues = ref({
+  start: '',
+  end: '',
+})
+
 data.value = {
   title: 'Delete',
   message: `Are you sure you want to delete charge`
@@ -388,13 +422,15 @@ const terminalHeaders = [
   { label: 'terminalCreatedAt', key: 'terminalCreatedAt' }]
 
 onMounted(async () => {
-  chartData.value = setChartData();
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
+  // chartData.value = setChartData();
   chartOptions.value = setChartOptions();
   wait.start("LOADING_STATS")
-  await StoreUtils.getter().organisation.readOrganisationStats( organisationID?.value, '01-01-2024','01-08-2024')
+  await StoreUtils.getter().organisation.readOrganisationStats( organisationID?.value, rangeValues.value.start, rangeValues.value.end)
   await StoreUtils.getter()?.organisation.readOrganisationPricing(organisationID?.value)
   await StoreUtils.getter()?.terminal.readOrganisationTerminalOrganisationId(organisationID?.value)
-  await StoreUtils.getter()?.organisation.readOrganisationTransactionsByOrganisationId(organisationID?.value,'01-01-2024','01-08-2024')
+  await StoreUtils.getter()?.organisation.readOrganisationTransactionsByOrganisationId(organisationID?.value,rangeValues.value.start, rangeValues.value.end)
   wait.stop("LOADING_STATS")
 });
 

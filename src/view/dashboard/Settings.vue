@@ -7,6 +7,7 @@ import Column from "primevue/column";
 import {FilterMatchMode} from "primevue/api";
 import BaseButton from "@/components/button/BaseButton.vue";
 import AddInterChange from "@/components/modal/interchangandrouting/AddInterChange.vue";
+import AddRouting from "@/components/modal/interchangandrouting/AddRouting.vue";
 import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 
@@ -14,7 +15,8 @@ const reactiveData=reactive({
    showAddInterChange:false,
    visible:false,
    showUpdateInterchange:false,
-   selectedRow:null as any
+   selectedRow:null as any,
+   showAddRouting:false,
 })
 const tabs = [
   { label: 'Profile', disabled: false },
@@ -43,13 +45,42 @@ const items = ref([
   }
 ]);
 
+const items2 = ref([
+  {
+    label: 'Options',
+    items: [
+      {
+        label: 'View',
+        icon: 'pi pi-refresh',
+        command:( ) => {
+          reactiveData.visible = !reactiveData.visible
+        }
+      },
+      {
+        label: 'Edit',
+        icon: 'pi pi-upload',
+        command:() => {
+          reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+        }
+      },
+    ]
+  }
+]);
+
 
 const menu = ref()
+
+const menu2 = ref()
 
 
 const toggle = (event:any) => {
   menu.value.toggle(event);
 }
+
+const toggle2 = (event:any) => {
+  menu2.value.toggle(event);
+}
+
 
 
 const filters = ref({
@@ -170,7 +201,7 @@ const metaKey = ref()
 const route = ref([
   {
     "routeId": 100,
-    "routeAmount": "200.00",
+    "routeAmount": "1000.00",
     "routeInterchangeId": 100,
     "routeStatus": "ACTIVE",
     "routeCreatedAt": "2024-06-18 22:25:18.230",
@@ -178,7 +209,7 @@ const route = ref([
   },
   {
     "routeId": 101,
-    "routeAmount": "200.00",
+    "routeAmount": "5000.00",
     "routeInterchangeId": 101,
     "routeStatus": "ACTIVE",
     "routeCreatedAt": "2024-06-18 22:25:18.230",
@@ -186,7 +217,7 @@ const route = ref([
   },
   {
     "routeId": 100,
-    "routeAmount": "200.00",
+    "routeAmount": "10000.00",
     "routeInterchangeId": 101,
     "routeStatus": "ACTIVE",
     "routeCreatedAt": "2024-06-18 22:25:18.230",
@@ -208,6 +239,7 @@ const onRowSelect = (event:any) => {
 }
 function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
+  reactiveData.showAddRouting = payload;
 }
 </script>
 
@@ -224,6 +256,7 @@ function handleClose(payload: any) {
   </Dialog>
 
   <AddInterChange v-if="reactiveData.showAddInterChange" @close="handleClose(false)" />
+  <AddRouting v-if="reactiveData.showAddRouting" @close="handleClose(false)" />
 
   <div class="w-full container content-table-section">
     <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
@@ -305,7 +338,7 @@ function handleClose(payload: any) {
 
             </div>
             <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-              <BaseButton  bg-color="transparent" bg-border="#D0D5DD">
+              <BaseButton  bg-color="transparent" bg-border="#D0D5DD" @click="reactiveData.showAddRouting=true">
                 <div style="display: flex;align-items: center;gap: 5px;">
                   <img src="../../assets/icon/Folder Add 2.svg" alt="t"/>
                   Add Routing
@@ -341,6 +374,18 @@ function handleClose(payload: any) {
 
 
                 <Column v-for="col of routeHeader" :key="col.key" :field="col.key" :header="col.label"></Column>
+                <Column header="actions">
+
+                  <template #body="">
+                    <div class="flex">
+
+                      <img src="../../assets/icon/Dropdown.svg" @click="toggle2"/>
+
+                      <Menu ref="menu2" id="overlay_menu2" :model="items2" :popup="true" />
+                    </div>
+                  </template>
+                </Column>
+
 
               </DataTable>
             </div>

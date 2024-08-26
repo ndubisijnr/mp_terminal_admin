@@ -52,18 +52,18 @@ async function createNewUser() {
 
         <div class="modal-child-content">
           <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminFirstName" placeholder="userFirstName"
-                        label="userFirstName" />
+            <base-input type="text" v-model="model.adminFirstName" placeholder="routeAmount"
+                        label="routeAmount" />
 
-            <base-input type="text" v-model="model.adminLastName" placeholder="userLastName"
-                        label="userLastName" />
+            <base-input type="text" v-model="model.adminLastName" placeholder="routeInterchangeId"
+                        label="routeInterchangeId" />
           </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"
-                        label="userPhone" />
-            <base-input type="text" v-model="model.adminEmail" placeholder="userEmail"
-                        label="userEmail" />
-          </div>
+<!--          <div class="flex justify-between gap-10">-->
+<!--            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"-->
+<!--                        label="userPhone" />-->
+<!--            <base-input type="text" v-model="model.adminEmail" placeholder="userEmail"-->
+<!--                        label="userEmail" />-->
+<!--          </div>-->
 
         </div>
 
