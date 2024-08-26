@@ -50,6 +50,7 @@ function logout(){
                 v-for="(i, index) in SidebarBottomUtils"
                 :key="index"
                 class="nav-item-base"
+                :class="{ 'active-nav': getCurrentRoutePath === i.route }"
               >
                 <img :src="i.icon" />
                 <p>{{ i.name }}</p>
