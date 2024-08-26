@@ -7,14 +7,51 @@ import Column from "primevue/column";
 import {FilterMatchMode} from "primevue/api";
 import BaseButton from "@/components/button/BaseButton.vue";
 import AddInterChange from "@/components/modal/interchangandrouting/AddInterChange.vue";
+import Menu from "primevue/menu";
+import Dialog from "primevue/dialog";
 
 const reactiveData=reactive({
    showAddInterChange:false,
+   visible:false,
+   showUpdateInterchange:false,
+   selectedRow:null as any
 })
 const tabs = [
   { label: 'Profile', disabled: false },
   { label: 'Interchange/Routing', disabled: false },
 ]
+
+const items = ref([
+  {
+    label: 'Options',
+    items: [
+      {
+        label: 'View',
+        icon: 'pi pi-refresh',
+        command:( ) => {
+          reactiveData.visible = !reactiveData.visible
+        }
+      },
+      {
+        label: 'Edit',
+        icon: 'pi pi-upload',
+        command:() => {
+          reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+        }
+      },
+    ]
+  }
+]);
+
+
+const menu = ref()
+
+
+const toggle = (event:any) => {
+  menu.value.toggle(event);
+}
+
+
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   userFirstName: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
@@ -109,10 +146,10 @@ const interchange = ref([
 
 const interchangeheader = [
   // {label:"interchangeId", key: "interchangeId"},
-  // {label:"interchangeName",key: "interchangeName"},
     {label:"interchangeName",key: "interchangeName"},
+    {label:"interchangeDescription",key: "interchangeDescription"},
     {label:"interchangeType",key: "interchangeType"},
-    {label:"interchangePinTranslationRequired",key: "interchangePinTranslationRequired"},
+    {label:"interchangePTR",key: "interchangePinTranslationRequired"},
     // {label:"interchangeEncryptedInterchangeKey",key: "interchangeEncryptedInterchangeKey"},
     // {label:"interchangeEncryptedSinkZpk",key: "interchangeEncryptedSinkZpk"},
     {label:"interchangeSinkHost",key: "interchangeSinkHost"},
@@ -124,7 +161,7 @@ const interchangeheader = [
     // {label:"interchangeExtendedTransactionType",key: "interchangeExtendedTransactionType"},
     // {label:"interchangeForwardingInstitutionId",key: "interchangeForwardingInstitutionId"},
     {label:"interchangeStatus",key: "interchangeStatus"},
-    {label:"interchangeCreatedAt",key: "interchangeCreatedAt"},
+    // {label:"interchangeCreatedAt",key: "interchangeCreatedAt"},
     // {label:"interchangeUpdatedAt",key: "interchangeUpdatedAt"}
 ]
 
@@ -157,7 +194,18 @@ const route = ref([
   }
 ])
 
-function onRowSelect(){}
+const routeHeader = [
+  {key:"routeId", label: "routeId"},
+  {key:"routeAmount", label: "routeAmount"},
+  {key:"routeInterchangeId", label: "routeInterchangeId"},
+  {key:"routeStatus", label: "routeStatus"},
+  {key:"routeCreatedAt", label: "routeCreatedAt"},
+  {key:"routeUpdatedAt", label: "routeUpdatedAt"}]
+
+const onRowSelect = (event:any) => {
+  reactiveData.selectedRow = event.data
+  console.log(event.data)
+}
 function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
 }
@@ -168,6 +216,13 @@ function handleClose(payload: any) {
 
   
     <ContentHeader />
+  <Dialog v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
+      <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
+      <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ i }}</p>
+    </div>
+  </Dialog>
+
   <AddInterChange v-if="reactiveData.showAddInterChange" @close="handleClose(false)" />
 
   <div class="w-full container content-table-section">
@@ -223,7 +278,17 @@ function handleClose(payload: any) {
 
 
                 <Column v-for="col of interchangeheader" :key="col.key" :field="col.key" :header="col.label"></Column>
+                <Column header="actions">
 
+                  <template #body="">
+                    <div class="flex">
+
+                      <img src="../../assets/icon/Dropdown.svg" @click="toggle"/>
+
+                      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+                    </div>
+                  </template>
+                </Column>
               </DataTable>
             </div>
 
@@ -240,7 +305,7 @@ function handleClose(payload: any) {
 
             </div>
             <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-              <BaseButton  bg-color="transparent" bg-border="#D0D5DD" @click="reactiveData.showAddInterChange=true">
+              <BaseButton  bg-color="transparent" bg-border="#D0D5DD">
                 <div style="display: flex;align-items: center;gap: 5px;">
                   <img src="../../assets/icon/Folder Add 2.svg" alt="t"/>
                   Add Routing
@@ -252,7 +317,7 @@ function handleClose(payload: any) {
           <div>
             <div class="overflow-scroll rounded-lg shadow">
 
-              <DataTable  v-model:filters="filters" :value="interchange" :metaKeySelection="metaKey" selectionMode="single" paginator
+              <DataTable  v-model:filters="filters" :value="route" :metaKeySelection="metaKey" selectionMode="single" paginator
                           :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
                           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -275,7 +340,7 @@ function handleClose(payload: any) {
                 </template>
 
 
-                <Column v-for="col of interchangeheader" :key="col.key" :field="col.key" :header="col.label"></Column>
+                <Column v-for="col of routeHeader" :key="col.key" :field="col.key" :header="col.label"></Column>
 
               </DataTable>
             </div>
