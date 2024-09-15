@@ -23,6 +23,7 @@ import BaseCard from "@/components/cards/BaseCard.vue";
 import ChargesRequest from "@/models/request/charges/ChargesRequest";
 import Chart from "primevue/chart";
 import { RouteConstantUtil } from "@/util/constant/RouteConstantUtil";
+import getResponse from "@/util/helper/globalResponse.ts";
 
 const chartData = ref();
 
@@ -162,6 +163,35 @@ const menu3 = ref();
 
 
 
+data.value = {
+  title: 'Reversal',
+  message: `Are you sure you want to reverse this transaction`
+}
+
+async function askToUser(transactionId:any) {
+  try {
+    const responseOne = await showDialogAndWaitChoice('two')
+
+    if (responseOne === 'accept') {
+      reversal(transactionId)
+
+    } else {
+      console.log(responseOne)
+    }
+
+  } catch (error: any) {
+    console.log(error)
+  }
+}
+
+const reversal = (id:any) => {
+  let reversalRequest:{} = {
+    transactionId: id
+  }
+  StoreUtils.getter()?.fundTransfer.doManualReversal(toast, reversalRequest)
+}
+
+
 const addInstituteCharge = ref();
 
 
@@ -253,11 +283,14 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  { label: 'Stan', key: 'transactionStan' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' },
-  { label: 'AppLabel', key: 'transactionAppLabel'},
+  { label: 'Narration', key: 'journalNarration' },
+
+  // { label: 'Stan', key: 'transactionStan' },
+  // { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  // { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
-{label:'Response Status', key:'transactionResponseCode'}]
+// {label:'Response Status', key:'transactionResponseCode'}
+  ]
 
 
 const onRowSelect = (event: any) => {
@@ -409,6 +442,13 @@ const items3 = ref([
           reactiveData.visible = !reactiveData.visible
         }
       },
+      {
+        label: 'Reverse Transaction',
+        icon: 'pi pi-upload',
+        command:() => {
+          askToUser(reactiveData.selectedRow.transactionId)
+        }
+      },
       
     ]
   }
@@ -451,6 +491,7 @@ onMounted(async () => {
   </MazFullscreenLoader>
 
   <MazDialogPromise identifier="one" />
+  <MazDialogPromise identifier="two" />
 
   <AddInstitutionCharges :data="addInstituteCharge" v-if="reactiveData.showManageCharges" @close="handleClose"></AddInstitutionCharges>
   <UpdateTerminal :data="reactiveData?.selectedRow" v-if="reactiveData.showUpdateTerminal" @close="handleClose" />
@@ -602,7 +643,7 @@ onMounted(async () => {
 
       <div class="overflow-auto rounded-lg shadow">
         <DataTable v-model:filters="filters2" :value="organisationTerminal" :metaKeySelection="metaKey2"
-          selectionMode="single" :rows="3" stripedRows tableStyle="min-width: 50rem"
+          selectionMode="single"  paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
           :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
@@ -658,7 +699,7 @@ onMounted(async () => {
 
       <div class="overflow-auto rounded-lg shadow">
         <DataTable v-model:filters="filters2" :value="organisationTransaction" :metaKeySelection="metaKey2"
-          selectionMode="single" :rows="3" stripedRows tableStyle="min-width: 50rem"
+          selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
           :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
@@ -675,8 +716,25 @@ onMounted(async () => {
             </div>
           </template>
           <template #loading> Loading customers data. Please wait. </template>
+          <Column field="journalDrCr" header="DrCr">
+            <template #body="slotProps">
 
+              <div v-if="slotProps.data.journalDrCr">
+                <p :style="slotProps.data.journalDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.journalDrCr}}</p>
+              </div>
+
+            </template>
+          </Column>
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+          <Column field="transactionResponseCode" header="transactionResponse">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.transactionResponseCode">
+                <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
+              </div>
+
+            </template>
+          </Column>
           <Column header="actions">
 
             <template #body="">

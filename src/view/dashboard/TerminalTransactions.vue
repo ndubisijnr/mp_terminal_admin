@@ -10,13 +10,46 @@ import InputText from 'primevue/inputtext';
 import Menu from 'primevue/menu';
 import Dialog from 'primevue/dialog';
 // import { DialogCustomButton } from 'maz-ui/types/components/MazDialogPromise/use-maz-dialog-promise.js';
-import { useWait } from 'maz-ui';
+import {useToast, useWait} from 'maz-ui';
 import Breadcrumb from 'primevue/breadcrumb';
 import { router } from '@/router';
 import Receipt from "@/components/modal/Receipt.vue";
+import MazDialogPromise, {useMazDialogPromise} from "maz-ui/components/MazDialogPromise";
+import getResponse from "@/util/helper/globalResponse.ts";
 
 
 const wait = useWait()
+const toast =  useToast()
+
+const { showDialogAndWaitChoice, data } = useMazDialogPromise()
+
+data.value = {
+  title: 'Reversal',
+  message: `Are you sure you want to reverse this transaction`
+}
+
+async function askToUser(transactionId:any) {
+  try {
+    const responseOne = await showDialogAndWaitChoice('one')
+
+    if (responseOne === 'accept') {
+      reversal(transactionId)
+
+    } else {
+      console.log(responseOne)
+    }
+
+  } catch (error: any) {
+    console.log(error)
+  }
+}
+
+const reversal = (id:any) => {
+  let reversalRequest:{} = {
+    transactionId: id
+  }
+  StoreUtils.getter()?.fundTransfer.doManualReversal(toast, reversalRequest)
+}
 
 const reactiveData = reactive({
   showRequestTerminal: false,
@@ -61,10 +94,11 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
-  {label:'Response Status', key:'transactionResponseCode'},
-  { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' },
-  { label: 'AppLabel', key: 'transactionAppLabel'},
+  // {label:'Response Status', key:'transactionResponseCode'},
+  // { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
+  { label: 'Narration', key: 'journalNarration' },
+  // { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  // { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
 ]
 
@@ -110,6 +144,13 @@ const items = ref([
         command: () => {
           reactiveData.showReceipt = !reactiveData.showReceipt
 
+        }
+      },
+      {
+        label: 'Reverse Transaction',
+        icon: 'pi pi-upload',
+        command:() => {
+          askToUser(reactiveData.selectedRow.transactionId)
         }
       },
     ]
@@ -166,6 +207,7 @@ onMounted(() => {
 
 
     <ContentHeader />
+  <MazDialogPromise identifier="one" />
 
     <div class="content-table-section">
         <Breadcrumb :model="item">
@@ -217,8 +259,26 @@ onMounted(() => {
                Please Wait, fetching records.
               </div>
             </template>
+          <Column field="journalDrCr" header="DrCr">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.journalDrCr">
+                <p :style="slotProps.data.journalDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.journalDrCr}}</p>
+              </div>
+
+            </template>
+          </Column>
 
             <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
+          <Column field="transactionResponseCode" header="transactionResponse">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.transactionResponseCode">
+                <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
+              </div>
+
+            </template>
+          </Column>
             <!--terminal status-->
             <!-- <Column field="terminalStatus" header="terminalStatus">
                   <template #body="slotProps">
