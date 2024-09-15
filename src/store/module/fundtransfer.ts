@@ -13,15 +13,29 @@ export const useFundTransfer_Store = defineStore('fundTransfer_Store', {
     actions: {
 
     
-        async doNameEnquiry(toast:any, payload:{}){
-            const response = await FundsTransferController.nameEnquiry(payload)
+        // async doNameEnquiry(toast:any, payload:{}){
+        //     const response = await FundsTransferController.nameEnquiry(payload)
+        //     const responseData = response.data
+        //
+        //     try{
+        //         if(responseData.responseCode === '00'){
+        //             this.nameEnquiryResponse= responseData.data
+        //             toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+        //             console.log(responseData)
+        //         }else{
+        //             toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+        //             console.log(responseData.responseCode)
+        //         }
+        //     }catch(e){}
+        // },
+
+        async doManualReversal(toast:any, payload:{}){
+            const response = await FundsTransferController.manualReversal(payload)
             const responseData = response.data
 
             try{
                 if(responseData.responseCode === '00'){
-                    this.nameEnquiryResponse= responseData.data
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                    console.log(responseData)
                 }else{
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
                     console.log(responseData.responseCode)
@@ -29,22 +43,22 @@ export const useFundTransfer_Store = defineStore('fundTransfer_Store', {
             }catch(e){}
         },
 
-        async doTransfer(toast:any, payload:{}){
-            const response = await FundsTransferController.transfer(payload)
-            const responseData = response.data
-
-            try{
-                if(responseData.responseCode === '00'){
-                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-
-                    console.log(responseData)
-                }else{
-                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-
-                    console.log(responseData.responseCode)
-                }
-            }catch(e){}
-        },
+        // async doTransfer(toast:any, payload:{}){
+        //     const response = await FundsTransferController.transfer(payload)
+        //     const responseData = response.data
+        //
+        //     try{
+        //         if(responseData.responseCode === '00'){
+        //             toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+        //
+        //             console.log(responseData)
+        //         }else{
+        //             toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+        //
+        //             console.log(responseData.responseCode)
+        //         }
+        //     }catch(e){}
+        // },
 
     }
 })

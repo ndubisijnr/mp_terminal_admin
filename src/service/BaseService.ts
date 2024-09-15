@@ -24,7 +24,6 @@ export const appClient1 = axios.create({
     }
 });
 
-
 appClient.interceptors.request.use(config => {
     config.headers.Authorization = sessionStorage.token;
     config.headers.mid = 0
@@ -59,7 +58,6 @@ appClient.interceptors.response.use(response => {
     }
     return response
 });
-
 
 export const apiClient = {
     appClient: appClient,

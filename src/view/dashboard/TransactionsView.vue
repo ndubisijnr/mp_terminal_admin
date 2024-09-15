@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import { onMounted, ref, reactive, watch } from "vue";
-import {useWait } from 'maz-ui'
+import {useWait, useToast } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
@@ -15,8 +15,40 @@ import MazSpinner from "maz-ui/components/MazSpinner";
 import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from "maz-ui/components/MazPicker";
 import getResponse from "@/util/helper/globalResponse.ts";
+import MazDialogPromise, {useMazDialogPromise} from "maz-ui/components/MazDialogPromise";
 
 const wait = useWait()
+const toast =  useToast()
+
+const { showDialogAndWaitChoice, data } = useMazDialogPromise()
+
+data.value = {
+  title: 'Reversal',
+  message: `Are you sure you want to reverse this transaction`
+}
+
+async function askToUser(transactionId:any) {
+  try {
+    const responseOne = await showDialogAndWaitChoice('one')
+
+    if (responseOne === 'accept') {
+       reversal(transactionId)
+
+    } else {
+      console.log(responseOne)
+    }
+
+  } catch (error: any) {
+    console.log(error)
+  }
+}
+
+const reversal = (id:any) => {
+  let reversalRequest:{} = {
+    transactionId: id
+  }
+  StoreUtils.getter()?.fundTransfer.doManualReversal(toast, reversalRequest)
+}
 
 function getFirstOfMonth() {
   // Create a new Date object for the current date
@@ -65,7 +97,6 @@ watch(rangeValues, async (newVal, oldVal) => {
   }
 })
 
-
 const reactiveData = reactive({
 
   visible: false,
@@ -78,10 +109,10 @@ const reactiveData = reactive({
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
-  { label: 'Amount', key: 'transactionRequestAmount' },
+  { label: 'Amount', key: 'journalAmount' },
   { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' },
-  { label: 'AppLabel', key: 'transactionAppLabel'},
+  { label: 'Narration', key: 'journalNarration' },
+  // { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
 ]
 
@@ -167,13 +198,13 @@ const items = ref([
           reactiveData.showReceipt = !reactiveData.showReceipt
         }
       },
-      // {
-      //     label: 'Edit',
-      //     icon: 'pi pi-upload',
-      //     command:() => {
-      //       reactiveData.showUpdateTerminal = !reactiveData.showUpdateTerminal
-      //     }
-      // },
+      {
+          label: 'Reverse Transaction',
+          icon: 'pi pi-upload',
+          command:() => {
+            askToUser(reactiveData.selectedRow.transactionId)
+          }
+      },
       // {
       //     label: 'Delete',
       //     icon: 'pi pi-upload',
@@ -238,6 +269,8 @@ onMounted(async () => {
 
 
   <ContentHeader />
+  <MazDialogPromise identifier="one" />
+
 
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
@@ -298,6 +331,15 @@ onMounted(async () => {
           <template #loading> 
             <MazSpinner v-if="wait.isLoading('READ_TRANSACTION')"  color="secondary"></MazSpinner>
           </template>
+          <Column field="journalDrCr" header="DrCr">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.journalDrCr">
+                <p :style="slotProps.data.journalDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.journalDrCr}}</p>
+              </div>
+
+            </template>
+          </Column>
 
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <!--terminal status-->
@@ -310,6 +352,7 @@ onMounted(async () => {
 
                         </template>
                 </Column>
+
 
           <Column header="actions">
 

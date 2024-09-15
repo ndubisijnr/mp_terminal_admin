@@ -213,8 +213,10 @@ const transactionsHeaders = [
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
   { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
-  { label: 'MaskedPan', key: 'transactionMaskedPan' },
-  { label: 'AppLabel', key: 'transactionAppLabel' },
+  { label: 'Narration', key: 'journalNarration' },
+
+  // { label: 'MaskedPan', key: 'transactionMaskedPan' },
+  // { label: 'AppLabel', key: 'transactionAppLabel' },
   { label: 'Created At', key: 'transactionCreatedAt' },
 
 ]
@@ -334,7 +336,15 @@ onMounted(async () => {
             <MazSpinner v-if="readTerminalTransactionLoading" color="secondary" />
 
           </template>
+          <Column field="journalDrCr" header="DrCr">
+            <template #body="slotProps">
 
+              <div v-if="slotProps.data.journalDrCr">
+                <p :style="slotProps.data.journalDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.journalDrCr}}</p>
+              </div>
+
+            </template>
+          </Column>
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <Column field="transactionResponseCode" header="transactionResponse">
             <template #body="slotProps">

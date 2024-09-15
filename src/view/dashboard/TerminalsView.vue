@@ -354,7 +354,6 @@ onMounted(async () => {
   <div class="content-table-section">
 
     <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
-
       <div style="display: flex; align-items: center; justify-content: center;gap:20px">
         <p class="text-xl text-black"> Terminal Serials List</p>
         <img src="../../assets/icon/alert-circle.svg" />
@@ -376,9 +375,6 @@ onMounted(async () => {
         </BaseButton>
       </div>
     </div>
-
-
-
 
     <div class="overflow-auto rounded-lg shadow">
 
