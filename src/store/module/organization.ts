@@ -161,8 +161,13 @@ export const useOrganisationStore = defineStore('organisation_Store', {
             }catch(e){}
         },
 
-        async readOrganisationTransactionsByOrganisationId(payload:string, startDate:string, endDate:string){
-            const response = await OrganisationController.readTransctionByOrganisationId(payload, startDate, endDate)
+        async readOrganisationTransactionsByOrganisationId(payload:string, startDate:string, endDate:string, searchParam:string){
+            const config = {
+                headers: {
+                    mid: payload // Setting mid header before making the request
+                }
+            };
+            const response = await OrganisationController.readTransctionByOrganisationId(payload, startDate, endDate, searchParam, config)
             const responseData = response.data
 
             try{

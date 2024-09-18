@@ -470,7 +470,7 @@ onMounted(async () => {
   await StoreUtils.getter().organisation.readOrganisationStats( organisationID?.value, rangeValues.value.start, rangeValues.value.end)
   await StoreUtils.getter()?.organisation.readOrganisationPricing(organisationID?.value)
   await StoreUtils.getter()?.terminal.readOrganisationTerminalOrganisationId(organisationID?.value)
-  await StoreUtils.getter()?.organisation.readOrganisationTransactionsByOrganisationId(organisationID?.value,rangeValues.value.start, rangeValues.value.end)
+  await StoreUtils.getter()?.organisation.readOrganisationTransactionsByOrganisationId(organisationID?.value,rangeValues.value.start, rangeValues.value.end,'')
   wait.stop("LOADING_STATS")
 });
 

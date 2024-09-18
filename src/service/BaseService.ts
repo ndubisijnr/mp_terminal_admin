@@ -26,7 +26,10 @@ export const appClient1 = axios.create({
 
 appClient.interceptors.request.use(config => {
     config.headers.Authorization = sessionStorage.token;
-    config.headers.mid = 0
+    // Only set mid to 0 if it hasn't been set already
+    if (!config.headers.mid) {
+        config.headers.mid = 0; // Default value if not provided
+    }
     return config
 })
 

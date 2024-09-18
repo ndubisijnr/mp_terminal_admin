@@ -20,9 +20,9 @@ export const useTransactionStore = defineStore('transaction_Store', {
     actions: {
 
     
-        async readCustomerOrganisationTransactions(page:Number, size:Number, endDate:string, startDate:string){
+        async readCustomerOrganisationTransactions(page:Number, size:Number, endDate:string, startDate:string, searchParam:string){
             if(!this.transactions)this.loading = true
-            const response = await TransactionsController.readTransactions(page, size, endDate, startDate)
+            const response = await TransactionsController.readTransactions(page, size, endDate, startDate, searchParam)
             const responseData = response.data
 
             try{

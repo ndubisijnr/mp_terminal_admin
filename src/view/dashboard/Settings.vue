@@ -10,6 +10,7 @@ import AddInterChange from "@/components/modal/interchangandrouting/AddInterChan
 import AddRouting from "@/components/modal/interchangandrouting/AddRouting.vue";
 import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
+import StoreUtils from "@/util/storeUtils.ts";
 
 const reactiveData=reactive({
    showAddInterChange:false,
@@ -18,6 +19,7 @@ const reactiveData=reactive({
    selectedRow:null as any,
    showAddRouting:false,
 })
+
 const tabs = [
   { label: 'Profile', disabled: false },
   { label: 'Interchange/Routing', disabled: false },
@@ -67,11 +69,9 @@ const items2 = ref([
   }
 ]);
 
-
 const menu = ref()
 
 const menu2 = ref()
-
 
 const toggle = (event:any) => {
   menu.value.toggle(event);
@@ -80,8 +80,6 @@ const toggle = (event:any) => {
 const toggle2 = (event:any) => {
   menu2.value.toggle(event);
 }
-
-
 
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -237,17 +235,19 @@ const onRowSelect = (event:any) => {
   reactiveData.selectedRow = event.data
   console.log(event.data)
 }
+
 function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
   reactiveData.showAddRouting = payload;
 }
+
+
+
 </script>
 
 <template>
 
-
-  
-    <ContentHeader />
+  <ContentHeader />
   <Dialog v-model:visible="reactiveData.visible" modal :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
     <div v-for="(i, key, index) in reactiveData.selectedRow" :key="index" class="flex justify-between">
       <p class="text-lg leading-relaxed text-gray-800 mb-4">{{ key }}:</p>
@@ -404,7 +404,6 @@ function handleClose(payload: any) {
 
 
   </div>
-
 
 </template>
 

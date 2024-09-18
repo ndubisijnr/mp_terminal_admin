@@ -35,8 +35,8 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async readTerminalTransactionByTerminalId(terminalId:string){
-            const response = await TerminalController.readTerminaTransactionByTerminalId(terminalId)
+        async readTerminalTransactionByTerminalId(terminalId:string,page:string,size:string,startDate:string,endDate:string,searchParam:string){
+            const response = await TerminalController.readTerminaTransactionByTerminalId(terminalId,page,size,startDate,endDate,searchParam)
             const responseData = response.data
             try{
                 if(responseData.responseCode === '00'){

@@ -33,8 +33,8 @@ export const OrganisationController = {
         return apiClient.appClient.get(`organisation-pricing/read-by-organisation-pricing-organisation-id/${organisationPricingOrganisationId}`)
     },
     
-    readTransctionByOrganisationId(organisationId:string, startDate:string, endDate:string){
-        return apiClient.appClient.get(`terminal-transaction/read-by-organisation-id/${organisationId}?startDate=${startDate}&endDate=${endDate}`)
+    readTransctionByOrganisationId(organisationId:string, startDate:string, endDate:string,searchParam:string,args:{}){
+        return apiClient.appClient.get(`terminal-transaction/read-by-organisation-id/${organisationId}?startDate=${startDate}&endDate=${endDate}&searchParam=${searchParam}`, args)
     }
     
 }

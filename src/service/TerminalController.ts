@@ -43,8 +43,8 @@ export  class  TerminalController {
         return apiClient.appClient.post(`terminal-transaction/read-by-terminal-transaction-organisation-id/${organisationId}`)
     }
 
-    static readTerminaTransactionByTerminalId(terminalId: string){
-        return apiClient.appClient.get(`terminal-transaction/read-by-terminal-id/${terminalId}`)
+    static readTerminaTransactionByTerminalId(terminalId: string,page:string,size:string,startDate:string,endDate:string,searchParam:string){
+        return apiClient.appClient.get(`terminal-transaction/read-by-terminal-id/${terminalId}?page=${page}&pageSize=${size}&startDate=${startDate}&endDate=${endDate}&searchParam=${searchParam}`)
     }
 
    

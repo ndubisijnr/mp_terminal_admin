@@ -231,10 +231,10 @@ onMounted(async () => {
   rangeValues.value.end = getCurrentDate()
   chartData.value = setChartData();
   chartOptions.value = setChartOptions();
-  if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
+  // if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
   wait.start('DASHBOARD')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start,'')
   wait.stop('DASHBOARD')
 
 })

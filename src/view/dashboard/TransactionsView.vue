@@ -16,6 +16,8 @@ import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from "maz-ui/components/MazPicker";
 import getResponse from "@/util/helper/globalResponse.ts";
 import MazDialogPromise, {useMazDialogPromise} from "maz-ui/components/MazDialogPromise";
+import BaseButton from "@/components/button/BaseButton.vue";
+// import TransactionAdvanceSearch from "@/components/modal/TransactionAdvanceSearch.vue";
 
 const wait = useWait()
 const toast =  useToast()
@@ -101,9 +103,9 @@ const reactiveData = reactive({
 
   visible: false,
   selectedRow: null as any,
-  showReceipt:false
+  showReceipt:false,
+  advanceSearchKeyword:''
 })
-
 
 
 const transactionsHeaders = [
@@ -245,11 +247,31 @@ const adminStats = computed(() => {
 // });
 
 
+const doAdvanceSearch = async () => {
+  wait.start('READ_TRANSACTION')
+  wait.start('ADV_SEARCH')
+
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, '', '', reactiveData.advanceSearchKeyword)
+  wait.stop('READ_TRANSACTION')
+  wait.stop('ADV_SEARCH')
+
+}
+
+const doCustomDateSearch = async () => {
+  wait.start('READ_TRANSACTION')
+  wait.start('CUS_SEARCH')
+
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100,  rangeValues.value.end, rangeValues.value.start, '')
+  wait.stop('READ_TRANSACTION')
+  wait.stop('CUS_SEARCH')
+}
+
+
 onMounted(async () => {
   rangeValues.value.start = getFirstOfMonth()
   rangeValues.value.end = getCurrentDate()
   wait.start('READ_TRANSACTION')
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
   wait.stop('READ_TRANSACTION')
 })
 
@@ -271,7 +293,7 @@ onMounted(async () => {
   <ContentHeader />
   <MazDialogPromise identifier="one" />
 
-
+<!--  <TransactionAdvanceSearch/>-->
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
   <div class="content">
@@ -286,20 +308,51 @@ onMounted(async () => {
 
     <div class="content-table-section">
       <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
-        <p class="text-xl text-black">Transactions</p>
-        <img src="../../assets/icon/alert-circle.svg" alt="sjsj"/>
+<!--        <p class="text-xl text-black">Transactions</p>-->
+<!--        <img src="../../assets/icon/alert-circle.svg" alt="sjsj"/>-->
         <div class="flex justify-between relative">
           <div class="flex items-center gap-5">
-            <span>Filter Transactions:</span>
-            <MazPicker
-                autoClose
-                v-model="rangeValues"
-                label=""
-                color="white"
-                :min-date="minMaxDates.min"
-                :max-date="minMaxDates.max"
-                double
-            />
+<!--            <span class="text-sm">Filter Transactions:</span>-->
+
+            <div>
+               <div class="flex items-center justify-center gap-5">
+                <div>
+                  <p class="text-sm mb-1">Filter Transaction By Custom Date </p>
+                  <div class="gap-5 flex">
+                   <MazPicker
+                       v-model="rangeValues.start"
+                       label="Select start date"
+                   />
+                   <MazPicker
+                      v-model="rangeValues.end"
+                      label="Select end date"
+                  />
+                   <BaseButton :loading="wait.isLoading('CUS_SEARCH')" @click="doCustomDateSearch" style="width:auto;">
+                      <div style="display: flex;align-items: center;gap: 5px;">
+                        Search
+                      </div>
+
+                    </BaseButton>
+                  </div>
+                </div>
+
+                <div class="flex items-end gap-3">
+
+                  <div class="mt-6">
+<!--                    <p class="">Filter By Keyword</p>-->
+                    <InputText v-model="reactiveData.advanceSearchKeyword" placeholder="Advance Keyword Search"
+                             class="pl-10 font-normal terminal_search" />
+                  </div>
+                  <BaseButton :loading="wait.isLoading('ADV_SEARCH')" @click="doAdvanceSearch" style="width:auto;margin-left:0;">
+                   <div style="display: flex;align-items: center;gap: 5px;">
+                      Search
+                   </div>
+
+                 </BaseButton>
+                 </div>
+              </div>
+            </div>
+
           </div>
 
         </div>

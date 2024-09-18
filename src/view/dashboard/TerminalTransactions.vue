@@ -16,6 +16,8 @@ import { router } from '@/router';
 import Receipt from "@/components/modal/Receipt.vue";
 import MazDialogPromise, {useMazDialogPromise} from "maz-ui/components/MazDialogPromise";
 import getResponse from "@/util/helper/globalResponse.ts";
+import MazPicker from "maz-ui/components/MazPicker";
+import BaseButton from "@/components/button/BaseButton.vue";
 
 
 const wait = useWait()
@@ -44,6 +46,11 @@ async function askToUser(transactionId:any) {
   }
 }
 
+const rangeValues = ref({
+  start: '',
+  end: '',
+})
+
 const reversal = (id:any) => {
   let reversalRequest:{} = {
     transactionId: id
@@ -58,11 +65,11 @@ const reactiveData = reactive({
   selectedRow: {} as any,
   showUpdateTerminal: false,
   readTerminalTransactions:false,
-  showReceipt:false
+  showReceipt:false,
+  advanceSearchKeyword:''
+
 
 })
-
-
 
 const onRowSelect = (event: any) => {
   reactiveData.selectedRow = event.data
@@ -177,13 +184,34 @@ function handleClose(payload: any) {
 }
 const item = ref([
     { label: `${redirectTo.value ? 'Organisations' : 'Terminals'}`, route:`${redirectTo.value ? redirectTo.value : '/terminals'}` },
-    { label: 'Transactions' }, 
+    { label: `${terminalID.value} Transactions` },
 ]);
+
+const doAdvanceSearch = async () => {
+  wait.start('READ_TERMINAL_TRANSACTIONS')
+  wait.start('ADV_SEARCH')
+
+  await StoreUtils.getter()?.terminal.readTerminalTransactionByTerminalId(terminalID.value,'','','','',reactiveData.advanceSearchKeyword);
+  wait.stop('READ_TERMINAL_TRANSACTIONS')
+  wait.stop('ADV_SEARCH')
+
+}
+
+const doCustomDateSearch = async () => {
+  wait.start('READ_TERMINAL_TRANSACTIONS')
+  wait.start('CUS_SEARCH')
+
+  await StoreUtils.getter()?.terminal.readTerminalTransactionByTerminalId(terminalID.value,'','',rangeValues.value.start,rangeValues.value.end,'');
+  wait.stop('CUS_SEARCH')
+  wait.stop('READ_TERMINAL_TRANSACTIONS')
+}
+
+
 
 
 const readTerminalTransactions = async () => {
     wait.start('READ_TERMINAL_TRANSACTIONS')
-    await StoreUtils.getter()?.terminal.readTerminalTransactionByTerminalId(terminalID.value);
+    await StoreUtils.getter()?.terminal.readTerminalTransactionByTerminalId(terminalID.value,'','','','','');
     wait.stop('READ_TERMINAL_TRANSACTIONS')
 
 }
@@ -223,13 +251,64 @@ onMounted(() => {
                     </a>
                 </template>
         </Breadcrumb>
-      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">
+<!--      <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:25px 0">-->
 
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">{{`${terminalID} Transactions`}}</p>
+<!--        <div style="display: flex; align-items: center; justify-content: center;gap:20px">-->
+<!--          <p class="text-xl text-black">{{`${terminalID} Transactions`}}</p>-->
+
+<!--        </div>-->
+
+
+<!--      </div>-->
+      <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
+        <!--        <p class="text-xl text-black">Transactions</p>-->
+        <!--        <img src="../../assets/icon/alert-circle.svg" alt="sjsj"/>-->
+        <div class="flex justify-between relative">
+          <div class="flex items-center gap-5">
+            <!--            <span class="text-sm">Filter Transactions:</span>-->
+
+            <div>
+              <div class="flex items-center justify-center gap-5">
+                <div>
+                  <p class="text-sm mb-1">Filter Transaction By Custom Date </p>
+                  <div class="gap-5 flex">
+                    <MazPicker
+                        v-model="rangeValues.start"
+                        label="Select start date"
+                    />
+                    <MazPicker
+                        v-model="rangeValues.end"
+                        label="Select end date"
+                    />
+                    <BaseButton @click="doCustomDateSearch" :loading="wait.isLoading('CUS_SEARCH')"  style="width:auto;">
+                      <div style="display: flex;align-items: center;gap: 5px;">
+                        Search
+                      </div>
+
+                    </BaseButton>
+                  </div>
+                </div>
+
+                <div class="flex items-end gap-3">
+
+                  <div class="mt-6">
+                    <!--                    <p class="">Filter By Keyword</p>-->
+                    <InputText placeholder="Advance Keyword Search"
+                               class="pl-10 font-normal terminal_search" v-model="reactiveData.advanceSearchKeyword" />
+                  </div>
+                  <BaseButton @click="doAdvanceSearch" :loading="wait.isLoading('ADV_SEARCH')"  style="width:auto;margin-left:0;">
+                    <div style="display: flex;align-items: center;gap: 5px;">
+                      Search
+                    </div>
+
+                  </BaseButton>
+                </div>
+              </div>
+            </div>
+
+          </div>
 
         </div>
-       
       </div>
 
       <div class="overflow-auto rounded-lg shadow">

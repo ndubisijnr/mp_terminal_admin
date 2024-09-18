@@ -3,10 +3,14 @@ export  class  ChargesController {
     static readCharges(){
         return apiClient.appClient.get(`pricing/read`)
     }
+
+    static readPartnerCharges(){
+        return apiClient.appClient.get(`provider-pricing/read`)
+    }
+
     static readOrgCharges(){
         return apiClient.appClient.get(`organisation-pricing/read`)
     }
-
 
     static createCharges(payload:{}){
         return apiClient.appClient.post('pricing/create', payload)

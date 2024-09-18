@@ -39,6 +39,15 @@ data.value = {
     message: `Are you sure you want to delete charge`
 }
 
+const tabs = [
+  { label: 'Default Charges', disabled: false },
+  { label: 'Partner Charges', disabled: false },
+  { label: 'Profit Margin', disabled: false },
+]
+
+const activeTab = ref('Default Charges')
+
+
 // const organisations = computed(() => {
 //     return StoreUtils.getter()?.organisation.getCurrentOrganisation
 // })
@@ -73,6 +82,10 @@ const charges = computed(() => {
     return StoreUtils.getter()?.charges.getCharges
 })
 
+const partnerCharges = computed(() => {
+  return StoreUtils.getter()?.charges.getPartnerCharges
+})
+
 async function askToUser() {
     try {
       const responseOne = await showDialogAndWaitChoice('one')
@@ -102,6 +115,14 @@ const headers = [
   {label:'pricingMinAmount',key:'pricingMinAmount'},
   {label:'pricingMaxAmount',key:'pricingMaxAmount'},]
 
+const partnersHeaders = [
+  {label:'PricingInterchangeId',key:'providerPricingInterchangeId'},
+  {label:'PricingDescription',key:'providerPricingDescription'},
+  {label:'PricingType',key:'providerPricingType'},
+  {label:'PricingAmountType',key:'providerPricingAmountType'},
+  {label:'PricingAmount',key:'providerPricingAmount'},
+  {label:'PricingMinAmount',key:'providerPricingMinAmount'},
+  {label:'PricingMaxAmount',key:'providerPricingMaxAmount'},]
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -167,6 +188,7 @@ function requestAddCharges(){
  onMounted(async () => {
   wait.start('LOADING_CHARGES')
   await StoreUtils.getter()?.charges.getOrganizationCharges()
+  await StoreUtils.getter()?.charges.callPartnerCharges()
   wait.stop('LOADING_CHARGES')
 })
 
@@ -183,11 +205,13 @@ function requestAddCharges(){
     
 
     <AddManageCharges v-if="reactiveData.showManageCharges" @close="handleClose"></AddManageCharges>
-   
+
     <UpdateManageCharges v-if="reactiveData.showUpdateCharges" :data="reactiveData.selectedRow"  @close="handleClose"></UpdateManageCharges>
     <ContentHeader />
-
-    <div class="content-table-section">
+  <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
+    <p v-for="i in tabs" class="text-md p-3 rounded-md text-bold" :class="{'bg-gray-300':activeTab===i.label}" @click="activeTab = i.label">{{ i.label }}</p>
+  </div>
+    <div v-if="activeTab==='Default Charges'" class="content-table-section">
         <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
 
         <div style="display: flex; align-items: center; justify-content: center;gap:20px">
@@ -257,6 +281,78 @@ function requestAddCharges(){
                 
         </DataTable>
         
+      </div>
+    </div>
+    <div v-if="activeTab==='Partner Charges'" class="content-table-section">
+        <div style="display: flex; align-items: center; justify-content: space-between;gap:20px;margin:10px 0">
+
+        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
+          <p class="text-xl text-black">Partner Charges List</p>
+          <img src="../../assets/icon/alert-circle.svg"  />
+          <!-- <div>
+            <input class="terminal_search"  placeholder="Search"/>
+          </div> -->
+
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
+          <!-- <BaseButton bg-color="transparent" bg-border="#D0D5DD" @click="assignTerminal">
+            <img src="../../assets/icon/Group 2.svg" />
+            <p class="bnt-trans-text">Assgin Terminal</p>
+
+          </BaseButton> -->
+          <BaseButton @click="requestAddCharges">
+            <div style="display: flex;align-items: center;gap: 5px;">
+            <img src="../../assets/icon/Folder Add 2.svg" />
+            Add New Partner Charges
+          </div>
+
+        </BaseButton>
+        </div>
+        </div>
+
+        <!-- <BaseTable pagination="true" search="true" :headers="" :bodies=""></BaseTable> -->
+        <div class="overflow-auto rounded-lg shadow">
+
+        <DataTable :loading="wait.isLoading('LOADING_CHARGES')" v-model:filters="filters" :value="partnerCharges" :metaKeySelection="metaKey" selectionMode="single" paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+            currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
+            :globalFilterFields="['pricingCode','pricingType']" @rowSelect="onRowSelect">
+
+            <template #header>
+                    <div class="flex justify-end">
+                        <span class="relative">
+                            <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+                            <InputText v-model="filters['global'].value" placeholder="Keyword Search"  class="pl-10 font-normal terminal_search"/>
+                        </span>
+                    </div>
+                </template>
+
+                <template #empty>
+                  <div class="text-center">
+                    No Charges List.
+                    </div>
+                  </template>
+                <template #loading>
+                  <MazSpinner v-if="wait.isLoading('LOADING_CHARGES')" color="secondary"></MazSpinner>
+                </template>
+
+                <Column v-for="col of partnersHeaders"  :key="col.key" :field="col.key" :header="col.label"></Column>
+                <!--terminal status-->
+                <Column header="actions">
+
+                  <template #body="">
+                    <div class="flex">
+
+                      <img src="../../assets/icon/Dropdown.svg" @click="toggle"/>
+
+                      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
+                    </div>
+                  </template>
+                </Column>
+
+
+        </DataTable>
+
       </div>
     </div>
 </template>

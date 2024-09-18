@@ -2,17 +2,20 @@ import { defineStore } from 'pinia'
 import StoreUtils from '@/util/storeUtils';
 import { ChargesController } from '@/service/ChargesController';
 
-export type ChargesStoreState = {
-    charges: null
-}
+// export type ChargesStoreState = {
+//     charges: null,
+//     partnerCharges:null
+// }
 
 export const useChargesStore = defineStore('charges_store', {
-    state: ():ChargesStoreState  => ({
-        charges: null
+    state: () => ({
+        charges: null as null,
+        partnerCharges: null as null
     }),
 
     getters: {
         getCharges:state => state.charges,
+        getPartnerCharges:state => state.partnerCharges,
     },
 
     actions: {
@@ -22,6 +25,20 @@ export const useChargesStore = defineStore('charges_store', {
             try{
                 if(responseData.responseCode === '00'){
                    this.charges = responseData.data
+                }else{
+                    console.log(responseData)
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async callPartnerCharges(){
+            const response = await ChargesController.readPartnerCharges()
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                   this.partnerCharges = responseData.data
                 }else{
                     console.log(responseData)
                 }
