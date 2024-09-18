@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import StoreUtils from '@/util/storeUtils';
 import { ChargesController } from '@/service/ChargesController';
+import InterChangeController from "@/service/InterChangeController.ts";
 
 // export type ChargesStoreState = {
 //     charges: null,
@@ -10,12 +11,16 @@ import { ChargesController } from '@/service/ChargesController';
 export const useChargesStore = defineStore('charges_store', {
     state: () => ({
         charges: null as null,
-        partnerCharges: null as null
+        partnerCharges: null as null,
+        interChanges: null as null,
+        routing:null as null
     }),
 
     getters: {
         getCharges:state => state.charges,
         getPartnerCharges:state => state.partnerCharges,
+        getInterChanges:state => state.interChanges,
+        getRouting:state => state.routing,
     },
 
     actions: {
@@ -135,7 +140,94 @@ export const useChargesStore = defineStore('charges_store', {
             }
         },
 
-        
+        async readInterChange(toast:any){
+            const response = await InterChangeController.readInterChange()
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    this.interChanges = responseData.data
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readRoutingRule(toast:any){
+            const response = await InterChangeController.readRoutingRule()
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    this.routing = responseData.data
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+
+        async createInterChange(payload:{}, toast:any){
+            const response = await InterChangeController.createInterChange(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readInterChange(toast)
+
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async createRoutingRule(payload:{}, toast:any){
+            const response = await InterChangeController.createRoutingRule(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readRoutingRule(toast)
+
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async updateRoutingRule(payload:{}, toast:any){
+            const response = await InterChangeController.updateRoutingRule(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readRoutingRule(toast)
+
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
 
     }
 })

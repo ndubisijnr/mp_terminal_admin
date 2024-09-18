@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import {ref, reactive, onMounted, computed} from 'vue';
 import ContentHeader from '@/components/dashboardHeader/ContentHeader.vue';
 import DataTable from "primevue/datatable";
 import InputText from "primevue/inputtext";
@@ -11,6 +11,7 @@ import AddRouting from "@/components/modal/interchangandrouting/AddRouting.vue";
 import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 import StoreUtils from "@/util/storeUtils.ts";
+import {useToast} from "maz-ui";
 
 const reactiveData=reactive({
    showAddInterChange:false,
@@ -19,6 +20,7 @@ const reactiveData=reactive({
    selectedRow:null as any,
    showAddRouting:false,
 })
+const toast = useToast()
 
 const tabs = [
   { label: 'Profile', disabled: false },
@@ -177,12 +179,12 @@ const interchangeheader = [
   // {label:"interchangeId", key: "interchangeId"},
     {label:"interchangeName",key: "interchangeName"},
     {label:"interchangeDescription",key: "interchangeDescription"},
-    {label:"interchangeType",key: "interchangeType"},
+    {label:"interchangeType",key: "interchangeTypeName"},
     {label:"interchangePTR",key: "interchangePinTranslationRequired"},
     // {label:"interchangeEncryptedInterchangeKey",key: "interchangeEncryptedInterchangeKey"},
     // {label:"interchangeEncryptedSinkZpk",key: "interchangeEncryptedSinkZpk"},
-    {label:"interchangeSinkHost",key: "interchangeSinkHost"},
-    {label:"interchangeSinkPort",key: "interchangeSinkPort"},
+    // {label:"interchangeSinkHost",key: "interchangeSinkHost"},
+    // {label:"interchangeSinkPort",key: "interchangeSinkPort"},
     // {label:"interchangeMcc",key: "interchangeMcc"},
     // {label:"interchangeTransferDestinationAccount",key: "interchangeTransferDestinationAccount"},
     {label:"interchangePayee",key: "interchangePayee"},
@@ -190,7 +192,7 @@ const interchangeheader = [
     // {label:"interchangeExtendedTransactionType",key: "interchangeExtendedTransactionType"},
     // {label:"interchangeForwardingInstitutionId",key: "interchangeForwardingInstitutionId"},
     {label:"interchangeStatus",key: "interchangeStatus"},
-    // {label:"interchangeCreatedAt",key: "interchangeCreatedAt"},
+    {label:"interchangeCreatedAt",key: "interchangeCreatedAt"},
     // {label:"interchangeUpdatedAt",key: "interchangeUpdatedAt"}
 ]
 
@@ -223,6 +225,15 @@ const route = ref([
   }
 ])
 
+const interChangeResponse = computed(() => {
+  return StoreUtils.getter().charges.getInterChanges
+})
+
+const routingRuleResponse = computed(() => {
+  return StoreUtils.getter().charges.getRouting
+})
+
+
 const routeHeader = [
   {key:"routeId", label: "routeId"},
   {key:"routeAmount", label: "routeAmount"},
@@ -230,6 +241,15 @@ const routeHeader = [
   {key:"routeStatus", label: "routeStatus"},
   {key:"routeCreatedAt", label: "routeCreatedAt"},
   {key:"routeUpdatedAt", label: "routeUpdatedAt"}]
+
+const callReadInterChange = () => {
+  StoreUtils.getter().charges.readInterChange(toast)
+}
+
+const callReadRoutingRule = () => {
+  StoreUtils.getter().charges.readRoutingRule(toast)
+}
+
 
 const onRowSelect = (event:any) => {
   reactiveData.selectedRow = event.data
@@ -240,6 +260,11 @@ function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
   reactiveData.showAddRouting = payload;
 }
+
+onMounted(() => {
+  callReadInterChange()
+  callReadRoutingRule()
+})
 
 
 
@@ -287,7 +312,7 @@ function handleClose(payload: any) {
           <div>
             <div class="overflow-scroll rounded-lg shadow">
 
-              <DataTable  v-model:filters="filters" :value="interchange" :metaKeySelection="metaKey" selectionMode="single" paginator
+              <DataTable  v-model:filters="filters" :value="interChangeResponse" :metaKeySelection="metaKey" selectionMode="single" paginator
                           :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
                           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -311,6 +336,13 @@ function handleClose(payload: any) {
 
 
                 <Column v-for="col of interchangeheader" :key="col.key" :field="col.key" :header="col.label"></Column>
+                 <Column field="sinkHost" header="sinkHost">
+                 <template #body="slotProps">
+                   <p>{{slotProps.data.interchangeSpecificData.sinkHost}}</p>
+<!--                  <Tag :value="slotProps.data.organisationStatus" :severity="getSeverity(slotProps.data.organisationStatus)" />-->
+
+                  </template>
+            </Column>
                 <Column header="actions">
 
                   <template #body="">
@@ -350,7 +382,7 @@ function handleClose(payload: any) {
           <div>
             <div class="overflow-scroll rounded-lg shadow">
 
-              <DataTable  v-model:filters="filters" :value="route" :metaKeySelection="metaKey" selectionMode="single" paginator
+              <DataTable  v-model:filters="filters" :value="routingRuleResponse" :metaKeySelection="metaKey" selectionMode="single" paginator
                           :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
                           paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
                           currentPageReportTemplate="{first} to {last} of {totalRecords}" dataKey="id" filterDisplay="row"
@@ -368,7 +400,7 @@ function handleClose(payload: any) {
 
                 <template #empty>
                   <div class="text-center">
-                    No InterChange found.
+                    No Routing found.
                   </div>
                 </template>
 
