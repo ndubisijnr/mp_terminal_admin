@@ -1,7 +1,7 @@
 <template>
   <div class="input-component">
     <h1>{{props.label}}</h1>
-    <div class="relative mt-1">
+    <div class="relative">
       <input v-bind="$attrs" :type="type" required :class="{'border-red-900 outline-red-900 ring-red-500 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500': hasError}" 
       :style="inputStyle" @input="$emit('update:modelValue', ($event as any)?.target?.value)" />
       <span v-if="hasError" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

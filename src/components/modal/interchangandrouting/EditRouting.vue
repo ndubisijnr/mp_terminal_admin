@@ -5,33 +5,41 @@ import {computed, defineEmits, ref} from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
-import UserRequest from '@/models/request/user/UserRequest'
 import Dropdown from 'primevue/dropdown';
-
-const model:any = ref(UserRequest.CreateUpdateUserRequest)
-const currentAdmin = computed(() => {
-  return StoreUtils.getter().auth.getUserInfo
-})
+import {data} from "autoprefixer";
 
 const interChangeResponse:any = computed(() => {
   return StoreUtils.getter().charges.getInterChanges
 })
 
-const routingRequest = ref({
-  routingRuleInterchangeId: null as null,
-  routingRuleMaxAmount: null as null
-})
-
 const toast = useToast()
 const wait = useWait()
 
+const props = defineProps({
+  data:{} as any
+})
+//
+// interface Data {
+//   routingRuleId: string,
+//   routingRuleInterchangeId: string,
+//   routingRuleMaxAmount: string,
+//   routingRuleStatus: string,
+//   routingRuleCreatedAt: string,
+//   routingRuleUpdatedAt: string
+// }
+
+const routingRequest = ref({
+  routingRuleId:null as string | null,
+  routingRuleInterchangeId: null as string | null,
+  routingRuleMaxAmount: null as string | null
+})
+
 
 const callCreateRouting = async () => {
+  routingRequest.value.routingRuleId = props.data?.routingRuleId
   wait.start('CREATING_ROUTING')
-  await StoreUtils.getter().charges.createRoutingRule(routingRequest.value, toast)
+  await StoreUtils.getter().charges.updateRoutingRule(routingRequest.value, toast)
   wait.stop('CREATING_ROUTING')
-
-
 }
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
@@ -49,7 +57,7 @@ function close() {
     <template v-slot:child>
       <div class="modal-child-wrapper">
         <div class="modal-child-header">
-          <p class="req-term">Add Routing</p>
+          <p class="req-term">Edit Routing</p>
           <img src="../../../assets/icon/Frame.svg" @click="close" />
         </div>
         <div class="modal-child-content">
@@ -62,7 +70,7 @@ function close() {
             </div>
 
 
-            <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" placeholder="routeAmount"
+            <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" :placeholder="props.data?.routingRuleMaxAmount"
                         label="routeAmount" />
           </div>
 <!--          <div class="flex justify-between gap-10">-->

@@ -12,6 +12,7 @@ import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 import StoreUtils from "@/util/storeUtils.ts";
 import {useToast} from "maz-ui";
+import EditRouting from "@/components/modal/interchangandrouting/EditRouting.vue";
 
 const reactiveData=reactive({
    showAddInterChange:false,
@@ -19,7 +20,9 @@ const reactiveData=reactive({
    showUpdateInterchange:false,
    selectedRow:null as any,
    showAddRouting:false,
+   showEditRouting:false,
 })
+
 const toast = useToast()
 
 const tabs = [
@@ -64,7 +67,7 @@ const items2 = ref([
         label: 'Edit',
         icon: 'pi pi-upload',
         command:() => {
-          reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+          reactiveData.showEditRouting = !reactiveData.showEditRouting
         }
       },
     ]
@@ -235,12 +238,12 @@ const routingRuleResponse = computed(() => {
 
 
 const routeHeader = [
-  {key:"routeId", label: "routeId"},
-  {key:"routeAmount", label: "routeAmount"},
-  {key:"routeInterchangeId", label: "routeInterchangeId"},
-  {key:"routeStatus", label: "routeStatus"},
-  {key:"routeCreatedAt", label: "routeCreatedAt"},
-  {key:"routeUpdatedAt", label: "routeUpdatedAt"}]
+  {key:"routingRuleId", label: "routeId"},
+  {key:"routingRuleMaxAmount", label: "routeAmount"},
+  {key:"routingRuleInterchangeId", label: "routeInterchangeId"},
+  {key:"routingRuleStatus", label: "routeStatus"},
+  {key:"routingRuleCreatedAt", label: "routeCreatedAt"}]
+  // {key:"routeUpdatedAt", label: "routeUpdatedAt"}]
 
 const callReadInterChange = () => {
   StoreUtils.getter().charges.readInterChange(toast)
@@ -259,6 +262,7 @@ const onRowSelect = (event:any) => {
 function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
   reactiveData.showAddRouting = payload;
+  reactiveData.showEditRouting = payload;
 }
 
 onMounted(() => {
@@ -282,6 +286,7 @@ onMounted(() => {
 
   <AddInterChange v-if="reactiveData.showAddInterChange" @close="handleClose(false)" />
   <AddRouting v-if="reactiveData.showAddRouting" @close="handleClose(false)" />
+  <EditRouting v-if="reactiveData.showEditRouting" :data="reactiveData.selectedRow" @close="handleClose(false)" />
 
   <div class="w-full container content-table-section">
     <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
