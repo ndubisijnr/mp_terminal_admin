@@ -6,7 +6,6 @@ import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
 import Dropdown from 'primevue/dropdown';
-import {data} from "autoprefixer";
 
 const interChangeResponse:any = computed(() => {
   return StoreUtils.getter().charges.getInterChanges
