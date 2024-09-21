@@ -1,41 +1,55 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import {computed, defineEmits, ref} from 'vue';
+import {defineEmits, ref} from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
-import UserRequest from '@/models/request/user/UserRequest'
-// import Dropdown from 'primevue/dropdown';
-
-const model:any = ref(UserRequest.CreateUpdateUserRequest)
-const currentAdmin = computed(() => {
-  return StoreUtils.getter().auth.getUserInfo
-})
-
+import Dropdown from "primevue/dropdown";
 
 
 const toast = useToast()
 const wait = useWait()
 
-
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
-
 
 function close() {
   emit('close', false)
 }
 
+const InterchangeConstant = [
+  {name:"ISO POSTILION", code:"ISO_POSTILION"},
+  {name:"ISO 8583", code:"ISO_8583"},
+  {name:"TRANSFER REST", code:"TRANSFER_REST"},
+]
 
-async function createNewUser() {
-  model.value.adminMaker = currentAdmin.value.userEmail
-  model.value.adminChecker = " "
-  wait.start('CREATING_USER')
-  await StoreUtils.getter()?.user.createUsers(model.value, toast)
-  await StoreUtils.getter()?.user.readAdminUsers(1)
-  wait.stop('CREATING_USER')
+const interChangeConfigRequest = ref({
+  interchangeConfigApiHeader: null,
+  interchangeConfigDescription: null,
+  interchangeConfigEncryptedComponent1: null,
+  interchangeConfigEncryptedComponent2: null,
+  interchangeConfigEncryptedComponent3: null,
+  interchangeConfigExtendedTransactionType: null,
+  interchangeConfigForwardingInstitutionId: null,
+  interchangeConfigKeyCheckValue: null,
+  interchangeConfigMcc: null,
+  interchangeConfigName: null,
+  interchangeConfigPayee: null,
+  interchangeConfigReceivingInstitutionId: null,
+  interchangeConfigSinkHost: null,
+  interchangeConfigSinkPort: 0,
+  interchangeConfigTransferDestinationAccount: null,
+  interchangeConfigType: null,
+  interchangeConfigUseSsl: null
+})
+
+async function createNewConfig() {
+  console.log(interChangeConfigRequest.value)
+  wait.start('CREATING_CONFIG')
+  await StoreUtils.getter()?.charges.createInterChange(interChangeConfigRequest.value, toast)
+  wait.stop('CREATING_CONFIG')
   close()
 }
 
@@ -50,65 +64,80 @@ async function createNewUser() {
           <img src="../../../assets/icon/Frame.svg" @click="close" />
         </div>
 
-        <div class="modal-child-content">
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminFirstName"
-                        label="interchangeName" />
+        <div>
+          <div class="modal-child-content">
+            <div class="flex justify-between gap-10">
+              <div class="input-component flex flex-col justify-end">
+                <p class="mb-2">InterChangeId</p>
+                <Dropdown  optionLabel="name" v-model="interChangeConfigRequest.interchangeConfigType" optionValue="code" placeholder="interchangeType" :options="InterchangeConstant" class="select-drowdown"></Dropdown>
+              </div>
+            </div>
 
-            <base-input type="text" v-model="model.adminLastName"
-                        label="interchangeType" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangeSinkHost" />
-            <base-input type="text" v-model="model.adminEmail"
-                        label="interchangeSinkPort" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangeEncryptedInterchangeKey" />
-            <base-input type="text" v-model="model.adminEmail"
-                        label="interchangeEncryptedSinkZpk" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangeMcc" />
-            <base-input type="text" v-model="model.adminEmail"
-                        label="interchangeTransferDestinationAccount" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangePayee" />
-            <base-input type="text" v-model="model.adminEmail"
-                        label="interchangeReceivingInstitutionId" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangeExtendedTransactionType" />
-            <base-input type="text" v-model="model.adminEmail"
-                        label="interchangeForwardingInstitutionId" />
-          </div>
-          <div class="flex justify-between gap-10">
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangeDescription" />
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigApiHeader"
+                          label="interchangeConfigApiHeader" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigDescription"
+                          label="interchangeConfigDescription" />
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent1"
+                          label="interchangeConfigEncryptedComponent1" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent2"
+                          label="interchangeConfigEncryptedComponent2" />
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent3"
+                          label="interchangeConfigEncryptedComponent3" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigExtendedTransactionType"
+                          label="interchangeConfigExtendedTransactionType" />
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigForwardingInstitutionId"
+                          label="interchangeConfigForwardingInstitutionId" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigKeyCheckValue"
+                          label="interchangeConfigKeyCheckValue" />
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigMcc"
+                          label="interchangeConfigMcc" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigName"
+                          label="interchangeConfigName" />
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigPayee"
+                          label="interchangeConfigPayee" />
 
-            <base-input type="text" v-model="model.adminPhoneNumber"
-                        label="interchangePinTranslationRequired" />
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigReceivingInstitutionId"
+                          label="interchangeConfigReceivingInstitutionId" />
+
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigSinkHost"
+                          label="interchangeConfigSinkHost" />
+
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigSinkHost"
+                          label="interchangeConfigSinkHost" />
+
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigUseSsl"
+                          label="interchangeConfigUseSsl" />
+
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigTransferDestinationAccount"
+                          label="interchangeConfigTransferDestinationAccount" />
+
+            </div>
 
           </div>
 
+          <div class="modal-child-footer">
+
+            <BaseButton  :loading="wait.isLoading('CREATING_CONFIG')" @click="createNewConfig">Send Request
+            </BaseButton>
+
+          </div>
         </div>
 
-
-        <!-- <div class="divider"></div> -->
-
-
-        <div class="modal-child-footer">
-
-          <BaseButton  :loading="wait.isLoading('CREATING_USER')" @click="createNewUser">Send Request
-          </BaseButton>
-
-        </div>
 
       </div>
     </template>
@@ -232,7 +261,9 @@ async function createNewUser() {
 .modal-child-wrapper {
   /* Assign Terminal Form */
   padding: 0px;
+  height:890px;
   width: 702px;
+  overflow-y:scroll;
   /* White */
   background: #FFFFFF;
   /* Shadow/sm */
@@ -241,11 +272,11 @@ async function createNewUser() {
   margin: 10px auto;
 
 
+
 }
 
 .modal-child-header {
   /* New registration header */
-
   box-sizing: border-box;
   cursor: pointer;
 
@@ -266,12 +297,10 @@ async function createNewUser() {
 .modal-child-content {
   /* Content */
   padding: 24px;
-
+  overflow-y: scroll;
   /* White */
   background: #FFFFFF;
   border-bottom: 1px solid #E6E6E6;
-
-
 
 }
 

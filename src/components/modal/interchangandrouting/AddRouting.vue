@@ -57,7 +57,7 @@ function close() {
             <div class="input-component flex flex-col justify-end">
               <p class="mb-2">InterChangeId</p>
 <!--              <label class="mb-3">Interchange Id</label>-->
-              <Dropdown  optionLabel="interchangeName" v-model="routingRequest.routingRuleInterchangeId" optionValue="interchangeId" placeholder="InterchangeId" :options="interChangeResponse" class="select-drowdown"></Dropdown>
+              <Dropdown  optionLabel="interchangeConfigName" v-model="routingRequest.routingRuleInterchangeId" optionValue="interchangeConfigId" placeholder="InterchangeId" :options="interChangeResponse" class="select-drowdown"></Dropdown>
 
             </div>
 

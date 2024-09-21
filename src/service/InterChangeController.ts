@@ -2,10 +2,11 @@ import { apiClient } from "./BaseService.ts"
 
 export default {
     readInterChange(){
-        return apiClient.appClient.get(`interchange/read`)
+        return apiClient.appClient.get(`interchange-config/read`)
     },
+
     createInterChange(payload: {}){
-        return apiClient.appClient.post(`interchange/read`, payload)
+        return apiClient.appClient.post(`interchange-config/create`, payload)
     },
 
     deleteInterChange(payload: {}){

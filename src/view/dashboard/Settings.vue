@@ -13,6 +13,7 @@ import Dialog from "primevue/dialog";
 import StoreUtils from "@/util/storeUtils.ts";
 import {useToast} from "maz-ui";
 import EditRouting from "@/components/modal/interchangandrouting/EditRouting.vue";
+import Tag from "primevue/tag";
 
 const reactiveData=reactive({
    showAddInterChange:false,
@@ -45,7 +46,14 @@ const items = ref([
         label: 'Edit',
         icon: 'pi pi-upload',
         command:() => {
-          reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+          // reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+        }
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-upload',
+        command:() => {
+          // reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
         }
       },
     ]
@@ -70,9 +78,29 @@ const items2 = ref([
           reactiveData.showEditRouting = !reactiveData.showEditRouting
         }
       },
+      {
+        label: 'Delete',
+        icon: 'pi pi-upload',
+        command:() => {
+          // reactiveData.showEditRouting = !reactiveData.showEditRouting
+        }
+      },
     ]
   }
 ]);
+
+const getSeverity = (status: string) => {
+  switch (status) {
+    case 'DECLINED':
+      return 'danger';
+
+    case 'ACTIVE':
+      return 'sucess';
+
+    case 'PENDING':
+      return 'warning';
+  }
+};
 
 const menu = ref()
 
@@ -180,22 +208,22 @@ const interchange = ref([
 
 const interchangeheader = [
   // {label:"interchangeId", key: "interchangeId"},
-    {label:"interchangeName",key: "interchangeName"},
-    {label:"interchangeDescription",key: "interchangeDescription"},
-    {label:"interchangeType",key: "interchangeTypeName"},
-    {label:"interchangePTR",key: "interchangePinTranslationRequired"},
+    {label:"interchangeName",key: "interchangeConfigName"},
+    {label:"interchangeDescription",key: "interchangeConfigDescription"},
+    {label:"interchangeType",key: "interchangeConfigType"},
+    // {label:"interchangePTR",key: "interchangeConfigPinTranslationRequired"},
     // {label:"interchangeEncryptedInterchangeKey",key: "interchangeEncryptedInterchangeKey"},
     // {label:"interchangeEncryptedSinkZpk",key: "interchangeEncryptedSinkZpk"},
     // {label:"interchangeSinkHost",key: "interchangeSinkHost"},
-    // {label:"interchangeSinkPort",key: "interchangeSinkPort"},
+    {label:"interchangeSinkPort",key: "interchangeConfigSinkHost"},
     // {label:"interchangeMcc",key: "interchangeMcc"},
     // {label:"interchangeTransferDestinationAccount",key: "interchangeTransferDestinationAccount"},
-    {label:"interchangePayee",key: "interchangePayee"},
+    {label:"interchangePayee",key: "interchangeConfigPayee"},
     // {label:"interchangeReceivingInstitutionId",key: "interchangeReceivingInstitutionId"},
     // {label:"interchangeExtendedTransactionType",key: "interchangeExtendedTransactionType"},
     // {label:"interchangeForwardingInstitutionId",key: "interchangeForwardingInstitutionId"},
-    {label:"interchangeStatus",key: "interchangeStatus"},
-    {label:"interchangeCreatedAt",key: "interchangeCreatedAt"},
+    // {label:"interchangeStatus",key: "interchangeConfigStatus"},
+    {label:"interchangeCreatedAt",key: "interchangeConfigCreatedAt"},
     // {label:"interchangeUpdatedAt",key: "interchangeUpdatedAt"}
 ]
 
@@ -236,7 +264,6 @@ const routingRuleResponse = computed(() => {
   return StoreUtils.getter().charges.getRouting
 })
 
-
 const routeHeader = [
   {key:"routingRuleId", label: "routeId"},
   {key:"routingRuleMaxAmount", label: "routeAmount"},
@@ -252,7 +279,6 @@ const callReadInterChange = () => {
 const callReadRoutingRule = () => {
   StoreUtils.getter().charges.readRoutingRule(toast)
 }
-
 
 const onRowSelect = (event:any) => {
   reactiveData.selectedRow = event.data
@@ -341,13 +367,23 @@ onMounted(() => {
 
 
                 <Column v-for="col of interchangeheader" :key="col.key" :field="col.key" :header="col.label"></Column>
-                 <Column field="sinkHost" header="sinkHost">
-                 <template #body="slotProps">
-                   <p>{{slotProps.data.interchangeSpecificData.sinkHost}}</p>
-<!--                  <Tag :value="slotProps.data.organisationStatus" :severity="getSeverity(slotProps.data.organisationStatus)" />-->
+                <Column field="interchangeConfigStatus" header="interchangeStatus">
+                  <template #body="slotProps">
+
+                    <div v-if="slotProps.data.interchangeConfigStatus">
+                      <Tag :value="slotProps.data.interchangeConfigStatus" :severity="getSeverity(slotProps.data.interchangeConfigStatus)" />
+                    </div>
 
                   </template>
-            </Column>
+                </Column>
+
+                <!--                 <Column field="sinkHost" header="sinkHost">-->
+<!--                 <template #body="slotProps">-->
+<!--                   <p>{{slotProps.data.interchangeConfigSpecificData.sinkHost}}</p>-->
+<!--&lt;!&ndash;                  <Tag :value="slotProps.data.organisationStatus" :severity="getSeverity(slotProps.data.organisationStatus)" />&ndash;&gt;-->
+
+<!--                  </template>-->
+<!--            </Column>-->
                 <Column header="actions">
 
                   <template #body="">

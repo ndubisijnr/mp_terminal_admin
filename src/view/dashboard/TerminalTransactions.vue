@@ -319,7 +319,16 @@ onMounted(() => {
             :globalFilterFields="['transactionStatus', 'transactionTerminalId']" @rowSelect="onRowSelect">
 
             <template #header>
-              <div class="flex justify-end">
+              <div class="flex justify-end gap-5">
+                <BaseButton  style="width:auto;">
+                  <div style="display: flex;align-items: center;gap: 5px;">
+                    <download-excel :data="terminalTransactions" :name="`${terminalID}_terminal_transaction`">
+                      Download Data
+                      <!--                <img src="download_icon.png"/>-->
+                    </download-excel>
+                  </div>
+
+                </BaseButton>
                 <span class="relative">
                   <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
                   <InputText v-model="filters['global'].value" placeholder="Keyword Search"

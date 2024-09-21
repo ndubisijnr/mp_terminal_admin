@@ -37,8 +37,11 @@ function logout(){
                 v-for="(i, index) in SidebarTopUtils"
                 :key="index"
                 class="nav-item-base"
-                :class="{ 'active-nav': getCurrentRoutePath === i.route }"
+                :class="{ 'active-nav': getCurrentRoutePath == i.route || getCurrentRoutePath.includes(i.route) }"
               >
+<!--                {{getCurrentRoutePath}}-->
+<!--                {{i.route}}-->
+
                 <img :src="i.icon" alt="" />
                 <p>{{ i.name }}</p>
               </router-link>
@@ -100,7 +103,7 @@ function logout(){
   transition: ease-in 0.3s;
   /* Sidebar navigation */
   padding: 25px;
-  height: 100vh;
+  min-height: 100%;
   overflow: auto;
 
   /* Bizgem primary */

@@ -59,13 +59,13 @@ onMounted(() => {
   width: 100%;
   background-color: #fafafa !important;
   display: flex;
-  height: 100vh;
+  min-height: 100%;
 
 }
 
 .dashboard-main{
   width: calc(100% - 250px);
-  height: 100vh;
+  min-height: 100vh;
   overflow: auto;
   background-color: #fafafa
 }

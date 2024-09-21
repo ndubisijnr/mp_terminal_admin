@@ -73,7 +73,7 @@ async function createNewUser() {
 
                 <div class="modal-child-footer">
 
-                    <BaseButton  :loading="wait.isLoading('CREATING_USER')" @click="createNewUser">Send Request
+                    <BaseButton  :loading="wait.isLoading('CREATING_USER')" @click="createNewUser">Create User
                     </BaseButton>
 
                 </div>

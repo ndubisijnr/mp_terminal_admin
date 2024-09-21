@@ -9,6 +9,7 @@ import 'maz-ui/css/main.css'
 import { installToaster, ToasterOptions, installWait} from 'maz-ui'
 import pinia from "@/util/PiniaUtil.ts";
 import ConfirmationService from 'primevue/confirmationservice';
+import JsonExcel from "vue-json-excel3";
 
 
 // DEFAULT OPTIONS
@@ -19,6 +20,7 @@ const toasterOptions: ToasterOptions = {
   }
 
 const app = createApp(App)
+app.component("downloadExcel", JsonExcel);
 app.use(installToaster, toasterOptions)
 app.use(installWait)
 app.use(ConfirmationService)
