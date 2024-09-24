@@ -30,8 +30,16 @@ const props = defineProps({
 const routingRequest = ref({
   routingRuleId:null as string | null,
   routingRuleInterchangeId: null as string | null,
-  routingRuleMaxAmount: null as string | null
+  routingRuleMaxAmount: null as string | null,
+  routingRuleCardBrand:null as null,
 })
+
+const CardBrandConstant = [
+  {name:"VERVE", code:"VERVE"},
+  {name:"MASTERCARD", code:"MASTERCARD"},
+  {name:"VISA", code:"VISA"},
+  {name:"ALL", code:"ALL"},
+]
 
 
 const callCreateRouting = async () => {
@@ -63,16 +71,24 @@ function close() {
           <div class="flex justify-between gap-10">
             <div class="input-component flex flex-col justify-end">
               <p class="mb-2">InterChangeId</p>
-<!--              <label class="mb-3">Interchange Id</label>-->
-              <Dropdown  optionLabel="interchangeName" v-model="routingRequest.routingRuleInterchangeId" optionValue="interchangeId" placeholder="InterchangeId" :options="interChangeResponse" class="select-drowdown"></Dropdown>
+              <!--              <label class="mb-3">Interchange Id</label>-->
+              <Dropdown  optionLabel="interchangeConfigName" v-model="routingRequest.routingRuleInterchangeId" optionValue="interchangeConfigId" placeholder="InterchangeId" :options="interChangeResponse" class="select-drowdown"></Dropdown>
 
             </div>
 
+            <div class="input-component flex flex-col justify-end">
+              <p class="mb-2">routingRuleCardBrand</p>
+              <!--              <label class="mb-3">Interchange Id</label>-->
+              <Dropdown  optionLabel="name" v-model="routingRequest.routingRuleCardBrand" optionValue="code" placeholder="routingRuleCardBrand" :options="CardBrandConstant" class="select-drowdown"></Dropdown>
 
-            <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" :placeholder="props.data?.routingRuleMaxAmount"
-                        label="routeAmount" />
+            </div>
+
           </div>
-<!--          <div class="flex justify-between gap-10">-->
+
+          <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" :placeholder="props.data?.routingRuleMaxAmount"
+                      label="routeAmount" />
+
+          <!--          <div class="flex justify-between gap-10">-->
 <!--            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"-->
 <!--                        label="userPhone" />-->
 <!--            <base-input type="text" v-model="model.adminEmail" placeholder="userEmail"-->
@@ -87,8 +103,7 @@ function close() {
 
         <div class="modal-child-footer">
 
-          <BaseButton  :loading="wait.isLoading('CREATING_ROUTING')" @click="callCreateRouting">Send Request
-          </BaseButton>
+          <BaseButton  :loading="wait.isLoading('CREATING_ROUTING')" @click="callCreateRouting">Send Request</BaseButton>
 
         </div>
 

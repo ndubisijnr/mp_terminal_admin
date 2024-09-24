@@ -19,12 +19,20 @@ const interChangeResponse:any = computed(() => {
 
 const routingRequest = ref({
   routingRuleInterchangeId: null as null,
-  routingRuleMaxAmount: null as null
+  routingRuleMaxAmount: null as null,
+  routingRuleCardBrand:null as null,
+
 })
 
 const toast = useToast()
 const wait = useWait()
 
+const CardBrandConstant = [
+  {name:"VERVE", code:"VERVE"},
+  {name:"MASTERCARD", code:"MASTERCARD"},
+  {name:"VISA", code:"VISA"},
+  {name:"ALL", code:"ALL"},
+]
 
 const callCreateRouting = async () => {
   wait.start('CREATING_ROUTING')
@@ -61,10 +69,16 @@ function close() {
 
             </div>
 
+            <div class="input-component flex flex-col justify-end">
+              <p class="mb-2">routingRuleCardBrand</p>
+              <!--              <label class="mb-3">Interchange Id</label>-->
+              <Dropdown  optionLabel="name" v-model="routingRequest.routingRuleCardBrand" optionValue="code" placeholder="routingRuleCardBrand" :options="CardBrandConstant" class="select-drowdown"></Dropdown>
 
-            <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" placeholder="routeAmount"
-                        label="routeAmount" />
+            </div>
+
           </div>
+          <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" placeholder="routeAmount"
+                      label="routeAmount" />
 <!--          <div class="flex justify-between gap-10">-->
 <!--            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"-->
 <!--                        label="userPhone" />-->

@@ -311,7 +311,9 @@ onMounted(() => {
   </Dialog>
 
   <AddInterChange v-if="reactiveData.showAddInterChange" @close="handleClose(false)" />
+
   <AddRouting v-if="reactiveData.showAddRouting" @close="handleClose(false)" />
+
   <EditRouting v-if="reactiveData.showEditRouting" :data="reactiveData.selectedRow" @close="handleClose(false)" />
 
   <div class="w-full container content-table-section">
@@ -447,6 +449,7 @@ onMounted(() => {
 
 
                 <Column v-for="col of routeHeader" :key="col.key" :field="col.key" :header="col.label"></Column>
+
                 <Column header="actions">
 
                   <template #body="">
