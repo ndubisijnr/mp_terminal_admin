@@ -29,6 +29,18 @@ const InterchangeConstant = [
   {name:"TRANSFER REST", code:"TRANSFER_REST"},
 ]
 
+const InterchangeConstantSSL = [
+  {key:"YES", value:"YES"},
+  {key:"NO", value:"NO"},
+]
+
+const interchangeConfigStatus= [
+  {key:"ACTIVE", value:"ACTIVE"},
+  {key:"INACTIVE", value:"INACTIVE"},
+  {key:"DELETED", value:"DELETED"},
+]
+
+
 const interChangeConfigRequest = ref({
   interchangeConfigId:null,
   interchangeConfigApiHeader: null,
@@ -44,7 +56,8 @@ const interChangeConfigRequest = ref({
   interchangeConfigPayee: null,
   interchangeConfigReceivingInstitutionId: null,
   interchangeConfigSinkHost: null,
-  interchangeConfigSinkPort: 0,
+  interchangeConfigSinkPort: null,
+  interchangeConfigStatus: null,
   interchangeConfigTransferDestinationAccount: null,
   interchangeConfigType: null,
   interchangeConfigUseSsl: null
@@ -66,7 +79,7 @@ async function createNewConfig() {
     <template v-slot:child>
       <div class="modal-child-wrapper">
         <div class="modal-child-header">
-          <p class="req-term">Add InterChange</p>
+          <p class="req-term">Update InterChange</p>
           <img src="../../../assets/icon/Frame.svg" @click="close" />
         </div>
         <div>
@@ -76,13 +89,22 @@ async function createNewConfig() {
                 <p class="mb-2">InterChangeId</p>
                 <Dropdown  optionLabel="name" v-model="interChangeConfigRequest.interchangeConfigType" optionValue="code" :placeholder="props.data.interchangeConfigType" :options="InterchangeConstant" class="select-drowdown"></Dropdown>
               </div>
+              <div class="input-component flex flex-col justify-end">
+                <p class="mb-2">interchangeConfigStatus</p>
+                <Dropdown  optionLabel="key" v-model="interChangeConfigRequest.interchangeConfigUseSsl" optionValue="value" placeholder="interchangeConfigStatus" :options="interchangeConfigStatus" class="select-drowdown"></Dropdown>
+              </div>
             </div>
 
             <div class="flex justify-between gap-10">
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigApiHeader"
-                          label="interchangeConfigApiHeader" :placeholder="props.data.interchangeConfigApiHeader" />
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigDescription"
-                          label="interchangeConfigDescription" :placeholder="props.data.interchangeConfigDescription"/>
+              <div class="input-component flex flex-col justify-end">
+                <p class="mb-2">interchangeConfigUseSsl</p>
+                <Dropdown  optionLabel="key" v-model="interChangeConfigRequest.interchangeConfigUseSsl" optionValue="value" placeholder="interchangeConfigUseSsl" :options="InterchangeConstantSSL" class="select-drowdown"></Dropdown>
+              </div>
+
+
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigTransferDestinationAccount"
+                          label="interchangeConfigTransferDestinationAccount" />
+
             </div>
             <div class="flex justify-between gap-10">
               <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent1"
@@ -121,25 +143,21 @@ async function createNewConfig() {
                           label="interchangeConfigSinkHost" :placeholder="props.data.interchangeConfigSinkHost"/>
 
               <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigSinkPort"
-                          label="interchangeConfigSinkHost" :placeholder="props.data.interchangeConfigSinkPort"/>
+                          label="interchangeConfigSinkPort" :placeholder="props.data.interchangeConfigSinkPort"/>
 
             </div>
             <div class="flex justify-between gap-10">
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigUseSsl"
-                          label="interchangeConfigUseSsl" :placeholder="props.data.interchangeConfigUseSsl"/>
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigDescription"
+                          label="interchangeConfigDescription" :placeholder="props.data.interchangeConfigDescription"/>
 
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigTransferDestinationAccount"
-                          label="interchangeConfigTransferDestinationAccount" :placeholder="props.data.interchangeConfigTransferDestinationAccount"/>
-
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigApiHeader"
+                          label="interchangeConfigApiHeader" :placeholder="props.data.interchangeConfigApiHeader" />
             </div>
 
           </div>
 
           <div class="modal-child-footer">
-
-            <BaseButton  :loading="wait.isLoading('CREATING_CONFIG')" @click="createNewConfig">Send Request
-            </BaseButton>
-
+            <BaseButton  :loading="wait.isLoading('CREATING_CONFIG')" @click="createNewConfig">Send Request</BaseButton>
           </div>
         </div>
 

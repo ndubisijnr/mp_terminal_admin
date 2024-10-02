@@ -32,6 +32,7 @@ const routingRequest = ref({
   routingRuleInterchangeId: null as string | null,
   routingRuleMaxAmount: null as string | null,
   routingRuleCardBrand:null as null,
+  routingRuleStatus:null as null
 })
 
 const CardBrandConstant = [
@@ -39,6 +40,12 @@ const CardBrandConstant = [
   {name:"MASTERCARD", code:"MASTERCARD"},
   {name:"VISA", code:"VISA"},
   {name:"ALL", code:"ALL"},
+]
+
+const routingConfigStatus= [
+  {key:"ACTIVE", value:"ACTIVE"},
+  {key:"INACTIVE", value:"INACTIVE"},
+  {key:"DELETED", value:"DELETED"},
 ]
 
 
@@ -85,8 +92,17 @@ function close() {
 
           </div>
 
+          <div class="flex gap-5">
           <base-input type="text" v-model="routingRequest.routingRuleMaxAmount" :placeholder="props.data?.routingRuleMaxAmount"
                       label="routeAmount" />
+
+          <div class="input-component flex flex-col justify-end">
+            <p class="mb-2">routingRuleStatus</p>
+            <!--              <label class="mb-3">Interchange Id</label>-->
+            <Dropdown  optionLabel="key" v-model="routingRequest.routingRuleStatus" optionValue="value" placeholder="routingRuleStatus" :options="routingConfigStatus" class="select-drowdown"></Dropdown>
+
+          </div>
+          </div>
 
           <!--          <div class="flex justify-between gap-10">-->
 <!--            <base-input type="text" v-model="model.adminPhoneNumber" placeholder="userPhone"-->
