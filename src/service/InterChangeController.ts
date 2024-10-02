@@ -21,6 +21,14 @@ export default {
         return apiClient.appClient.post(`routing-rule/create`, payload)
     },
 
+    updateInterchangeComponent(payload: {}){
+            return apiClient.appClient.post(`interchange-config/update-keys`, payload)
+    },
+
+    updateInterchange(payload: {}){
+            return apiClient.appClient.post(`interchange-config/update`, payload)
+    },
+
     updateRoutingRule(payload: {}){
         return apiClient.appClient.post(`routing-rule/update`, payload)
     },

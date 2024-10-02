@@ -192,6 +192,40 @@ export const useChargesStore = defineStore('charges_store', {
             }
         },
 
+        async updateInterChange(payload:{}, toast:any){
+            const response = await InterChangeController.updateInterchange(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readInterChange(toast)
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async updateInterChangeComponent(payload:{}, toast:any){
+            const response = await InterChangeController.updateInterchangeComponent(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readInterChange(toast)
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
         async createRoutingRule(payload:{}, toast:any){
             const response = await InterChangeController.createRoutingRule(payload)
             const responseData = response.data

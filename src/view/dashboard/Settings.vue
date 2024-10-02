@@ -14,6 +14,8 @@ import StoreUtils from "@/util/storeUtils.ts";
 import {useToast} from "maz-ui";
 import EditRouting from "@/components/modal/interchangandrouting/EditRouting.vue";
 import Tag from "primevue/tag";
+import EditInterChangeComponent from "@/components/modal/interchangandrouting/EditInterChangeComponent.vue";
+import EditInterChange from "@/components/modal/interchangandrouting/EditInterChange.vue";
 
 const reactiveData=reactive({
    showAddInterChange:false,
@@ -22,6 +24,8 @@ const reactiveData=reactive({
    selectedRow:null as any,
    showAddRouting:false,
    showEditRouting:false,
+   showEditInterChangeComponent:false,
+   showEditInterChange:false,
 })
 
 const toast = useToast()
@@ -46,9 +50,17 @@ const items = ref([
         label: 'Edit',
         icon: 'pi pi-upload',
         command:() => {
-          // reactiveData.showUpdateInterchange = !reactiveData.showUpdateInterchange
+          reactiveData.showEditInterChange = !reactiveData.showEditInterChange
         }
       },
+      {
+        label: 'Update Component',
+        icon: 'pi pi-upload',
+        command:() => {
+          reactiveData.showEditInterChangeComponent = !reactiveData.showEditInterChangeComponent
+        }
+      },
+
       {
         label: 'Delete',
         icon: 'pi pi-upload',
@@ -289,6 +301,8 @@ function handleClose(payload: any) {
   reactiveData.showAddInterChange = payload;
   reactiveData.showAddRouting = payload;
   reactiveData.showEditRouting = payload;
+  reactiveData.showEditInterChangeComponent = payload;
+  reactiveData.showEditInterChange = payload;
 }
 
 onMounted(() => {
@@ -315,6 +329,11 @@ onMounted(() => {
   <AddRouting v-if="reactiveData.showAddRouting" @close="handleClose(false)" />
 
   <EditRouting v-if="reactiveData.showEditRouting" :data="reactiveData.selectedRow" @close="handleClose(false)" />
+
+  <EditInterChange v-if="reactiveData.showEditInterChange" :data="reactiveData.selectedRow" @close="handleClose(false)"></EditInterChange>
+
+  <EditInterChangeComponent v-if="reactiveData.showEditInterChangeComponent" :data="reactiveData.selectedRow" @close="handleClose(false)"></EditInterChangeComponent>
+
 
   <div class="w-full container content-table-section">
     <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
