@@ -12,9 +12,6 @@ const wait = useWait()
 
 const model:any = ref(TerminalRequest.createTerminal)
 
-const props = defineProps({
-    data:Object
-})
 
 const emit = defineEmits<{
   (e: 'close', value: boolean): void;

@@ -52,7 +52,6 @@ const terminalOrganizations = computed(() => StoreUtils.getter()?.terminal?.getT
 
 async function createTerminalMapping(){
   wait.start('CREATE_TERMINAL_MAPPING')
-  terminalMappingRequest.value.terminalMappingInterchangeTerminalId ='string'
   await StoreUtils.getter().terminal.createTerminalMapping(terminalMappingRequest.value,toast)
   wait.stop('CREATE_TERMINAL_MAPPING')
   close()
@@ -99,10 +98,11 @@ onMounted(()=>{
             </Dropdown>
           </div>
 
-<!--          <div class="flex justify-between gap-10">-->
-<!--            &lt;!&ndash; <base-input type="text"  v-model="TerminalRequest.createTerminal.terminalSerialNumber"  placeholder="Terminal Serial Number"  label="TerminalSerialNumber" /> &ndash;&gt;-->
-<!--            <base-input type="text"  placeholder="Terminal Pin" v-model="TerminalRequest.changeTerminalPin.terminalPin"  label="TerminalPin" />-->
-<!--          </div>-->
+          <div class="flex justify-between gap-10">
+            <!-- <base-input type="text"  v-model="TerminalRequest.createTerminal.terminalSerialNumber"  placeholder="Terminal Serial Number"  label="TerminalSerialNumber" /> -->
+            <base-input type="text" v-model="terminalMappingRequest.terminalMappingInterchangeTerminalId"
+                        label="terminalMappingInterchangeTerminalId" placeholder="terminalMappingInterchangeTerminalId"/>
+          </div>
 
         </div>
 

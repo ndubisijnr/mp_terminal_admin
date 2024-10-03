@@ -14,20 +14,17 @@ const emit = defineEmits<{
 
 const toast = useToast()
 const wait = useWait()
-const model = ref(TerminalRequest.changeTerminalPin)
 
-const terminal = defineProps({
-  terminalSeriaNumber:String as any
-})
-
-defineProps({
+const props = defineProps({
   data:Object
 })
 
 const terminalMappingRequest=ref({
   terminalMappingInterchangeId: null,
   terminalMappingInterchangeTerminalId: String as any ,
-  terminalMappingTerminalId: null
+  terminalMappingTerminalId: null,
+  terminalMappingId: null,
+  terminalMappingStatus: null,
 })
 
 const interChangeResponse = computed(() => {
@@ -36,6 +33,12 @@ const interChangeResponse = computed(() => {
 
 const terminalOrganizations = computed(() => StoreUtils.getter()?.terminal?.getTerminalOrganisations)
 
+
+const terminalMappingStatus= [
+  {key:"ACTIVE", value:"ACTIVE"},
+  {key:"INACTIVE", value:"INACTIVE"},
+  {key:"DELETED", value:"DELETED"},
+]
 
 // const currentOrganisation:any = computed(() => {
 //     return StoreUtils.getter().organisation.getCurrentOrganisation
@@ -56,8 +59,8 @@ const terminalOrganizations = computed(() => StoreUtils.getter()?.terminal?.getT
 
 async function createTerminalMapping(){
   wait.start('CREATE_TERMINAL_MAPPING')
-  terminalMappingRequest.value.terminalMappingInterchangeTerminalId ='string'
-  await StoreUtils.getter().terminal.createTerminalMapping(terminalMappingRequest.value,toast)
+  terminalMappingRequest.value.terminalMappingId = props?.data?.terminalMappingId
+  await StoreUtils.getter().terminal.updateTerminalMapping(terminalMappingRequest.value,toast)
   wait.stop('CREATE_TERMINAL_MAPPING')
   close()
 }
@@ -86,21 +89,49 @@ onMounted(()=>{
         </div>
         <div class="modal-child-content">
           <div class="flex justify-between gap-10 mt-3">
-            <Dropdown class="select_div" filter
-                      :optionLabel="'interchangeConfigName'"
-                      :optionValue="'interchangeConfigId'"
-                      v-model="terminalMappingRequest.terminalMappingInterchangeId"
-                      :options="interChangeResponse"
-                      placeholder="Terminal Mapping InterchangeId">
-            </Dropdown>
+            <div>
+              <label>terminalMappingInterchangeId</label>
+              <Dropdown class="select_div" filter
+                        :optionLabel="'interchangeConfigName'"
+                        :optionValue="'interchangeConfigId'"
+                        v-model="terminalMappingRequest.terminalMappingInterchangeId"
+                        :options="interChangeResponse"
+                        :placeholder="props?.data?.terminalMappingInterchangeId">
+              </Dropdown>
+            </div>
 
+            <div>
+              <label>terminalMappingTerminalId</label>
+
+              <Dropdown class="select_div" filter
+                        :optionLabel="'terminalId'"
+                        :optionValue="'terminalId'"
+                        v-model="terminalMappingRequest.terminalMappingTerminalId"
+                        :options="terminalOrganizations"
+                        :placeholder="props?.data?.terminalMappingTerminalId">
+              </Dropdown>
+            </div>
+
+          </div>
+          <div class="flex justify-between gap-10 mt-3">
+            <div style="width:100%;">
+            <label>terminalMappingStatus</label>
             <Dropdown class="select_div" filter
-                      :optionLabel="'terminalId'"
-                      :optionValue="'terminalId'"
-                      v-model="terminalMappingRequest.terminalMappingTerminalId"
-                      :options="terminalOrganizations"
-                      placeholder="Terminal Mapping TerminalId">
+                      :optionLabel="'key'"
+                      :optionValue="'value'"
+                      v-model="terminalMappingRequest.terminalMappingStatus"
+                      :options="terminalMappingStatus"
+                      placeholder="terminalMappingStatus">
             </Dropdown>
+            </div>
+            <base-input type="text" v-model="terminalMappingRequest.terminalMappingInterchangeTerminalId"
+                        label="terminalMappingInterchangeTerminalId" :placeholder="props?.data?.terminalMappingInterchangeTerminalId"/>
+<!--            <div>-->
+<!--     -->
+<!--            </div>-->
+
+
+
           </div>
 
 <!--          <div class="flex justify-between gap-10">-->

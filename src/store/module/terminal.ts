@@ -198,6 +198,8 @@ export const useTerminalStore = defineStore('terminal_store', {
 
             try{
                 if(responseData.responseCode === '00'){
+                    await StoreUtils.getter().terminal.readTerminalMapping()
+
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
                 }else{
                     console.log(responseData)
@@ -233,6 +235,8 @@ export const useTerminalStore = defineStore('terminal_store', {
 
             try{
                 if(responseData.responseCode === '00'){
+                    await StoreUtils.getter().terminal.readTerminalMapping()
+
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
                 }else{
                     console.log(responseData)
@@ -266,6 +270,8 @@ export const useTerminalStore = defineStore('terminal_store', {
 
             try{
                 if(responseData.responseCode === '00'){
+                    await StoreUtils.getter().terminal.readTerminalMapping()
+
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
                 }else{
                     console.log(responseData)
