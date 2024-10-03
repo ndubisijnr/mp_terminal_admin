@@ -16,6 +16,7 @@ export const RouteConstantUtil = {
         organisations:"Organisations",
         terminalTransactions:"Terminal Transactions",
         charges:"Manage Charges",
+        terminalMapping:"Terminal Mapping",
         institutions:"Manage Institutions",
         settings:"Settings",
         support:"Support",

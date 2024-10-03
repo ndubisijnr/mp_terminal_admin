@@ -72,9 +72,8 @@ function close(){
                                         :optionValue="'organisationId'"
                                         placeholder="Merchant Name"
                                         :options="organisation">
-                            </Dropdown>
+                        </Dropdown>
                         <div class="flex justify-between gap-10">
-                           
                             <!-- <base-input type="text"  v-model="TerminalRequest.createTerminal.terminalSerialNumber"  placeholder="Terminal Serial Number"  label="TerminalSerialNumber" /> -->
                             <base-input type="text"  placeholder="Terminal Pin" v-model="TerminalRequest.createTerminal.terminalPin"  label="TerminalPin" />
                         </div>

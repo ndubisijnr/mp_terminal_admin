@@ -12,7 +12,7 @@ const wait = useWait()
 
 const model:any = ref(TerminalRequest.createTerminal)
 
-defineProps({
+const props = defineProps({
     data:Object
 })
 
@@ -53,6 +53,7 @@ async function createTerminal(){
                     </div>
 
                     <div class="modal-child-content">
+                      {{props.data}}
                         <div class="flex justify-between gap-10">
                             <base-input type="text" v-model="model.terminalSerialNumber" :placeholder="data?.terminalSerialNumber"  label="TerminalSerialNumber" />
                             <base-input type="text" v-model="model.terminalPin" label="TerminalPin" />

@@ -10,6 +10,7 @@ export const useTerminalStore = defineStore('terminal_store', {
         terminalOrganisationTransactions:null,
         organisationTerminal:null,
         terminalSerials:null,
+        terminalMapping:null
     }),
 
     getters: {
@@ -17,7 +18,8 @@ export const useTerminalStore = defineStore('terminal_store', {
         getTerminalOrganisationTransactions:state => state.terminalOrganisationTransactions,
         getLoading: state => state.loading,
         getOrganisationTerminals:state => state.organisationTerminal,
-        getTerminalSerial:state => state.terminalSerials
+        getTerminalSerial:state => state.terminalSerials,
+        getTerminalMapping:state => state.terminalMapping
     },
 
     actions: {
@@ -191,7 +193,75 @@ export const useTerminalStore = defineStore('terminal_store', {
         },
 
         async deleteTerminal(payload:{}, toast:any){
-            const response = await TerminalController.deleteTerminal(payload)
+            const response = await TerminalController.deleteTerminalMapping(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async createTerminalMapping(payload:{}, toast:any){
+            const response = await TerminalController.createTerminalMapping(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    await StoreUtils.getter().terminal.readTerminalMapping()
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async updateTerminalMapping(payload:{}, toast:any){
+            const response = await TerminalController.updateTerminalMapping(payload)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readTerminalMapping(){
+            const response = await TerminalController.readTerminalMapping()
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+
+                    this.terminalMapping = responseData.data
+                }else{
+                    console.log(responseData)
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async createBulkTerminalMapping(payload:{}, toast:any){
+            const response = await TerminalController.createBulkTerminalSerial(payload)
             const responseData = response.data
 
             try{

@@ -47,5 +47,24 @@ export  class  TerminalController {
         return apiClient.appClient.get(`terminal-transaction/read-by-terminal-id/${terminalId}?page=${page}&pageSize=${size}&startDate=${startDate}&endDate=${endDate}&searchParam=${searchParam}`)
     }
 
+    static readTerminalMapping(){
+        return apiClient.appClient.get(`terminal-mapping/read`)
+    }
+
+    static createTerminalMapping(payload: { }){
+        return apiClient.appClient.post(`terminal-mapping/create`, payload)
+    }
+    static updateTerminalMapping(payload:{}){
+        return apiClient.appClient.post(`terminal-mapping/update`, payload)
+    }
+
+    static deleteTerminalMapping(payload:{}){
+        return apiClient.appClient.post(`terminal-mapping/delete`, payload)
+    }
+
+    static bulkCreateTerminalMapping(payload:{}){
+        return apiClient.appClient.post(`terminal-mapping/bulk-create`, payload)
+    }
+
    
 }

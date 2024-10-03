@@ -40,6 +40,12 @@ export const dashboardRoute: BaseRouteProps[] = [
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage charges!'},
     },
     {
+        name: RouteConstantUtil.dashboard.terminalMapping,
+        path: '/terminal-mapping',
+        component: () => import("@/view/dashboard/TerminalMapping.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Map, Terminals!'},
+    },
+    {
         name: RouteConstantUtil.dashboard.terminalTransactions,
         path: '/terminal-transaction',
         component: () => import("@/view/dashboard/TerminalTransactions.vue"),
