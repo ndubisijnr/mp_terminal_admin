@@ -282,24 +282,6 @@ export const useTerminalStore = defineStore('terminal_store', {
             }
         },
 
-        async createBulkTerminalMapping(payload:{}, toast:any){
-            const response = await TerminalController.createBulkTerminalSerial(payload)
-            const responseData = response.data
-
-            try{
-                if(responseData.responseCode === '00'){
-                    await StoreUtils.getter().terminal.readTerminalMapping()
-
-                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-                }else{
-                    console.log(responseData)
-                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
-
-                }
-            }catch(e){
-                console.log('readOrganizationTerminal error', e)
-            }
-        },
 
     }
 })
