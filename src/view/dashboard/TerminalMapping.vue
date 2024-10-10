@@ -14,6 +14,7 @@ import Menu from "primevue/menu";
 import CreateTerminalMapping from "@/components/modal/terminal/CreateTerminalMapping.vue";
 import UpdateTerminalMapping from "@/components/modal/terminal/UpdateTerminalMapping.vue";
 import Dialog from "primevue/dialog";
+import CreateTerminalBulkMapping from "@/components/modal/terminal/CreateTerminalBulkMapping.vue";
 
 const wait = useWait()
 const menu2 = ref();
@@ -23,6 +24,7 @@ const toast = useToast()
 const reactiveData = reactive({
   showUserModal: false,
   showTerminalMapping: false,
+  showTerminalBulkMapping: false,
   showUpdateTerminalMapping: false,
   visible: false,
   selectedRow: null
@@ -80,6 +82,7 @@ const mappedTerminalHeaders = [
 function handleClose(payload: any) {
   reactiveData.showUserModal = payload;
   reactiveData.showTerminalMapping = payload
+  reactiveData.showTerminalBulkMapping = payload
   reactiveData.showUpdateTerminalMapping = payload
 }
 
@@ -150,6 +153,7 @@ onMounted(async () => {
     </div>
   </Dialog>
   <CreateTerminalMapping v-if="reactiveData.showTerminalMapping"  @close="handleClose"/>
+  <CreateTerminalBulkMapping v-if="reactiveData.showTerminalBulkMapping"  @close="handleClose"/>
   <UpdateTerminalMapping :data="reactiveData.selectedRow" v-if="reactiveData.showUpdateTerminalMapping"  @close="handleClose"/>
   <ContentHeader />
   <div class="content-table-section">
@@ -162,10 +166,16 @@ onMounted(async () => {
 
       </div>
       <div style="display: flex; align-items: center; justify-content: center;gap:20px;">
-        <BaseButton  bg-color="transparent" bg-border="#D0D5DD" @click="reactiveData.showTerminalMapping=true">
+        <BaseButton  bg-color="transparent" bg-border="#D0D5DD" style="width:16rem" @click="reactiveData.showTerminalMapping=true">
           <div style="display: flex;align-items: center;gap: 5px;">
             <img src="../../assets/icon/Folder Add 2.svg" alt="t"/>
             Create Mapping
+          </div>
+        </BaseButton>
+        <BaseButton  bg-color="transparent" bg-border="#D0D5DD" style="width:16rem" @click="reactiveData.showTerminalBulkMapping=true">
+          <div style="display: flex;align-items: center;gap: 5px;">
+            <img src="../../assets/icon/Folder Add 2.svg" alt="t"/>
+            Bulk Mapping
           </div>
         </BaseButton>
       </div>
