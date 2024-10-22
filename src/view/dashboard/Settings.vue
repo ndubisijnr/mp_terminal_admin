@@ -11,15 +11,19 @@ import AddRouting from "@/components/modal/interchangandrouting/AddRouting.vue";
 import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 import StoreUtils from "@/util/storeUtils.ts";
-import {useToast} from "maz-ui";
+import {useToast, useWait} from "maz-ui";
 import EditRouting from "@/components/modal/interchangandrouting/EditRouting.vue";
 import Tag from "primevue/tag";
 import EditInterChangeComponent from "@/components/modal/interchangandrouting/EditInterChangeComponent.vue";
 import EditInterChange from "@/components/modal/interchangandrouting/EditInterChange.vue";
+import Dropdown from "primevue/dropdown";
+import storeUtils from "@/util/storeUtils.ts";
+
 
 const reactiveData=reactive({
    showAddInterChange:false,
    visible:false,
+   testIsVisible:false,
    showUpdateInterchange:false,
    selectedRow:null as any,
    showAddRouting:false,
@@ -30,10 +34,30 @@ const reactiveData=reactive({
 
 const toast = useToast()
 
+const wait = useWait()
+
 const tabs = [
   { label: 'Profile', disabled: false },
   { label: 'Interchange/Routing', disabled: false },
 ]
+
+const testType = ref()
+
+const testTypeOptions = computed(() => {
+  return StoreUtils.getter().charges.getTestDataType
+})
+
+const testData = computed(() => {
+  return StoreUtils.getter().charges.getTestDataResult
+})
+
+const testRequest = computed(() => {
+  return StoreUtils.getter().charges.getTestRequest
+})
+
+const testResponse = computed(() => {
+  return StoreUtils.getter().charges.getTestResponse
+})
 
 const items = ref([
   {
@@ -58,6 +82,13 @@ const items = ref([
         icon: 'pi pi-upload',
         command:() => {
           reactiveData.showEditInterChangeComponent = !reactiveData.showEditInterChangeComponent
+        }
+      },
+      {
+        label: 'Test',
+        icon: 'pi pi-upload',
+        command:() => {
+          reactiveData.testIsVisible = !reactiveData.testIsVisible
         }
       },
 
@@ -279,6 +310,7 @@ const routingRuleResponse = computed(() => {
 const routeHeader = [
   {key:"routingRuleId", label: "routeId"},
   {key:"routingRuleMaxAmount", label: "routeAmount"},
+  {key:"routingRuleCardBrand", label: "routingRuleCardBrand"},
   {key:"routingRuleInterchangeId", label: "routeInterchangeId"},
   {key:"routingRuleStatus", label: "routeStatus"},
   {key:"routingRuleCreatedAt", label: "routeCreatedAt"}]
@@ -305,11 +337,30 @@ function handleClose(payload: any) {
   reactiveData.showEditInterChange = payload;
 }
 
+const testDataRequest = ref({
+  input: null as null,
+  interchangeConfigId: null as null,
+  testType: null as null
+})
+
+
+const callTest = async () => {
+  wait.start("TESTING_INTERCHANGE")
+  testDataRequest.value.interchangeConfigId = reactiveData?.selectedRow.interchangeConfigId;
+  await StoreUtils.getter().charges.testInterChange(testDataRequest.value, toast)
+  wait.stop("TESTING_INTERCHANGE")
+
+}
+
+
+
+
 onMounted(() => {
   callReadInterChange()
   callReadRoutingRule()
+  StoreUtils.getter().charges.readInterChangeTestDataType(toast)
+  StoreUtils.getter().charges.readInterChangeTestData(toast)
 })
-
 
 
 </script>
@@ -324,6 +375,66 @@ onMounted(() => {
     </div>
   </Dialog>
 
+  <Dialog v-model:visible="reactiveData.testIsVisible" maximizable modal :header="reactiveData?.selectedRow?.interchangeConfigName" :style="{ width: '50rem' }" :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <div class="m-0 relative">
+      <div>
+        <label class="bold pr-4">Test Type</label>
+        <Dropdown class="select_div" filter
+                  :optionLabel="'key'"
+                  :optionValue="'value'"
+                  v-model="testDataRequest.testType"
+                  :options="testTypeOptions"
+                  placeholder="Test Type">
+        </Dropdown>
+
+        <div class="mb-5 mt-5">
+          <span class="text-lg">Input(optional)</span><br />
+          <textarea class="custom_test_area" v-model="testDataRequest.input"></textarea>
+        </div>
+
+
+        <base-button @click="callTest" style="width:30%" :disabled="wait.isLoading('TESTING_INTERCHANGE')" :loading="wait.isLoading('TESTING_INTERCHANGE')">Execute</base-button>
+
+      </div>
+
+      <div class="flex  flex-col md:flex-row justify-between mt-5 flex-wrap gap-5">
+        <div class="flex flex-col gap-5 w-full">
+          <div class="w-full">
+            <div class="flex  flex-col gap-5 w-full md:w-1/2">
+              <span class="text-lg font-bold">Request</span>
+              <div class="w-full bg-gray-100 p-4 rounded-md shadow-md">
+                <code class="block whitespace-pre-wrap bg-gray-900 text-white p-2 rounded-md mt-2">
+                  {{testRequest}}
+                </code>
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+<!--            <span class="text-lg font-bold"></span> <br />-->
+            <div class="flex flex-col gap-5 w-full md:w-1/2">
+              <span class="text-lg font-bold">Response</span>
+              <div class="w-full bg-gray-100 p-4 rounded-md shadow-md">
+                <code class="block whitespace-pre-wrap bg-gray-900 text-white p-2 rounded-md mt-2">
+                  {{testResponse}}
+                </code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex lg:absolute md:absolute top-0 right-0 lg:pl-5 md:pl-5 flex-col gap-5 w-full md:w-1/2">
+          <span class="text-lg font-bold">Test Data</span>
+          <div class="w-full bg-gray-100 p-4 rounded-md shadow-md" v-for="(i, index) in testData" :key="index">
+            <span class="text-lg">{{ i.key }}</span>
+            <code class="block whitespace-pre-wrap bg-gray-900 text-white p-2 rounded-md mt-2">
+              {{i.value}}
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Dialog>
+
   <AddInterChange v-if="reactiveData.showAddInterChange" @close="handleClose(false)" />
 
   <AddRouting v-if="reactiveData.showAddRouting" @close="handleClose(false)" />
@@ -333,7 +444,6 @@ onMounted(() => {
   <EditInterChange v-if="reactiveData.showEditInterChange" :data="reactiveData.selectedRow" @close="handleClose(false)"></EditInterChange>
 
   <EditInterChangeComponent v-if="reactiveData.showEditInterChangeComponent" :data="reactiveData.selectedRow" @close="handleClose(false)"></EditInterChangeComponent>
-
 
   <div class="w-full container content-table-section">
     <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
@@ -503,5 +613,12 @@ onMounted(() => {
 </template>
 
 <style scoped>
-
+.custom_test_area{
+  width: 50%;
+  height: 80px;
+  margin: 0 auto;
+  border:solid grey 1px;
+  border-radius: 5px;
+  outline:none;
+}
 </style>

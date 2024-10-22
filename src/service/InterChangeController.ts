@@ -33,6 +33,18 @@ export default {
         return apiClient.appClient.post(`routing-rule/update`, payload)
     },
 
+    interChangeTestData(){
+            return apiClient.appClient.get(`interchange-config/test-data`)
+    },
+
+    interChangeTestDataType(){
+            return apiClient.appClient.get(`/interchange-config/test-types`)
+    },
+
+    interChangeTest(payload: {}){
+            return apiClient.appClient.post(`/interchange-config/test`, payload)
+    },
+
     deleteRoutingRule(payload: {}){
         return apiClient.appClient.post(`routing-rule/delete`, payload)
     }

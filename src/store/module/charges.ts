@@ -13,7 +13,11 @@ export const useChargesStore = defineStore('charges_store', {
         charges: null as null,
         partnerCharges: null as null,
         interChanges: null as null,
-        routing:null as null
+        routing:null as null,
+        testDataResult:null as null,
+        testDataType: null as null,
+        testResponse: null as null,
+        testRequest: null as null,
     }),
 
     getters: {
@@ -21,6 +25,10 @@ export const useChargesStore = defineStore('charges_store', {
         getPartnerCharges:state => state.partnerCharges,
         getInterChanges:state => state.interChanges,
         getRouting:state => state.routing,
+        getTestDataResult:state => state.testDataResult,
+        getTestDataType:state => state.testDataType,
+        getTestResponse:state => state.testResponse,
+        getTestRequest:state => state.testRequest,
     },
 
     actions: {
@@ -215,6 +223,61 @@ export const useChargesStore = defineStore('charges_store', {
             try{
                 if(responseData.responseCode === '00'){
                     toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                    await StoreUtils.getter().charges.readInterChange(toast)
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async testInterChange(payload:{}, toast:any){
+            this.testResponse = null
+            this.testRequest = null
+
+            const response = await InterChangeController.interChangeTest(payload)
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.testResponse = responseData.response
+                    this.testRequest = responseData.request
+                    toast.success(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readInterChangeTestData(toast:any){
+            const response = await InterChangeController.interChangeTestData()
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.testDataResult = responseData.data
+                    await StoreUtils.getter().charges.readInterChange(toast)
+                }else{
+                    console.log(responseData)
+                    toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
+
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readInterChangeTestDataType(toast:any){
+            const response = await InterChangeController.interChangeTestDataType()
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.testDataType = responseData.data
                     await StoreUtils.getter().charges.readInterChange(toast)
                 }else{
                     console.log(responseData)
