@@ -48,8 +48,6 @@ defineProps({
 
 }
 
-
-
 .base-card-title {
   /* Heading and dropdown */
   /* Auto layout */

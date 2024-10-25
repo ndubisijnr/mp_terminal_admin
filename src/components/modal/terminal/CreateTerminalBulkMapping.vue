@@ -49,6 +49,43 @@ const uploadedFilename:any =ref(null)
 
 // })
 
+// Function to export JSON to Excel
+function exportToExcelTemplate() {
+  // Step 1: Create a new workbook
+  const wb = XLSX.utils.book_new();
+
+  // Step 2: Define headers (for your template)
+  const headers = [["terminalMappingInterchangeId", "terminalMappingInterchangeTerminalId", "terminalMappingTerminalId"]];  // These will act as the template's headers
+
+  // Step 3: Create a new worksheet with only headers
+  const ws = XLSX.utils.aoa_to_sheet(headers);
+
+  // Optional: Adjust column width to fit content
+  const wscols = [
+    { wch: 15 }, // "Name" column width
+    { wch: 5 },  // "Age" column width
+    { wch: 20 }  // "City" column width
+  ];
+  ws['!cols'] = wscols;
+
+  // Optional: Add some simple styling (bold header)
+  const headerStyle = {
+    font: { bold: true },
+    alignment: { horizontal: "center" }
+  };
+
+  // Apply style to each header cell
+  ws['A1'].s = headerStyle; // Apply style to "Name"
+  ws['B1'].s = headerStyle; // Apply style to "Age"
+  ws['C1'].s = headerStyle; // Apply style to "City"
+
+  // Step 4: Append the worksheet to the workbook
+  XLSX.utils.book_append_sheet(wb, ws, "Template Sheet");
+
+  // Step 5: Generate Excel file and download it
+  XLSX.writeFile(wb, "terminal_bulk_upload_template.xlsx");
+}
+
 async function createTerminalMapping(){
   if(!excelData.value.length){
     alert(`upload file`)
@@ -65,22 +102,22 @@ function close(){
   emit('close', false)
 }
 
-const downloadFile = () => {
-  // Reference the file directly in the public folder
-  const fileUrl = 'src/terminal_mapping_template.xlsx';
-
-  // Create an anchor element and set the href attribute to the file URL
-  const link = document.createElement('a');
-  link.href = fileUrl;
-
-  // Set the download attribute with the desired file name
-  link.setAttribute('download', 'terminal_mapping_template.xlsx'); // Optional: Specify a file name for download
-
-  // Append the anchor to the document, trigger the click event, and then remove it
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+// const downloadFile = () => {
+//   // Reference the file directly in the public folder
+//   const fileUrl = 'src/terminal_mapping_template.xlsx';
+//
+//   // Create an anchor element and set the href attribute to the file URL
+//   const link = document.createElement('a');
+//   link.href = fileUrl;
+//
+//   // Set the download attribute with the desired file name
+//   link.setAttribute('download', 'terminal_mapping_template.xlsx'); // Optional: Specify a file name for download
+//
+//   // Append the anchor to the document, trigger the click event, and then remove it
+//   document.body.appendChild(link);
+//   link.click();
+//   document.body.removeChild(link);
+// };
 
 function handleUpload() {
   const uploadModal = document.getElementById('upload_logo')
@@ -190,7 +227,7 @@ async function handleFile(e:any) {
               <div class="form" >
                 <input class="file-input" type="file" accept=".xlxs" @change="handleFile" name="file" id="upload_logo" hidden>
                 <i class="fas fa-cloud-upload-alt"></i>
-                <p @click="downloadFile">Click here to download</p>
+                <p @click="exportToExcelTemplate">Click here to download</p>
               </div>
 
 
