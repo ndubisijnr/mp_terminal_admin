@@ -87,11 +87,11 @@ async function createNewConfig() {
             <div class="flex justify-between gap-10">
               <div class="input-component flex flex-col justify-end">
                 <p class="mb-2">InterChangeId</p>
-                <Dropdown  optionLabel="name" v-model="interChangeConfigRequest.interchangeConfigType" optionValue="code" :placeholder="props.data.interchangeConfigType" :options="InterchangeConstant" class="select-drowdown"></Dropdown>
+                <Dropdown  optionLabel="name" v-model="interChangeConfigRequest.interchangeConfigId" optionValue="code" :placeholder="props.data.interchangeConfigId" :options="InterchangeConstant" class="select-drowdown"></Dropdown>
               </div>
               <div class="input-component flex flex-col justify-end">
                 <p class="mb-2">interchangeConfigStatus</p>
-                <Dropdown  optionLabel="key" v-model="interChangeConfigRequest.interchangeConfigUseSsl" optionValue="value" placeholder="interchangeConfigStatus" :options="interchangeConfigStatus" class="select-drowdown"></Dropdown>
+                <Dropdown  optionLabel="key" v-model="interChangeConfigRequest.interchangeConfigStatus" optionValue="value" placeholder="interchangeConfigStatus" :options="interchangeConfigStatus" class="select-drowdown"></Dropdown>
               </div>
             </div>
 

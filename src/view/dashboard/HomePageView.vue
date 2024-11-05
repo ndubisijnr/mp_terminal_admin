@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import BaseCard from "../../components/cards/BaseCard.vue";
 import { ref, onMounted, reactive, computed, watch } from "vue";
-import { useToast, useWait } from 'maz-ui'
+import { useWait } from 'maz-ui'
 import StoreUtils from "@/util/storeUtils.ts";
 import ContentHeader from "@/components/dashboardHeader/ContentHeader.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 // import { FilterMatchMode } from 'primevue/api';
-import { useAuthStore } from "@/store/module/auth";
+// import { useAuthStore } from "@/store/module/auth";
 import MazSpinner from 'maz-ui/components/MazSpinner'
 import Chart from "primevue/chart";
 import Receipt from "@/components/modal/Receipt.vue";
 import MazPicker from 'maz-ui/components/MazPicker'
 import getResponse from "@/util/helper/globalResponse.ts";
+// import InputText from "primevue/inputtext";
+import BaseButton from "@/components/button/BaseButton.vue";
 // import MazFullscreenLoader from "maz-ui/components/MazFullscreenLoader";
 
 
@@ -49,24 +51,29 @@ const rangeValues = ref({
   end: '',
 })
 
-const minMaxDates = ref({
-  min: '2024-01-01',
-  max: '2024-12-31',
-})
-
-const toast = useToast()
+// const statsRangeValues = ref({
+//   start: '',
+//   end: '',
+// })
+//
+// const minMaxDates = ref({
+//   min: '2024-01-01',
+//   max: '2024-12-31',
+// })
+//
+// const toast = useToast()
 const wait = useWait()
 const metaKey = ref(true);
 
-const readTerminalTransactionLoading = computed(() => {
-  return StoreUtils.getter().transactions.getLoading
-})
+// const readTerminalTransactionLoading = computed(() => {
+//   return StoreUtils.getter().transactions.getLoading
+// })
 
 const chartData = ref();
 
 const chartOptions = ref();
 
-const user = useAuthStore()
+// const user = useAuthStore()
 
 const transactions = computed(() => {
   return StoreUtils.getter().transactions.getTransactions
@@ -95,38 +102,6 @@ const onRowSelect = (event: any) => {
   reactiveData.selectedRow = event.data
   console.log(event)
 }
-
-// const filters = ref({
-//   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-//   transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-//   // representative: { value: null, matchMode: FilterMatchMode.IN },
-//   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
-// });
-
-// const filters2 = ref({
-//   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-//   transactionTerminalId: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-//   // representative: { value: null, matchMode: FilterMatchMode.IN },
-//   transactionStatus: { value: null, matchMode: FilterMatchMode.EQUALS },
-// });
-
-// function extractMonthsInWords(dates) {
-//   const monthNames = [
-//     "January", "February", "March", "April", "May", "June",
-//     "July", "August", "September", "October", "November", "December"
-//   ];
-//
-//     const months = dates.map(date => {
-//     const d = new Date(date); // Convert the date string to a Date object
-//     const month = d.getMonth(); // Get the month (0 = January, 11 = December)
-//     return monthNames[month]; // Return the corresponding month name
-//   });
-//
-//   // Use a Set to remove duplicates
-//   const uniqueMonths = [...new Set(months)];
-//
-//   return uniqueMonths;
-// }
 
 
 const setChartData = () => {
@@ -208,23 +183,41 @@ const adminStats = computed(() => {
   return StoreUtils.getter().organisation.getAdminStats
 })
 
+const adminStatsLoading = computed(() => {
+  return StoreUtils.getter().organisation.getAdminStatsLoading
+})
+
 const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'Amount', key: 'transactionRequestAmount' },
   { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
   { label: 'Narration', key: 'journalNarration' },
-
-  // { label: 'MaskedPan', key: 'transactionMaskedPan' },
-  // { label: 'AppLabel', key: 'transactionAppLabel' },
   { label: 'Created At', key: 'transactionCreatedAt' },
 
 ]
 
-// const sortedItems:any = transactions?.value?.sort((a:any, b:any) => {
-//   return new Date(b.transactionCreatedAt).getTime() - new Date(a.transactionCreatedAt).getTime();
-// });
+async function getTransactionData(){
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
 
+}
+
+setInterval(getTransactionData, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+function filterStats(){
+  StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+}
+
+async function refreshTransactionList(){
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
+  wait.start('DASHBOARD')
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start,'')
+  wait.stop('DASHBOARD')
+}
 
 onMounted(async () => {
   rangeValues.value.start = getFirstOfMonth()
@@ -249,57 +242,77 @@ onMounted(async () => {
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
   <ContentHeader />
-  <div class="content">
+  <div class="content ">
+    <div class="pl-8">
+      <p class="text-sm mb-1">Filter Stats </p>
+      <div class="gap-5 flex">
+        <MazPicker
+            v-model="rangeValues.start"
+            label="Select start date"
+        />
+        <MazPicker
+            v-model="rangeValues.end"
+            label="Select end date"
+        />
+        <BaseButton :loading="adminStatsLoading" @click="filterStats" style="width:auto;">
+          <div style="display: flex;align-items: center;gap: 5px;">
+            Filter
+          </div>
+
+        </BaseButton>
+      </div>
+    </div>
+
 
     <div class="content-card-section">
-      <base-card text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card>
-      <base-card text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
-      <base-card text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
-      <base-card text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
-      <base-card text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume"
+      <base-card :loading="adminStatsLoading" text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume"
         :analytics="true"></base-card>
-      <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume"
+      <base-card :loading="adminStatsLoading" text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume"
         :analytics="true"></base-card>
     </div>
     <div class="content-chart-section">
 
-      <div class="flex justify-between relative">
-        <div class="flex items-center gap-5">
-          <span>Filter Statistics:</span>
-          <MazPicker
-              autoClose
-              v-model="rangeValues"
-              label=""
-              color="white"
-              :min-date="minMaxDates.min"
-              :max-date="minMaxDates.max"
-              double
-          />
+<!--      <div class="flex justify-between relative">-->
+<!--        <div class="flex items-center gap-5">-->
+<!--          <span>Filter Statistics:</span>-->
+<!--          <MazPicker-->
+<!--              autoClose-->
+<!--              v-model="rangeValues"-->
+<!--              label=""-->
+<!--              color="white"-->
+<!--              :min-date="minMaxDates.min"-->
+<!--              :max-date="minMaxDates.max"-->
+<!--              double-->
+<!--          />-->
 
-          <!--            <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">-->
-          <!--              <img src="../../assets/icon/Ic.svg" alt="">-->
-          <!--              <p>July 12, 2021 - August 10, 2021</p>-->
+<!--          &lt;!&ndash;            <div class="date-picker" style="display: flex; align-items: center; justify-content: center;">&ndash;&gt;-->
+<!--          &lt;!&ndash;              <img src="../../assets/icon/Ic.svg" alt="">&ndash;&gt;-->
+<!--          &lt;!&ndash;              <p>July 12, 2021 - August 10, 2021</p>&ndash;&gt;-->
 
-          <!--            </div>-->
-        </div>
+<!--          &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--        </div>-->
 
-        <div style="display: flex; align-items: center; justify-content: center;gap:20px">
-          <p class="text-xl text-black">Statistics</p>
-          <img src="../../assets/icon/alert-circle.svg" />
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm"></p>
-            <p>Success</p>
-          </div>
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm pending"></p>
-            <p>Pending</p>
-          </div>
-          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">
-            <p class="circle-sm failed"></p>
-            <p>Failed</p>
-          </div>
-        </div>
-      </div>
+<!--        <div style="display: flex; align-items: center; justify-content: center;gap:20px">-->
+<!--          <p class="text-xl text-black">Statistics</p>-->
+<!--          <img src="../../assets/icon/alert-circle.svg" />-->
+<!--          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">-->
+<!--            <p class="circle-sm"></p>-->
+<!--            <p>Success</p>-->
+<!--          </div>-->
+<!--          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">-->
+<!--            <p class="circle-sm pending"></p>-->
+<!--            <p>Pending</p>-->
+<!--          </div>-->
+<!--          <div style="position:relative;display:flex;align-items:center;justify-content:center;gap:5px;">-->
+<!--            <p class="circle-sm failed"></p>-->
+<!--            <p>Failed</p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <Chart type="line" :data="chartData" :options="chartOptions" class="h-100rem" />
 
@@ -307,17 +320,17 @@ onMounted(async () => {
 
 
     <div class="content-table-section">
-      <div style="display: flex; align-items: center; justify-content: start;gap:20px;margin:25px 0">
-        <p class="text-xl text-black">Recent Transaction</p>
-        <img src="../../assets/icon/alert-circle.svg" />
+      <div class="w-full flex justify-end align-end">
+        <BaseButton style="width:10rem" @click="refreshTransactionList">Refresh List</BaseButton>
       </div>
       <div class="overflow-auto rounded-lg shadow">
+
 
         <!-- <BaseTable :headers="headers" :bodies="data"></BaseTable>
         <div class="overflow-auto rounded-lg shadow"> -->
 
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
-        <DataTable :loading="readTerminalTransactionLoading" :value="transactions" :metaKeySelection="metaKey"
+        <DataTable :loading="wait.isLoading('DASHBOARD')" :value="transactions" :metaKeySelection="metaKey"
           selectionMode="single" :rows="10" paginator stripedRows tableStyle="min-width: 50rem" dataKey="id"
           filterDisplay="row" @rowSelect="onRowSelect">
 
@@ -333,7 +346,7 @@ onMounted(async () => {
             </div>
           </template>
           <template #loading>
-            <MazSpinner v-if="readTerminalTransactionLoading" color="secondary" />
+            <MazSpinner v-if="wait.isLoading('DASHBOARD')" color="secondary" />
 
           </template>
           <Column field="journalDrCr" header="DrCr">
@@ -369,7 +382,6 @@ onMounted(async () => {
 
         </DataTable>
       </div>
-
     </div>
   </div>
 </template>

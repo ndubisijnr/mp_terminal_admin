@@ -75,6 +75,18 @@ export const dashboardRoute: BaseRouteProps[] = [
         component: () => import("@/view/dashboard/Support.vue"),
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage charges!'},
     },
+    {
+        name: RouteConstantUtil.dashboard.directors,
+        path: '/kyc/directors',
+        component: () => import("@/view/dashboard/Director.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Manage charges directors'},
+    },
+    {
+        name: RouteConstantUtil.dashboard.documents,
+        path: '/kyc/documents',
+        component: () => import("@/view/dashboard/Documents.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Manage charges documents!'},
+    },
 
 
 ]

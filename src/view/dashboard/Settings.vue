@@ -250,7 +250,7 @@ const interchange = ref([
 ])
 
 const interchangeheader = [
-  // {label:"interchangeId", key: "interchangeId"},
+  {label:"interchangeConfigId", key: "interchangeConfigId"},
     {label:"interchangeName",key: "interchangeConfigName"},
     {label:"interchangeDescription",key: "interchangeConfigDescription"},
     {label:"interchangeType",key: "interchangeConfigType"},

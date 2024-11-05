@@ -23,6 +23,8 @@ export const RouteConstantUtil = {
         adminUsers:"AdminUsers",
         institutionsCharges:"Institutions Statistics",
         user:"Users",
-        authRequired:true
+        authRequired:true,
+        directors:"Directors",
+        documents:"Documents",
     },
 }

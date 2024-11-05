@@ -12,11 +12,13 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         organisationStats:null as any,
         organisationPricing:null,
         adminStats:null as any,
-        organisationTransaction:null
+        organisationTransaction:null,
+        adminStatsLoading:false
     }),
 
     getters: {
         getOrganisation:state => state.organisations,
+        getAdminStatsLoading:state => state.adminStatsLoading,
         getLoading: state => state.loading,
         getCurrentOrganisation:state => state.currentOrganisation,
         getOnboardingStage:state => state.onboardingStage,
@@ -105,7 +107,6 @@ export const useOrganisationStore = defineStore('organisation_Store', {
             }
         },
 
-
         async readOrganisationStats(organisationId:string, startDate:string, endDate:string){
             const response = await OrganisationController.organisationStats(organisationId,startDate,endDate)
             const responseData = response.data
@@ -119,7 +120,8 @@ export const useOrganisationStore = defineStore('organisation_Store', {
                 }
             
 
-            }catch(e){
+            }
+            catch(e){
                 console.log('readOrganizationTerminal error', e)
             }
             
@@ -127,10 +129,12 @@ export const useOrganisationStore = defineStore('organisation_Store', {
         },
 
         async readAdminStats(startDate:string, endDate:string){
+            this.adminStatsLoading = true
             const response = await OrganisationController.organisationAdminStats(startDate,endDate)
             const responseData = response.data
 
             try{
+                this.adminStatsLoading = false
                 if(responseData.responseCode === '00'){
                     this.adminStats = responseData
                 }else{

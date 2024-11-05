@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import formatAmount from '@/util/helper/formatAmount';
+import MazSpinner from "maz-ui/components/MazSpinner";
 
 defineProps({
   text: String,
   amount: String as any,
   analytics: Boolean,
-  currency: Boolean
+  currency: Boolean,
+  loading: Boolean,
 
 })
 </script>
@@ -13,11 +15,13 @@ defineProps({
 <template>
   <div class="base-card">
     <div>
-      <p class="base-card-title">{{ text }}</p>
+      <MazSpinner v-if="loading" color="secondary" />
+      <p v-else class="base-card-title">{{ text }}</p>
     </div>
 
     <div>
-      <p class="base-card-amount"> <span v-if="currency">₦</span> {{ formatAmount(amount) }}</p>
+      <MazSpinner v-if="loading" color="secondary" />
+      <p v-else class="base-card-amount"> <span v-if="currency">₦</span> {{ formatAmount(amount) }}</p>
     </div>
     <!-- <p v-if="analytics" class="text-green flex items-center gap-3"><img src="../../assets/icon/arrow-up.svg" /> 20% <span>vs last month</span></p> -->
   </div>

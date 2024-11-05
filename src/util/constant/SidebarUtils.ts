@@ -22,9 +22,15 @@ export const  SidebarTopUtils = [
     {name:"Institutions", icon:Merchant, active:'active-nav', route:'/institutions'},
     {name:"Manage Users", icon:Users,active:'active-nav', route:'/users'},
     {name:"Terminal Mapping", icon:Terminal,active:'active-nav', route:'/terminal-mapping'},
+]
+export const  ModulesUtils = [
+
+    {name:"KYC Module", icon:Support, children:[
+        {name:"Director", icon:Terminal,active:'active-nav', route:'/kyc/directors'},
+        {name:"Document", icon:Terminal,active:'active-nav', route:'/kyc/documents'},
+        ]},
 
 ]
-
 export const  SidebarBottomUtils = [
 
     {name:"Support", icon:Support,active:'active-nav', route:'/support'},

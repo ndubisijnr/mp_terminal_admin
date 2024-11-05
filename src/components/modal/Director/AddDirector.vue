@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import {defineEmits, ref} from 'vue';
-import StoreUtils from '@/util/storeUtils';
+import Dropdown from 'primevue/dropdown';
+import { defineEmits, ref } from 'vue';
 import BaseInput from '@/components/input/BaseInput.vue';
+import ChargesRequest  from '@/models/request/charges/ChargesRequest';
 import { useToast, useWait } from 'maz-ui';
+import StoreUtils from '@/util/storeUtils';
 
 const toast = useToast()
 const wait = useWait()
@@ -13,34 +15,40 @@ const emit = defineEmits<{
   (e: 'close', value: boolean): void;
 }>();
 
+
 const props = defineProps({
   data:{} as any
 })
 
-function close() {
+const directorRequest = ref({
+  directorBusinessType: null as null,
+  directorBvn: null as null,
+  directorDob: null as null,
+  directorEmail: null as null,
+  directorGender: null as null,
+  directorName: null as null,
+  directorNationality: null as null,
+  directorOrganisationId: null as null,
+  directorPhoneNumber: null as null,
+  directorShare: null as null,
+  directorType: null as null
+})
+
+function close(){
   emit('close', false)
 }
 
-const interChangeConfigRequest = ref({
-  interchangeConfigEncryptedComponent1: "",
-  interchangeConfigEncryptedComponent2: "",
-  interchangeConfigEncryptedComponent3: "",
-  interchangeConfigId: 0,
-  interchangeConfigKeyCheckValue: ""
-})
 
+async function addDirector(){
+  console.log(directorRequest)
+  directorRequest.value.directorOrganisationId = props?.data?.organisationId
+  wait.start('CREATING_DIRECTOR')
+  await StoreUtils.getter()?.director.createDirector(directorRequest.value, toast)
+  await StoreUtils.getter()?.director.readDirectors()
 
-async function updateComponentConfig() {
-  console.log(interChangeConfigRequest.value)
-  interChangeConfigRequest.value.interchangeConfigId = props.data.interchangeConfigId
-  interChangeConfigRequest.value.interchangeConfigEncryptedComponent1 = interChangeConfigRequest.value.interchangeConfigEncryptedComponent1 ? interChangeConfigRequest.value.interchangeConfigEncryptedComponent1 : props.data.interchangeConfigEncryptedComponent1
-  interChangeConfigRequest.value.interchangeConfigEncryptedComponent2 = interChangeConfigRequest.value.interchangeConfigEncryptedComponent2 ? interChangeConfigRequest.value.interchangeConfigEncryptedComponent2 : props.data.interchangeConfigEncryptedComponent2
-  interChangeConfigRequest.value.interchangeConfigKeyCheckValue = interChangeConfigRequest.value.interchangeConfigKeyCheckValue ? interChangeConfigRequest.value.interchangeConfigKeyCheckValue : props.data.interchangeConfigKeyCheckValue
-  interChangeConfigRequest.value.interchangeConfigEncryptedComponent3 = interChangeConfigRequest.value.interchangeConfigEncryptedComponent3 ? interChangeConfigRequest.value.interchangeConfigEncryptedComponent3 : props.data.interchangeConfigEncryptedComponent3
-  wait.start('CREATING_CONFIG')
-  await StoreUtils.getter()?.charges.updateInterChangeComponent(interChangeConfigRequest.value, toast)
-  wait.stop('CREATING_CONFIG')
+  wait.stop('CREATING_DIRECTOR')
   close()
+
 }
 
 </script>
@@ -50,43 +58,62 @@ async function updateComponentConfig() {
     <template v-slot:child>
       <div class="modal-child-wrapper">
         <div class="modal-child-header">
-          <p class="req-term">Update InterChange Component</p>
-          <img src="../../../assets/icon/Frame.svg" @click="close" />
+          <p class="req-term">Add Director</p>
+          <img src="../../../assets/icon/Frame.svg"  @click="close"/>
         </div>
-<!--        {{props.data}}-->
-        <div>
-          <div class="modal-child-content">
-            <div class="flex justify-between gap-10">
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent1"
-                          label="interchangeConfigEncryptedComponent1" :placeholder="props.data.interchangeConfigEncryptedComponent1" />
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent2"
-                          label="interchangeConfigEncryptedComponent2" :placeholder="props.data.interchangeConfigEncryptedComponent2" />
+        <!-- pricingAmount -->
+        <form class="modal-child-content">
+
+
+          <div class="flex justify-between gap-10">
+            <base-input required type="text"  v-model="directorRequest.directorName" placeholder="Director Name"  label="Director Name" />
+            <base-input required type="text" v-model="directorRequest.directorPhoneNumber" placeholder="Director Phone Number"  label="Director Phone Number" />
+          </div>
+
+          <div class="flex justify-between gap-10">
+            <base-input type="text"  v-model="directorRequest.directorEmail" placeholder="Director Email"  label="Director Email" />
+            <base-input type="text"  v-model="directorRequest.directorBvn" placeholder="Director Bvn"  label="Director Bvn" />
+          </div>
+          <div class="flex justify-between gap-10 mt-3">
+            <div>
+              <label>Gender</label>
+              <Dropdown  optionLabel="name" v-model="directorRequest.directorGender" optionValue="code" placeholder="Gender" :options="[{name:'FLAT', code:'FLAT'},{name:'PERCENT', code:'PERCENT'}]" class="select-drowdown"></Dropdown>
             </div>
-            <div class="flex justify-between gap-10">
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigEncryptedComponent3"
-                          label="interchangeConfigEncryptedComponent3" :placeholder="props.data.interchangeConfigEncryptedComponent3"/>
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigKeyCheckValue"
-                          label="interchangeConfigKeyCheckValue" :placeholder="props.data.interchangeConfigKeyCheckValue"/>
+            <div>
+              <label>Nationality</label>
+              <Dropdown optionLabel="name" v-model="directorRequest.directorNationality" optionValue="code" placeholder="Nationality" :options="[{name:'TRANSFER INWARD', code:'TRANSFER_INWARD'},{name:'TRANSFER INTERNAL', code:'TRANSFER_INTERNAL'},{name:'TRANSFER OUTWARD', code:'TRANSFER_OUTWARD'},{name:'CARD', code:'CARD'}]" class="select-drowdown"></Dropdown>
             </div>
+          </div>
+
+          <div class="flex justify-between gap-10">
+            <base-input type="text"  v-model="directorRequest.directorBvn" placeholder="directorBvn"  label="Director Bvn" />
+            <base-input type="text"  v-model="directorRequest.directorBvn" placeholder="directorBvn"  label="Director Bvn" />
 
           </div>
 
-          <div class="modal-child-footer">
+        </form>
 
-            <BaseButton  :loading="wait.isLoading('CREATING_CONFIG')" @click="updateComponentConfig">Send Request
-            </BaseButton>
 
-          </div>
+
+        <!-- <div class="divider"></div> -->
+
+
+        <div class="modal-child-footer">
+
+          <BaseButton type="sumbit" :loading="wait.isLoading('CREATING_DIRECTOR')" @click="addDirector">Add Director</BaseButton>
+
         </div>
-
 
       </div>
+
+
+
     </template>
   </BaseLayout>
 </template>
 
 <style scoped>
-.confirm-request-subtitle {
+.confirm-request-subtitle{
   /* Supporting text */
 
   /* width: 424px;
@@ -112,7 +139,7 @@ async function updateComponentConfig() {
 
 }
 
-.confirm-request-title {
+.confirm-request-title{
   /* Text */
 
   /* Text lg/Semibold */
@@ -128,8 +155,7 @@ async function updateComponentConfig() {
 
 
 }
-
-.select-drowdown {
+.select-drowdown{
   /* Input */
 
   box-sizing: border-box;
@@ -158,8 +184,7 @@ async function updateComponentConfig() {
   flex-grow: 0;
 
 }
-
-.req-term {
+.req-term{
   /* Assign Terminal */
 
   height: 20px;
@@ -176,12 +201,10 @@ async function updateComponentConfig() {
 
 
 }
-
-.bnt-trans-text {
+.bnt-trans-text{
   color: var(--dark_color);
 }
-
-.divider {
+.divider{
   /* Divider */
 
   width: 702px;
@@ -199,24 +222,23 @@ async function updateComponentConfig() {
 }
 
 
-.modal-child-wrapper {
+.modal-child-wrapper{
   /* Assign Terminal Form */
   padding: 0px;
   width: 702px;
-  overflow-y:scroll;
   /* White */
   background: #FFFFFF;
   /* Shadow/sm */
   box-shadow: 0px 1px 3px rgba(16, 24, 40, 0.1), 0px 1px 2px rgba(16, 24, 40, 0.06);
   border-radius: 8px;
-  margin: 10px auto;
-
+  margin: 100px auto;
 
 
 }
 
-.modal-child-header {
+.modal-child-header{
   /* New registration header */
+
   box-sizing: border-box;
   cursor: pointer;
 
@@ -234,23 +256,25 @@ async function updateComponentConfig() {
 
 }
 
-.modal-child-content {
+.modal-child-content{
   /* Content */
   padding: 24px;
-  overflow-y: scroll;
+
   /* White */
   background: #FFFFFF;
   border-bottom: 1px solid #E6E6E6;
 
+
+
 }
 
-.modal-child-footer {
+.modal-child-footer{
   /* Footer */
 
   /* Auto layout */
   display: flex;
   align-items: center;
-  padding: 24px;
+  padding:24px;
   justify-content: end;
   width: 702px;
   gap: 12px;
@@ -258,7 +282,7 @@ async function updateComponentConfig() {
 
 }
 
-.modal-confirm-div {
+.modal-confirm-div{
   /* Request Terminal Confirm */
 
   /* Auto layout */
@@ -283,7 +307,7 @@ async function updateComponentConfig() {
 }
 
 
-.modal-confirm-inner-div {
+.modal-confirm-inner-div{
   /* Content */
 
   /* Auto layout */
@@ -304,11 +328,11 @@ async function updateComponentConfig() {
 
 }
 
-.modal-confirm-inner-div-footer {
+.modal-confirm-inner-div-footer{
   display: flex;
 
   align-items: center;
-  padding: 0 24px;
+  padding:0 24px;
   justify-content: end;
   gap: 12px;
   width: 100%;

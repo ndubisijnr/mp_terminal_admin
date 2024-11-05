@@ -266,11 +266,37 @@ const doCustomDateSearch = async () => {
   wait.stop('CUS_SEARCH')
 }
 
+async function getTransactionData(){
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+
+}
+
+setInterval(getTransactionData, 5 * 60 * 1000); // 5 minutes in milliseconds
+
+function filterStats(){
+  StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+}
+
+const adminStatsLoading = computed(() => {
+  return StoreUtils.getter().organisation.getAdminStatsLoading
+})
+
+async function refreshTransactionList(){
+  rangeValues.value.start = getFirstOfMonth()
+  rangeValues.value.end = getCurrentDate()
+  wait.start('READ_TRANSACTION')
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+  wait.stop('READ_TRANSACTION')
+}
 
 onMounted(async () => {
   rangeValues.value.start = getFirstOfMonth()
   rangeValues.value.end = getCurrentDate()
   wait.start('READ_TRANSACTION')
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
   await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
   wait.stop('READ_TRANSACTION')
 })
@@ -291,19 +317,40 @@ onMounted(async () => {
 
 
   <ContentHeader />
+
   <MazDialogPromise identifier="one" />
 
 <!--  <TransactionAdvanceSearch/>-->
   <Receipt :transactionData="reactiveData.selectedRow" @close="handleClose" v-if="reactiveData.showReceipt"></Receipt>
 
   <div class="content">
+    <div class="pl-8">
+      <p class="text-sm mb-1">Filter Stats </p>
+      <div class="gap-5 flex">
+        <MazPicker
+            v-model="rangeValues.start"
+            label="Select start date"
+        />
+        <MazPicker
+            v-model="rangeValues.end"
+            label="Select end date"
+        />
+        <BaseButton :loading="adminStatsLoading" @click="filterStats" style="width:auto;">
+          <div style="display: flex;align-items: center;gap: 5px;">
+            Filter
+          </div>
+
+        </BaseButton>
+      </div>
+    </div>
+
     <div class="content-card-section">
-      <base-card text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card> 
-      <base-card text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
-      <base-card text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
-      <base-card text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
-      <base-card text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume" :analytics="true"></base-card>
-      <base-card text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Count" :amount="adminStats?.transactionCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Successful Count" :amount="adminStats?.transactionSuccessfulCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Failed Count" :amount="adminStats?.transactionFailedCount" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Volume" :currency="true" :amount="adminStats?.transactionVolume" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Successful Volume" :currency="true" :amount="adminStats?.transactionSuccessfulVolume" :analytics="true"></base-card>
+      <base-card :loading="adminStatsLoading" text="Failed Volume" :currency="true" :amount="adminStats?.transactionFailedVolume" :analytics="true"></base-card>
     </div>
 
     <div class="content-table-section">
@@ -354,7 +401,6 @@ onMounted(async () => {
             </div>
 
           </div>
-
         </div>
       </div>
       <div class="overflow-auto rounded-lg shadow">
@@ -368,6 +414,7 @@ onMounted(async () => {
 
           <template #header>
             <div class="flex justify-end gap-5">
+              <BaseButton style="width:10rem" @click="refreshTransactionList">Refresh List</BaseButton>
 
 
               <BaseButton  style="width:auto;">
