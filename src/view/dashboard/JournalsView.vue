@@ -17,10 +17,14 @@ import MazPicker from "maz-ui/components/MazPicker";
 import getResponse from "@/util/helper/globalResponse.ts";
 import MazDialogPromise, {useMazDialogPromise} from "maz-ui/components/MazDialogPromise";
 import BaseButton from "@/components/button/BaseButton.vue";
+import Tag from "primevue/tag";
+import Dropdown from "primevue/dropdown";
 // import TransactionAdvanceSearch from "@/components/modal/TransactionAdvanceSearch.vue";
 
 const wait = useWait()
 const toast =  useToast()
+
+const pageSize = ref("100")
 
 const { showDialogAndWaitChoice, data } = useMazDialogPromise()
 
@@ -94,7 +98,7 @@ watch(rangeValues, async (newVal, oldVal) => {
   console.log(oldVal)
   if(newVal){
     wait.start('READING_TRANSACTION')
-    await StoreUtils?.getter()?.transactions?.readOrganisationTransactionsByOrganisationId(JSON.stringify(organisations.value?.organisationId), rangeValues.value.start, rangeValues.value.end)
+    await StoreUtils?.getter()?.transactions?.readOrganisationTransactionsByOrganisationId(JSON.stringify(organisations.value?.organisationId),pageSize.value, rangeValues.value.start, rangeValues.value.end)
     wait.stop('READING_TRANSACTION')
   }
 })
@@ -251,18 +255,24 @@ const doAdvanceSearch = async () => {
   wait.start('READ_TRANSACTION')
   wait.start('ADV_SEARCH')
 
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, '', '', reactiveData.advanceSearchKeyword)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, '', '', reactiveData.advanceSearchKeyword)
   wait.stop('READ_TRANSACTION')
   wait.stop('ADV_SEARCH')
 
 }
-
+const getSeverity = (status: string) => {
+  if(status === '00'){
+    return 'success';
+  }else{
+    return 'danger';
+  }
+};
 
 const doCustomDateSearch = async () => {
   wait.start('READ_TRANSACTION')
   wait.start('CUS_SEARCH')
 
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100,  rangeValues.value.end, rangeValues.value.start, '')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value,  rangeValues.value.end, rangeValues.value.start, '')
   wait.stop('READ_TRANSACTION')
   wait.stop('CUS_SEARCH')
 }
@@ -270,7 +280,7 @@ const doCustomDateSearch = async () => {
 async function getTransactionData(){
   rangeValues.value.start = getFirstOfMonth()
   rangeValues.value.end = getCurrentDate()
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start, '')
 
 }
 
@@ -289,7 +299,7 @@ async function refreshTransactionList(){
   rangeValues.value.end = getCurrentDate()
   wait.start('READ_TRANSACTION')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start, '')
   wait.stop('READ_TRANSACTION')
 }
 
@@ -298,7 +308,7 @@ onMounted(async () => {
   rangeValues.value.end = getCurrentDate()
   wait.start('READ_TRANSACTION')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start, '')
   wait.stop('READ_TRANSACTION')
 })
 
@@ -375,7 +385,9 @@ onMounted(async () => {
                       v-model="rangeValues.end"
                       label="Select end date"
                   />
-                   <BaseButton :loading="wait.isLoading('CUS_SEARCH')" @click="doCustomDateSearch" style="width:auto;">
+                    <Dropdown optionLabel="name" v-model="pageSize" optionValue="code" placeholder="Page Size" :options="[{name:'100', code:'100'},{name:'500', code:'500'},{name:'1000', code:'1000'}, {name:'5000', code:'5000'}]" class="select-drowdown"></Dropdown>
+
+                    <BaseButton :loading="wait.isLoading('CUS_SEARCH')" @click="doCustomDateSearch" style="width:auto;">
                       <div style="display: flex;align-items: center;gap: 5px;">
                         Search
                       </div>
@@ -427,13 +439,13 @@ onMounted(async () => {
                 </div>
 
               </BaseButton>
-              <span class="relative">
-                <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />
+<!--              <span class="relative">-->
+<!--                <i class="pi pi-search absolute top-2/4 -mt-2 left-3 text-surface-400 dark:text-surface-600" />-->
 
 
-                <InputText v-model="filters['global'].value" placeholder="Keyword Search"
-                  class="pl-10 font-normal terminal_search" />
-              </span>
+<!--                <InputText v-model="filters['global'].value" placeholder="Keyword Search"-->
+<!--                  class="pl-10 font-normal terminal_search" />-->
+<!--              </span>-->
             </div>
           </template>
 
@@ -467,7 +479,17 @@ onMounted(async () => {
                         </template>
                 </Column>
 
+          <Column field="transactionResponseCode" header="Transaction Status">
+            <template #body="slotProps">
+              <div v-if="slotProps.data.transactionResponseCode">
+                <Tag :value="slotProps.data.transactionResponseCode ==='00' ? 'Successful' : 'Failed'" :severity="getSeverity(slotProps.data.transactionResponseCode)" />
+              </div>
+              <!--              <div v-if="slotProps.data.transactionDrCr">-->
+              <!--                <p :style="slotProps.data.transactionDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.transactionDrCr}}</p>-->
+              <!--              </div>-->
 
+            </template>
+          </Column>
           <Column header="actions">
 
             <template #body="">

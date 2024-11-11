@@ -6,12 +6,14 @@ export const useTransactionStore = defineStore('transaction_Store', {
         loading: false,
         transactions:null,
         terminalTransactions:null,
-        organisationTerminalTransaction:null
+        organisationTerminalTransaction:null,
+        allTransactions: null,
     }),
 
     getters: {
         getTransactions:state => state.transactions,
         getTerminalTransactions:state => state.terminalTransactions,
+        getAllTransactions:state => state.allTransactions,
         getLoading: state => state.loading,
         getOrganisationTerminalTransaction:state => state.organisationTerminalTransaction,
 
@@ -46,6 +48,21 @@ export const useTransactionStore = defineStore('transaction_Store', {
                 if(responseData.responseCode === '00'){
                     this.terminalTransactions= responseData.data
                     console.log(responseData)
+                }else{
+                    console.log(responseData.responseCode)
+                }
+            }catch(e){}
+        },
+
+        async readAllTransactions(page:Number, size:Number, endDate:string, startDate:string, searchParam:string){
+            const response = await TransactionsController.transactions(page, size, endDate, startDate, searchParam)
+            const responseData = response.data
+
+            try{
+                if(responseData.responseCode === '00'){
+                    this.allTransactions= responseData.data
+                    // console.log(responseData.data)
+                    // console.log(this.allTransactions)
                 }else{
                     console.log(responseData.responseCode)
                 }

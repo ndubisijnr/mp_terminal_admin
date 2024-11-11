@@ -17,7 +17,9 @@ import Tag from "primevue/tag";
 import EditInterChangeComponent from "@/components/modal/interchangandrouting/EditInterChangeComponent.vue";
 import EditInterChange from "@/components/modal/interchangandrouting/EditInterChange.vue";
 import Dropdown from "primevue/dropdown";
-import storeUtils from "@/util/storeUtils.ts";
+// import getResponse from "@/util/helper/globalResponse.ts";
+// import MazPicker from "maz-ui/components/MazPicker";
+// import MazSpinner from "maz-ui/components/MazSpinner";
 
 
 const reactiveData=reactive({
@@ -40,8 +42,6 @@ const tabs = [
   { label: 'Profile', disabled: false },
   { label: 'Interchange/Routing', disabled: false },
 ]
-
-const testType = ref()
 
 const testTypeOptions = computed(() => {
   return StoreUtils.getter().charges.getTestDataType
@@ -91,7 +91,6 @@ const items = ref([
           reactiveData.testIsVisible = !reactiveData.testIsVisible
         }
       },
-
       {
         label: 'Delete',
         icon: 'pi pi-upload',
@@ -166,89 +165,6 @@ const filters = ref({
 
 const activeTab = ref('Interchange/Routing')
 
-const interchange = ref([
-  {
-    "interchangeId": 100,
-    "interchangeName": "Coralpay",
-    "interchangeDescription": "Interchange for Coralpay Postbridge",
-    "interchangeType": "Postbridge",
-    "interchangePinTranslationRequired": "YES",
-    "interchangeEncryptedInterchangeKey": "MGNkODE4NGQyMThiNDIyNTpzK0VKaUNpd21pbGlyR09jYUZ4Y1BtNDR4Z29hVnhZSDZJcXk4ek4xeDFOYnZuVWt4N2d4VEQrZVdmWU8zc2ZB",
-    "interchangeEncryptedSinkZpk": "YjhiNGI3OWJlNTllNGFkMTpEeVdMRC93dUY5Y0xUcGlOTHJRR0FKNUZGMzVXWmFPRzBvR3hjbVZIWXRYSFVUbnVibnpPVWxsSi9uNUNUN2Rj",
-    "interchangeSinkHost": "172.24.2.80",
-    "interchangeSinkPort": "35555",
-    "interchangeMcc": "6013",
-    "interchangeTransferDestinationAccount": "0123456789",
-    "interchangePayee": "Providus",
-    "interchangeReceivingInstitutionId": "666101",
-    "interchangeExtendedTransactionType": "6008",
-    "interchangeForwardingInstitutionId": "12345678",
-    "interchangeStatus": "ACTIVE",
-    "interchangeCreatedAt": "2024-06-18 22:25:18.230",
-    "interchangeUpdatedAt": "2024-08-25 17:25:01.200"
-  },
-  {
-    "interchangeId": 100,
-    "interchangeName": "Interswitch",
-    "interchangeDescription": "Interchange for Interswitch Postbridge",
-    "interchangeType": "Postbridge",
-    "interchangePinTranslationRequired": "YES",
-    "interchangeEncryptedInterchangeKey": "MGNkODE4NGQyMThiNDIyNTpzK0VKaUNpd21pbGlyR09jYUZ4Y1BtNDR4Z29hVnhZSDZJcXk4ek4xeDFOYnZuVWt4N2d4VEQrZVdmWU8zc2ZB",
-    "interchangeEncryptedSinkZpk": "YjhiNGI3OWJlNTllNGFkMTpEeVdMRC93dUY5Y0xUcGlOTHJRR0FKNUZGMzVXWmFPRzBvR3hjbVZIWXRYSFVUbnVibnpPVWxsSi9uNUNUN2Rj",
-    "interchangeSinkHost": "172.24.2.80",
-    "interchangeSinkPort": "35555",
-    "interchangeMcc": "6013",
-    "interchangeTransferDestinationAccount": "0123456789",
-    "interchangePayee": "Providus",
-    "interchangeReceivingInstitutionId": "666101",
-    "interchangeExtendedTransactionType": "6008",
-    "interchangeForwardingInstitutionId": "12345678",
-    "interchangeStatus": "ACTIVE",
-    "interchangeCreatedAt": "2024-06-18 22:25:18.230",
-    "interchangeUpdatedAt": "2024-08-25 17:25:01.200"
-  },
-  {
-    "interchangeId": 100,
-    "interchangeName": "NIBSS Test",
-    "interchangeDescription": "Interchange for NIBSS Postbridge",
-    "interchangeType": "Postbridge",
-    "interchangePinTranslationRequired": "YES",
-    "interchangeEncryptedInterchangeKey": "MGNkODE4NGQyMThiNDIyNTpzK0VKaUNpd21pbGlyR09jYUZ4Y1BtNDR4Z29hVnhZSDZJcXk4ek4xeDFOYnZuVWt4N2d4VEQrZVdmWU8zc2ZB",
-    "interchangeEncryptedSinkZpk": "YjhiNGI3OWJlNTllNGFkMTpEeVdMRC93dUY5Y0xUcGlOTHJRR0FKNUZGMzVXWmFPRzBvR3hjbVZIWXRYSFVUbnVibnpPVWxsSi9uNUNUN2Rj",
-    "interchangeSinkHost": "172.24.2.80",
-    "interchangeSinkPort": "35555",
-    "interchangeMcc": "6013",
-    "interchangeTransferDestinationAccount": "0123456789",
-    "interchangePayee": "Providus",
-    "interchangeReceivingInstitutionId": "666101",
-    "interchangeExtendedTransactionType": "6008",
-    "interchangeForwardingInstitutionId": "12345678",
-    "interchangeStatus": "ACTIVE",
-    "interchangeCreatedAt": "2024-06-18 22:25:18.230",
-    "interchangeUpdatedAt": "2024-08-25 17:25:01.200"
-  },
-  {
-    "interchangeId": 100,
-    "interchangeName": "UP",
-    "interchangeDescription": "Interchange for UP Postbridge",
-    "interchangeType": "Postbridge",
-    "interchangePinTranslationRequired": "YES",
-    "interchangeEncryptedInterchangeKey": "MGNkODE4NGQyMThiNDIyNTpzK0VKaUNpd21pbGlyR09jYUZ4Y1BtNDR4Z29hVnhZSDZJcXk4ek4xeDFOYnZuVWt4N2d4VEQrZVdmWU8zc2ZB",
-    "interchangeEncryptedSinkZpk": "YjhiNGI3OWJlNTllNGFkMTpEeVdMRC93dUY5Y0xUcGlOTHJRR0FKNUZGMzVXWmFPRzBvR3hjbVZIWXRYSFVUbnVibnpPVWxsSi9uNUNUN2Rj",
-    "interchangeSinkHost": "172.24.2.80",
-    "interchangeSinkPort": "35555",
-    "interchangeMcc": "6013",
-    "interchangeTransferDestinationAccount": "0123456789",
-    "interchangePayee": "Providus",
-    "interchangeReceivingInstitutionId": "666101",
-    "interchangeExtendedTransactionType": "6008",
-    "interchangeForwardingInstitutionId": "12345678",
-    "interchangeStatus": "ACTIVE",
-    "interchangeCreatedAt": "2024-06-18 22:25:18.230",
-    "interchangeUpdatedAt": "2024-08-25 17:25:01.200"
-  }
-])
-
 const interchangeheader = [
   {label:"interchangeConfigId", key: "interchangeConfigId"},
     {label:"interchangeName",key: "interchangeConfigName"},
@@ -272,32 +188,6 @@ const interchangeheader = [
 
 const metaKey = ref()
 
-const route = ref([
-  {
-    "routeId": 100,
-    "routeAmount": "1000.00",
-    "routeInterchangeId": 100,
-    "routeStatus": "ACTIVE",
-    "routeCreatedAt": "2024-06-18 22:25:18.230",
-    "routeUpdatedAt": "2024-08-25 17:25:01.200"
-  },
-  {
-    "routeId": 101,
-    "routeAmount": "5000.00",
-    "routeInterchangeId": 101,
-    "routeStatus": "ACTIVE",
-    "routeCreatedAt": "2024-06-18 22:25:18.230",
-    "routeUpdatedAt": "2024-08-25 17:25:01.200"
-  },
-  {
-    "routeId": 100,
-    "routeAmount": "10000.00",
-    "routeInterchangeId": 101,
-    "routeStatus": "ACTIVE",
-    "routeCreatedAt": "2024-06-18 22:25:18.230",
-    "routeUpdatedAt": "2024-08-25 17:25:01.200"
-  }
-])
 
 const interChangeResponse = computed(() => {
   return StoreUtils.getter().charges.getInterChanges
@@ -323,6 +213,8 @@ const callReadInterChange = () => {
 const callReadRoutingRule = () => {
   StoreUtils.getter().charges.readRoutingRule(toast)
 }
+
+
 
 const onRowSelect = (event:any) => {
   reactiveData.selectedRow = event.data
@@ -360,6 +252,7 @@ onMounted(() => {
   callReadRoutingRule()
   StoreUtils.getter().charges.readInterChangeTestDataType(toast)
   StoreUtils.getter().charges.readInterChangeTestData(toast)
+  StoreUtils.getter().charges.readInterChangePackagers()
 })
 
 
@@ -600,12 +493,14 @@ onMounted(() => {
 
     </div>
 
+
     <div v-else class="flex w-full justify-center">
       <div class="w-full flex items-center flex-col">
         <img alt="settings" src="../../assets/image/undraw_launch_day_4e04.png" class="mt-16 w-3/12" />
         <p class="text-2xl text-muted text-center py-5">COMING SOON.</p>
       </div>
     </div>
+
 
 
   </div>

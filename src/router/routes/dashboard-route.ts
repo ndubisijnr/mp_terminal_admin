@@ -28,6 +28,12 @@ export const dashboardRoute: BaseRouteProps[] = [
         meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage your transactions in real time!'},
     },
     {
+        name: RouteConstantUtil.dashboard.journals,
+        path: '/journals',
+        component: () => import("@/view/dashboard/JournalsView.vue"),
+        meta: {authRequired:RouteConstantUtil.dashboard.authRequired, layout:'dashboard', sub_title:'Track, Manage your journals in real time!'},
+    },
+    {
         name: RouteConstantUtil.dashboard.organisations,
         path: '/merchants',
         component: () => import("@/view/dashboard/MerchantView.vue"),

@@ -71,6 +71,8 @@ const metaKey = ref(true);
 
 const chartData = ref();
 
+const pageSize = ref(100)
+
 const chartOptions = ref();
 
 // const user = useAuthStore()
@@ -200,7 +202,8 @@ const transactionsHeaders = [
 async function getTransactionData(){
   rangeValues.value.start = getFirstOfMonth()
   rangeValues.value.end = getCurrentDate()
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start, '')
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start, '')
 
 }
 
@@ -215,7 +218,7 @@ async function refreshTransactionList(){
   rangeValues.value.end = getCurrentDate()
   wait.start('DASHBOARD')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start,'')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start,'')
   wait.stop('DASHBOARD')
 }
 
@@ -227,7 +230,7 @@ onMounted(async () => {
   // if (!user.userInfo) await StoreUtils?.getter()?.auth?.userDetails(toast)
   wait.start('DASHBOARD')
   await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
-  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, 100, rangeValues.value.end, rangeValues.value.start,'')
+  await StoreUtils.getter().transactions.readCustomerOrganisationTransactions(1, pageSize.value, rangeValues.value.end, rangeValues.value.start,'')
   wait.stop('DASHBOARD')
 
 })

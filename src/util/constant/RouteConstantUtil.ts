@@ -13,6 +13,7 @@ export const RouteConstantUtil = {
         homePage: "Dashboard",
         teminalPage:"Terminals",
         transactions:"Transactions",
+        journals:"Journals",
         organisations:"Organisations",
         terminalTransactions:"Terminal Transactions",
         charges:"Manage Charges",

@@ -18,6 +18,7 @@ export const useChargesStore = defineStore('charges_store', {
         testDataType: null as null,
         testResponse: null as null,
         testRequest: null as null,
+        packagers:null as null,
     }),
 
     getters: {
@@ -29,6 +30,7 @@ export const useChargesStore = defineStore('charges_store', {
         getTestDataType:state => state.testDataType,
         getTestResponse:state => state.testResponse,
         getTestRequest:state => state.testRequest,
+        getPackagers:state => state.packagers,
     },
 
     actions: {
@@ -266,6 +268,20 @@ export const useChargesStore = defineStore('charges_store', {
                     console.log(responseData)
                     toast.error(responseData.responseMessage, { position: 'bottom-right', timeout: 3000 })
 
+                }
+            }catch(e){
+                console.log('readOrganizationTerminal error', e)
+            }
+        },
+
+        async readInterChangePackagers(){
+            const response = await InterChangeController.readPackagers()
+            const responseData = response.data
+            try{
+                if(responseData.responseCode === '00'){
+                    this.packagers = responseData.data
+                }else{
+                    console.log(responseData)
                 }
             }catch(e){
                 console.log('readOrganizationTerminal error', e)

@@ -5,6 +5,11 @@ export default {
         return apiClient.appClient.get(`interchange-config/read`)
     },
 
+    readPackagers(){
+        return apiClient.appClient.get(`interchange-config/packagers`)
+    },
+
+
     createInterChange(payload: {}){
         return apiClient.appClient.post(`interchange-config/create`, payload)
     },

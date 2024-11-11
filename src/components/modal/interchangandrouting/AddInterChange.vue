@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import BaseLayout from '../BaseLayout.vue';
 import BaseButton from '@/components/button/BaseButton.vue';
-import {defineEmits, ref} from 'vue';
+import {computed, defineEmits, ref} from 'vue';
 import StoreUtils from '@/util/storeUtils';
 import BaseInput from '@/components/input/BaseInput.vue';
 import { useToast, useWait } from 'maz-ui';
@@ -47,7 +47,12 @@ const interChangeConfigRequest = ref({
   interchangeConfigSinkPort: null,
   interchangeConfigTransferDestinationAccount: null,
   interchangeConfigType: null,
+  interchangePackager:null,
   interchangeConfigUseSsl: null
+})
+
+const interChangePackagers:[] = computed(() => {
+  return StoreUtils.getter().charges.getPackagers
 })
 
 async function createNewConfig() {
@@ -68,7 +73,6 @@ async function createNewConfig() {
           <p class="req-term">Add InterChange</p>
           <img src="../../../assets/icon/Frame.svg" @click="close" />
         </div>
-
         <div>
           <div class="modal-child-content">
             <div class="flex justify-between gap-10">
@@ -82,6 +86,14 @@ async function createNewConfig() {
               </div>
 <!--              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigUseSsl"-->
 <!--                          label="interchangeConfigUseSsl" />-->
+            </div>
+            <div class="flex justify-between gap-10">
+              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigDescription"
+                          label="interchangeConfigDescription" />
+              <div class="input-component flex flex-col justify-end">
+              <p class="mb-2">interchangePackagers</p>
+              <Dropdown  optionLabel="key" v-model="interChangeConfigRequest.interchangePackager" optionValue="value" placeholder="interchangePackager" :options="interChangePackagers" class="select-drowdown"></Dropdown>
+            </div>
             </div>
 
             <div class="flex justify-between gap-10">
@@ -130,15 +142,6 @@ async function createNewConfig() {
 
               <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigSinkPort"
                           label="interchangeConfigSinkPort" />
-
-            </div>
-            <div class="flex justify-between gap-10">
-
-
-              <base-input type="text" v-model="interChangeConfigRequest.interchangeConfigDescription"
-                          label="interchangeConfigDescription" />
-
-
 
             </div>
 
