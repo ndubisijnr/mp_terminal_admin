@@ -89,10 +89,10 @@ const rangeValues = ref({
   end: '',
 })
 
-const minMaxDates = ref({
-  min: '2024-01-01',
-  max: '2024-12-31',
-})
+// const minMaxDates = ref({
+//   min: '2024-01-01',
+//   max: '2024-12-31',
+// })
 
 watch(rangeValues, async (newVal, oldVal) => {
   console.log(oldVal)
@@ -116,9 +116,9 @@ const transactionsHeaders = [
   { label: 'Terminal ID', key: 'transactionTerminalId' },
   // { label: 'Merchant Name', key: 'transactionOrganisationName' },
   { label: 'transaction Type', key: 'transactionType' },
-  { label: 'Amount', key: 'transactionResponseAmount' },
-  { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
-  { label: 'Merchant Type', key: 'transactionMerchantType' },
+  { label: 'Amount', key: 'transactionRequestAmount' },
+  // { label: 'RRN', key: 'transactionRetrievalReferenceNumber' },
+  // { label: 'Merchant Type', key: 'transactionMerchantType' },
   // { label: 'Narration', key: 'journalNarration' },
   // { label: 'AppLabel', key: 'transactionAppLabel'},
   { label: 'Created At', key: 'transactionCreatedAt'},
@@ -272,8 +272,8 @@ const doCustomDateSearch = async () => {
 }
 
 async function getTransactionData(){
+  await StoreUtils.getter().organisation.readAdminStats(rangeValues.value.start, rangeValues.value.end)
   await StoreUtils.getter().transactions.readAllTransactions(1, pageSize.value,  rangeValues.value.end, rangeValues.value.start, '')
-
 }
 
 setInterval(getTransactionData, 5 * 60 * 1000); // 5 minutes in milliseconds
@@ -342,6 +342,7 @@ onMounted(async () => {
         <MazPicker
             v-model="rangeValues.start"
             label="Select start date"
+
         />
         <MazPicker
             v-model="rangeValues.end"
@@ -418,7 +419,6 @@ onMounted(async () => {
         </div>
       </div>
       <div class="overflow-auto rounded-lg shadow">
-
         <!-- <BaseTable pagination="true" search="true" :bodies="transactions" :headers="transactionsHeaders"></BaseTable> -->
         <DataTable :loading="wait.isLoading('READ_TRANSACTION')"  v-model:filters="filters" :value="transactions" :metaKeySelection="metaKey" selectionMode="single"
           paginator :rows="10" :rowsPerPageOptions="[5, 10, 20, 50]" stripedRows tableStyle="min-width: 50rem"
@@ -459,32 +459,46 @@ onMounted(async () => {
             <MazSpinner v-if="wait.isLoading('READ_TRANSACTION')"  color="secondary"></MazSpinner>
           </template>
 
+          <Column   header="Merchant Name">
+            <template #body="slotProps">
+
+              <div v-if="slotProps.data.transactionCardAcceptorLocation">
+                <p>{{slotProps.data.transactionCardAcceptorLocation}}</p>
+              </div>
+
+              <div v-if="slotProps.data.transactionFromAccountType">
+                <p>{{slotProps.data.transactionFromAccountType}}</p>
+              </div>
+
+              <div v-if="slotProps.data.transactionToAccountType">
+                <p>{{slotProps.data.transactionToAccountType}}</p>
+              </div>
+
+            </template>
+          </Column>
 
 
           <Column v-for="col of transactionsHeaders" :key="col.key" :field="col.key" :header="col.label"></Column>
           <!--terminal status-->
+
           <Column field="transactionResponseCode" header="transactionResponse">
-                  <template #body="slotProps">
+            <template #body="slotProps">
 
-                        <div v-if="slotProps.data.transactionResponseCode">
-                          <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
-                        </div>
+              <div v-if="slotProps.data.transactionResponseCode">
+                <p>{{getResponse(slotProps.data.transactionResponseCode)}}</p>
+              </div>
 
-                        </template>
-                </Column>
+            </template>
+          </Column>
 
           <Column field="transactionResponseCode" header="Transaction Status">
             <template #body="slotProps">
               <div v-if="slotProps.data.transactionResponseCode">
                 <Tag :value="slotProps.data.transactionResponseCode ==='00' ? 'Successful' : 'Failed'" :severity="getSeverity(slotProps.data.transactionResponseCode)" />
               </div>
-              <!--              <div v-if="slotProps.data.transactionDrCr">-->
-              <!--                <p :style="slotProps.data.transactionDrCr === 'DR' ? {color:'red'}:{color:'green'}">{{slotProps.data.transactionDrCr}}</p>-->
-              <!--              </div>-->
 
             </template>
           </Column>
-
 
           <Column header="actions">
 
