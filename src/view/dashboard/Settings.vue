@@ -338,7 +338,7 @@ onMounted(() => {
 
   <EditInterChangeComponent v-if="reactiveData.showEditInterChangeComponent" :data="reactiveData.selectedRow" @close="handleClose(false)"></EditInterChangeComponent>
 
-  <div class="w-full container content-table-section">
+  <div class="w-full p-3 content-table-section">
     <div class="shadow-sm flex h-16 items-center justify-center p-10 gap-5 cursor-pointer">
       <p v-for="i in tabs" class="text-md p-3 rounded-md text-bold" :class="{'bg-gray-300':activeTab===i.label}" @click="activeTab = i.label">{{ i.label }}</p>
     </div>

@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { computed, ref} from 'vue';
+import { computed} from 'vue';
 import { useRouter } from 'vue-router';
-import { SidebarTopUtils, SidebarBottomUtils, ModulesUtils } from '@/util/constant/SidebarUtils.ts';
+import { SidebarTopUtils, SidebarBottomUtils } from '@/util/constant/SidebarUtils.ts';
 import Logout from "@/assets/icon/sidebar-icon/Button.svg"
 
 
 const authRoutes = ['Login', 'Register', 'InitiateForgotPassword'];
 
 const router = useRouter();
-
-const isOpen = ref(false)
 
 const getCurrentRoute:any = computed(() => router.currentRoute.value.name);
 
@@ -47,38 +45,7 @@ function logout(){
                 <p>{{ i.name }}</p>
               </router-link>
 
-<!--              <div-->
-<!--                  v-for="(i, index) in ModulesUtils"-->
-<!--                  :key="index"-->
-<!--                  class="nav-item-base"-->
-<!--                  :class="{ 'active-nav': getCurrentRoutePath == i.route || getCurrentRoutePath.includes(i.route) }"-->
-<!--              >-->
-<!--                &lt;!&ndash;                {{getCurrentRoutePath}}&ndash;&gt;-->
-<!--                &lt;!&ndash;                {{i.route}}&ndash;&gt;-->
 
-<!--                <div class="flex flex-col w-full h-auto relative">-->
-<!--                  <div class="flex gap-2 p-2" @click="isOpen = !isOpen" :class="{ 'active-nav': getCurrentRoutePath.includes('kyc') }">-->
-<!--                    <img :src="i.icon" alt="" />-->
-<!--                    <p>{{ i.name }} </p>-->
-<!--                  </div>-->
-
-<!--                  <div-->
-<!--                      v-if="isOpen"-->
-<!--                      class="pl-8 mb-4 pt-3 mt-4 flex flex-col space-y-2 absolute z-40 top-8 w-full"-->
-<!--                  >-->
-<!--                    <router-link-->
-<!--                        :to="x.route"-->
-<!--                        v-for="(x, childIndex) in i.children"-->
-<!--                        :key="childIndex"-->
-<!--                        class="nav-item-base gap-3 text-gray-700 hover:bg-black-600 w-full h-auto rounded-md"-->
-<!--                        :class="{ 'active-nav': getCurrentRoutePath == x.route || getCurrentRoutePath.includes(x.route) }"-->
-<!--                    >-->
-<!--                      <img :src="x.icon" alt="" />-->
-<!--                      <p class="text-white">{{ x.name }}</p>-->
-<!--                    </router-link>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--              </div>-->
             </div>
             <div class="sidebar-bottom-nav">
               <router-link

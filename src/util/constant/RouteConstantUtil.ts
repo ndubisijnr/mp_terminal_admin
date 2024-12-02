@@ -25,7 +25,5 @@ export const RouteConstantUtil = {
         institutionsCharges:"Institutions Statistics",
         user:"Users",
         authRequired:true,
-        directors:"Directors",
-        documents:"Documents",
     },
 }

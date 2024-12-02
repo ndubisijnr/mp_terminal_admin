@@ -3,7 +3,7 @@
     <div class="container">
       <div class="min-container">
         <div class="flex items-center mb-8">
-          <img class="logo" src="../../assets/image/coresteplogo.png" alt="">
+          <img class="logo" src="../../assets/image/terraswitch.jpeg" alt="">
           <p class="text-lg font-semibold">TMS PORTAL</p>
         </div>        
         <login-form />

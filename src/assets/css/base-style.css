@@ -95,6 +95,13 @@ body.corestep{
     --light-bgcolor: #ffc10781;
 }
 
+body.corestep{
+    --light_primary:#36029A;
+    --dark_color: #000;
+    --light_color:#20180135;
+    --light-bgcolor: #ffc10781;
+}
+
 
 
 @media (prefers-color-scheme: light) {

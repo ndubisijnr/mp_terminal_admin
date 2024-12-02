@@ -95,7 +95,7 @@ const getCurrentRouteSubTitle = computed(() => {
         </div>
 
         <div>
-          <img class="logo" src="../../assets/image/coresteplogo.png" alt="">
+          <img class="logo" src="../../assets/image/terraswitch.jpeg" alt="">
 
         </div>
        <!-- <div class="content-inner-container-right">-->

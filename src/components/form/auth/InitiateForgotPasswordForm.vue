@@ -3,7 +3,7 @@
 
     <div v-if="passwordResetStage === '1'" class="w-3/12 min-w-fit">
       <div class="flex items-center justify-center">
-        <img class="logo" src="@/assets/image/coresteplogo.png" alt="">
+        <img class="logo" src="@/assets/image/terraswitch.jpeg" alt="">
         <p class="text-lg font-semibold">TMS PORTAL</p>
       </div>
       <h1 class="font-[800] text-[37px] font-inter-Medium text-center">Forgot Password</h1>
@@ -30,7 +30,7 @@
     </div>
     <div v-else class="w-3/12 min-w-fit">
       <div class="flex items-center justify-center">
-        <img class="logo" src="@/assets/image/coresteplogo.png" alt="">
+        <img class="logo" src="@/assets/image/terraswitch.jpeg" alt="">
         <p class="text-lg font-semibold">TMS PORTAL</p>
       </div>
       <h1 class="font-[800] text-[37px] font-inter-Medium text-center">Forgot Password</h1>
